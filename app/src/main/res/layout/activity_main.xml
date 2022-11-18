@@ -27,7 +27,7 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/poster_1" />
 
-        <ImageView
+        <ImageView d
             android:id="@+id/imageView2"
             android:scaleType="centerCrop"
             android:layout_width="wrap_content"
