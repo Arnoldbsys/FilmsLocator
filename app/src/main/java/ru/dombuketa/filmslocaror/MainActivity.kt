@@ -1,20 +1,70 @@
 package ru.dombuketa.filmslocaror
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initMenuButtons()
+
+        initTopBar()
+        initNavigationMenu()
 
     }
+    fun initTopBar(){
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        topAppBar.setOnMenuItemClickListener{
+            when (it.itemId){
+                R.id.settings ->{
+                    if (AppCompatDelegate.getDefaultNightMode () != AppCompatDelegate.MODE_NIGHT_YES) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                        Toast.makeText(this, "Ночной режим", Toast.LENGTH_SHORT).show()
+                        it.setIcon(ContextCompat.getDrawable(applicationContext,R.drawable.ic_mode_night))
+                    }
+                    else
+                    {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                        Toast.makeText(this, "Дневной режим", Toast.LENGTH_SHORT).show()
+                        it.setIcon(ContextCompat.getDrawable(applicationContext,R.drawable.ic_mode_light))
+                    }
+//
+                    true
+                }
+                else -> false
+            }
+        }
 
-    fun initMenuButtons(){
+    }
+    fun initNavigationMenu(){
+        val bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNavMenu.setOnNavigationItemSelectedListener() {
+            when(it.itemId){
+                R.id.favorites->{
+                    Toast.makeText(this, "Избранное", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.watch_later->{
+                    Toast.makeText(this, "Посмотреть позже", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.casts->{
+                    Toast.makeText(this, "Подборки", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else->false
+            }
+        }
+    }
+
+    /*fun initMenuButtons(){
         val btn_menu = findViewById<Button>(R.id.button_menu)
         val btn_favs = findViewById<Button>(R.id.button_favorits)
         val btn_late = findViewById<Button>(R.id.button_seelater)
@@ -36,5 +86,5 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.btn_settings,Toast.LENGTH_SHORT).show()
         }
 
-    }
+    }*/
 }
