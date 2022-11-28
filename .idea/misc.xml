@@ -3,7 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/activity_main.xml" value="0.2554347826086957" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/drawable/corner_background.xml" value="0.4095" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/drawable/ic_btn_later.xml" value="0.2685" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/drawable/ic_round_attach.xml" value="0.2075" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/drawable/ic_round_favorite_border.xml" value="0.2075" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/drawable/ic_round_later_outline.xml" value="0.2075" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/drawable/ic_round_menu.xml" value="0.2075" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/drawable/ic_settings.xml" value="0.2075" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/activity_main.xml" value="0.2740740740740741" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/menu/settings_menu.xml" value="0.2625" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/menu/top_app_bar.xml" value="0.19895833333333332" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/menu/top_navigation.xml" value="0.2" />
       </map>
     </option>
   </component>
