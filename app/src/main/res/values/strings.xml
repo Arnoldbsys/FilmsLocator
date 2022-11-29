@@ -7,4 +7,9 @@
     <string name="btn_casts">Подборки</string>
     <string name="btn_settings">Настройки</string>
     <string name="page_title">Поиск</string>
+
+    <string name="mode_day">Поиск</string>
+    <string name="mode_night">Поиск</string>
+
+
 </resources>
