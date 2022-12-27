@@ -23,4 +23,6 @@ public class FilmViewHolder_J extends RecyclerView.ViewHolder {
         poster.setImageResource(film.getPoster());
         description.setText(film.getDescription());
     }
+
+
 }

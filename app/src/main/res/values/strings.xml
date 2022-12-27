@@ -11,6 +11,15 @@
 
     <string name="mode_day">Поиск</string>
     <string name="mode_night">Поиск</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    <string name="alert_2clickToExit">Нажмите дважды для выхода.</string>
+    <string name="alert_tellToFriends">Поделюсь с друзьями</string>
+
+
 
 
 </resources>
