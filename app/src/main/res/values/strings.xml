@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">FilmsLocaror</string>
+    <string name="app_name_j">FilmsLocaror_J</string>
     <string name="disclaimer">Картинки взяты с https://www.movieposters.com/</string>
     <string name="btn_menu">Меню</string>
     <string name="btn_favorits">Избранное</string>
