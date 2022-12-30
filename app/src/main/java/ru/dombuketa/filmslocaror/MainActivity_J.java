@@ -25,6 +25,7 @@ import java.util.List;
 public class MainActivity_J extends AppCompatActivity {
     private static final int TIME_INTERVAL = 2000;
     private long backPressed = 0L;
+    List<Film> dataBase = new FilmsDataBase_J().getFilmsDataBase();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,9 +91,18 @@ public class MainActivity_J extends AppCompatActivity {
 
                 switch (item.getItemId()){
                     case (R.id.favorites):
-                        snackbar.setText(R.string.btn_favorits);
-                        snackbar.show();
-                        return true;
+
+                        if (getSupportFragmentManager().findFragmentById(R.id.fragment_placeholder) instanceof FavoritesFragment_J){
+                            return true;
+                        } else{
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_placeholder,new FavoritesFragment_J())
+                                    .addToBackStack(null).commit();
+                            return true;
+
+                        }
+
+
                     case (R.id.watch_later):
                         snackbar.setText(R.string.btn_seelater);
                         snackbar.show();
