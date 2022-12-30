@@ -11,7 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-    private val TIME_INTERVAL = 2000
+    val dataBase = FilmsDataBase_J().getFilmsDataBase()
     private var backPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +65,12 @@ class MainActivity : AppCompatActivity() {
         bottomNavMenu.setOnNavigationItemSelectedListener() {
             when (it.itemId) {
                 R.id.favorites -> {
-                    snackbar.setText(R.string.btn_favorits)
-                    snackbar.show()
+                    if (supportFragmentManager.findFragmentById(R.id.fragment_placeholder) is FavoritesFragment)
+                        true
+                    else
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_placeholder,FavoritesFragment())
+                        .addToBackStack(null).commit()
                     true
                 }
                 R.id.watch_later -> {
@@ -113,4 +117,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    companion object consts{
+        const val TIME_INTERVAL = 2000
+    }
 }
