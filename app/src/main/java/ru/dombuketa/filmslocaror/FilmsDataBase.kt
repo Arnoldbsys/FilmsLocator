@@ -1,11 +1,12 @@
 package ru.dombuketa.filmslocaror
 
 class FilmsDataBase {
-    fun FilmsDataBase() {
+
+    private var filmsDataBase: MutableList<Film> = ArrayList()
+    init {
         initData()
     }
 
-    private var filmsDataBase: MutableList<Film> = ArrayList()
     fun getFilmsDataBase(): List<Film> {
         return filmsDataBase
     }

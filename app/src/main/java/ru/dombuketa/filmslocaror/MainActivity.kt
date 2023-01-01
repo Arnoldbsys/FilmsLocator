@@ -11,7 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-    val dataBase = FilmsDataBase_J().getFilmsDataBase()
+    val dataBase = FilmsDataBase().getFilmsDataBase()
     private var backPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
