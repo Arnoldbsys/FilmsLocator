@@ -21,41 +21,8 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.fragment_placeholder, HomeFragment())
             .addToBackStack(null).commit()
 
-        initTopBar()
         initNavigationMenu()
 
-    }
-
-    fun initTopBar() {
-        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
-        topAppBar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.settings -> {
-                    if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                        Toast.makeText(this, R.string.mode_night, Toast.LENGTH_SHORT).show()
-                        it.setIcon(
-                            ContextCompat.getDrawable(
-                                applicationContext,
-                                R.drawable.ic_mode_night
-                            )
-                        )
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        Toast.makeText(this, R.string.mode_day, Toast.LENGTH_SHORT).show()
-                        it.setIcon(
-                            ContextCompat.getDrawable(
-                                applicationContext,
-                                R.drawable.ic_mode_light
-                            )
-                        )
-                    }
-//
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     fun initNavigationMenu() {

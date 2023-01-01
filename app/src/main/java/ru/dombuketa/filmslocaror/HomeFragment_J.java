@@ -1,9 +1,12 @@
 package ru.dombuketa.filmslocaror;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,9 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 
 public class HomeFragment_J extends Fragment {
@@ -35,7 +41,44 @@ public class HomeFragment_J extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        initDatabase();
+
+        initSearchView();
         initRV();
+
+    }
+
+    private void initSearchView() {
+        SearchView search_view = requireActivity().findViewById(R.id.search_view);
+        search_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                search_view.setIconified(false);
+            }
+        });
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Если ввод пуст то вставляем в адаптер всю БД
+                if (newText.isEmpty()){
+                    filmsAdapter.addItems(((MainActivity_J)requireActivity()).dataBase);
+                    return true;
+                }
+                //Фильтруем список на поискк подходящих сочетаний
+                //Чтобы все работало правильно, нужно и запрос, и имя фильма приводить к нижнему регистру
+                List<Film> result = ((MainActivity_J)(requireActivity())).dataBase.stream().filter(
+                        x -> x.getTitle().toLowerCase(Locale.getDefault())
+                            .contains(newText.toLowerCase(Locale.getDefault())))
+                            .collect(Collectors.toList());
+                filmsAdapter.addItems(result);
+                return true;
+            }
+        });
     }
 
 //    void initDatabase(){
@@ -78,6 +121,26 @@ public class HomeFragment_J extends Fragment {
         main_recycler.addItemDecoration(new TopSpacingItemDecoration_J(8));
         //Кладем нашу БД в RV
         filmsAdapter.addItems(((MainActivity_J)requireActivity()).dataBase);
+
+        main_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                SearchView search_view = requireActivity().findViewById(R.id.search_view);
+                if (dy < 0)
+                    //search_view.
+                    Toast.makeText(requireActivity(), "dy < 0", Toast.LENGTH_SHORT).show();
+                else if (dy > 0)
+                    Toast.makeText(requireActivity(), "dy > 0", Toast.LENGTH_SHORT).show();
+            }
+                //super.onScrolled(recyclerView, dx, dy);
+
+        });
+
     }
 
 }

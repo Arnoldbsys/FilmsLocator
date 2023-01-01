@@ -25,7 +25,12 @@ import java.util.List;
 public class MainActivity_J extends AppCompatActivity {
     private static final int TIME_INTERVAL = 2000;
     private long backPressed = 0L;
+
     List<Film> dataBase = new FilmsDataBase_J().getFilmsDataBase();
+    public List<Film> getDataBase() {
+        return dataBase;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +39,9 @@ public class MainActivity_J extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_placeholder, new HomeFragment_J())
                 .addToBackStack(null).commit();
 
-        initTopBar();
+        //initTopBar();
         initNavigationMenu();
-
+        //setSupportActionBar(findViewById(R.id.app_bar2));
     }
 
 
@@ -55,7 +60,7 @@ public class MainActivity_J extends AppCompatActivity {
     }
 
 
-    void initTopBar() {
+    /*void initTopBar() {
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
         topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -77,7 +82,7 @@ public class MainActivity_J extends AppCompatActivity {
                 }
             }
         });
-    }
+    }*/
 
 
     void initNavigationMenu() {

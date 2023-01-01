@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -22,8 +24,37 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initSearchView()
         initRV()
 
+    }
+
+    private fun initSearchView() {
+        val search_view = requireView().findViewById<SearchView>(R.id.search_view)
+        search_view.setOnClickListener{ search_view.isIconified = false}
+        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    //Если ввод пуст то вставляем в адаптер всю БД
+                    if (newText.isEmpty()){
+                        filmsAdapter.addItems((requireActivity() as MainActivity).dataBase)
+                    }
+                    //Фильтруем список на поискк подходящих сочетаний
+                    val result = ((requireActivity() as MainActivity).dataBase).filter {
+                        //Чтобы все работало правильно, нужно и запрос, и имя фильма приводить к нижнему регистру
+                        it.title.toLowerCase(Locale.getDefault()).contains((newText.toLowerCase(Locale.getDefault())))
+                    }
+                    filmsAdapter.addItems(result)
+                }
+                return true
+            }
+
+        })
     }
 
     private fun initRV() {
