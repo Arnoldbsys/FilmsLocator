@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 //в параметр передаем слушатель, чтобы мы потом могли обрабатывать нажатия из класса Activity
 
-class FilmsListRecyclerAdapter(private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     //Здесь у нас хранится список элементов для RV
     private val items = mutableListOf<Film>()
 

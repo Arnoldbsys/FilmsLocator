@@ -11,7 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-    private val TIME_INTERVAL = 2000
+    val dataBase = FilmsDataBase().getFilmsDataBase()
     private var backPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,41 +21,8 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.fragment_placeholder, HomeFragment())
             .addToBackStack(null).commit()
 
-        initTopBar()
         initNavigationMenu()
 
-    }
-
-    fun initTopBar() {
-        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
-        topAppBar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.settings -> {
-                    if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                        Toast.makeText(this, R.string.mode_night, Toast.LENGTH_SHORT).show()
-                        it.setIcon(
-                            ContextCompat.getDrawable(
-                                applicationContext,
-                                R.drawable.ic_mode_night
-                            )
-                        )
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        Toast.makeText(this, R.string.mode_day, Toast.LENGTH_SHORT).show()
-                        it.setIcon(
-                            ContextCompat.getDrawable(
-                                applicationContext,
-                                R.drawable.ic_mode_light
-                            )
-                        )
-                    }
-//
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     fun initNavigationMenu() {
@@ -65,8 +32,12 @@ class MainActivity : AppCompatActivity() {
         bottomNavMenu.setOnNavigationItemSelectedListener() {
             when (it.itemId) {
                 R.id.favorites -> {
-                    snackbar.setText(R.string.btn_favorits)
-                    snackbar.show()
+                    if (supportFragmentManager.findFragmentById(R.id.fragment_placeholder) is FavoritesFragment)
+                        true
+                    else
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_placeholder,FavoritesFragment())
+                        .addToBackStack(null).commit()
                     true
                 }
                 R.id.watch_later -> {
@@ -113,4 +84,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    companion object consts{
+        const val TIME_INTERVAL = 2000
+    }
 }
