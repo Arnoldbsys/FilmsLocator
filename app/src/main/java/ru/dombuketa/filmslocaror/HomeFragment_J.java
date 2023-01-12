@@ -7,16 +7,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.Fade;
+import android.transition.Scene;
+import android.transition.Slide;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -41,6 +47,20 @@ public class HomeFragment_J extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        initDatabase();
+        ConstraintLayout home_fragment_root = requireActivity().findViewById(R.id.home_fragment_root);
+        Scene scene = Scene.getSceneForLayout(home_fragment_root, R.layout.merge_home_screen_content, requireContext());
+        //Создаем анимацию выезда поля поиска сверху
+        Slide searchSlider = (Slide) new Slide(Gravity.TOP).addTarget(R.id.search_view);
+        //Создаем анимацию выезда RV снизу
+        Slide recyclerSlider = (Slide) new Slide(Gravity.BOTTOM).addTarget(R.id.main_recycler);
+        Fade searchFade = (Fade) new Fade(Fade.MODE_IN).addTarget(R.id.search_view);
+        //Создаем экземпляр TransitionSet, который объединит все наши анимации
+        TransitionSet customTransition = new TransitionSet();
+        customTransition.setDuration(500);
+        customTransition.addTransition(recyclerSlider);
+        //customTransition.addTransition(searchSlider);
+        customTransition.addTransition(searchFade);
+        TransitionManager.go(scene, customTransition);
 
         initSearchView();
         initRV();

@@ -1,11 +1,17 @@
 package ru.dombuketa.filmslocaror
 
 import android.os.Bundle
+import android.transition.Scene
+import android.transition.Slide
+import android.transition.TransitionManager
+import android.transition.TransitionSet
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -15,15 +21,31 @@ class HomeFragment : Fragment() {
 //    val filmsDataBase = mutableListOf<Film>()
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
 
-    override fun onCreateView(
+        override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val home_fragment_root = requireActivity().findViewById<ConstraintLayout>(R.id.home_fragment_root)
+        val scene = Scene.getSceneForLayout(home_fragment_root, R.layout.merge_home_screen_content, requireContext())
+        //Создаем анимацию выезда поля поиска сверху
+        val searchSlider = Slide(Gravity.TOP).addTarget(R.id.search_view)
+        //Создаем анимацию выезда RV снизу
+        val recyclerSlider = Slide(Gravity.BOTTOM).addTarget(R.id.main_recycler)
+        //Создаем экземпляр TransitionSet, который объединит все наши анимации
+        val customTransition = TransitionSet().apply {
+            duration = 500
+            addTransition(recyclerSlider)
+            addTransition(searchSlider)
+        }
+        //scene.enter()
+        TransitionManager.go(scene, customTransition)
 
         initSearchView()
         initRV()

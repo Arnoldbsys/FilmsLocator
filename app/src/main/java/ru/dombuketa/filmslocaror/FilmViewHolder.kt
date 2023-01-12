@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 
 
@@ -17,7 +18,10 @@ class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     //В этом методе кладем данные из Film в наши View
     fun bind(film: Film){
         title.text = film.title
-        poster.setImageResource(film.poster)
+        Glide.with(itemView)
+            .load(film.poster)
+            .centerCrop()
+            .into(poster)
         description.text=film.description
     }
 }
