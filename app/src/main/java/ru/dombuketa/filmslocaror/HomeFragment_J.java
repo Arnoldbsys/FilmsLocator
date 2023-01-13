@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,8 +48,9 @@ public class HomeFragment_J extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        initDatabase();
-        ConstraintLayout home_fragment_root = requireActivity().findViewById(R.id.home_fragment_root);
-        Scene scene = Scene.getSceneForLayout(home_fragment_root, R.layout.merge_home_screen_content, requireContext());
+        CoordinatorLayout home_fragment_root = requireActivity().findViewById(R.id.home_fragment_root);
+/* предыдущая анимация м28
+        Scene scene = Scene.getSceneForLayout(home_fragment_root, R.layout.fragment_home, requireContext());
         //Создаем анимацию выезда поля поиска сверху
         Slide searchSlider = (Slide) new Slide(Gravity.TOP).addTarget(R.id.search_view);
         //Создаем анимацию выезда RV снизу
@@ -61,9 +63,10 @@ public class HomeFragment_J extends Fragment {
         //customTransition.addTransition(searchSlider);
         customTransition.addTransition(searchFade);
         TransitionManager.go(scene, customTransition);
-
+*/
         initSearchView();
-        initRV();
+        initHomeRV();
+        AnimationHelper_J.performFragmentCircularRevealAnimation(home_fragment_root, requireActivity(),1);
 
     }
 
@@ -114,7 +117,7 @@ public class HomeFragment_J extends Fragment {
 //        filmsDataBase.add(new Film(9,"Назад в будующее",R.drawable.poster_04,"Гениальный и неженатый профессор изобрел машину времени, которая помогла ему в итоге найти спутницу жизни при помощи паровоза."));
 //    }
 
-    void initRV(){
+    void initHomeRV(){
         RecyclerView main_recycler = requireActivity().findViewById(R.id.main_recycler);
         //Инициализируем наш адаптер в конструктор передаем анонимно инициализированный интерфейс,
         filmsAdapter = new FilmListRecyclerAdapter_J(new FilmListRecyclerAdapter_J.OnItemClickListener1() {

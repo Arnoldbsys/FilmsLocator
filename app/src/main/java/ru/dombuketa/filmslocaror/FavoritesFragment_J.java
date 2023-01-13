@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,12 +30,16 @@ public class FavoritesFragment_J extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //Получаем список при транзакции фрагмента
-        initRV();
+        initFavoriteRV();
+
+        ConstraintLayout favorite_fragment_root = requireActivity().findViewById(R.id.favorite_fragment_root);
+        AnimationHelper_J.performFragmentCircularRevealAnimation(favorite_fragment_root, requireActivity(),2);
+
     }
 
 
 
-    void initRV(){
+    void initFavoriteRV(){
 
         RecyclerView favorite_rv = requireActivity().findViewById(R.id.favorites_recycler);
         //Инициализируем наш адаптер в конструктор передаем анонимно инициализированный интерфейс,

@@ -1,14 +1,21 @@
 package ru.dombuketa.filmslocaror
 
+import android.animation.Animator
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val dataBase = FilmsDataBase().getFilmsDataBase()
@@ -17,12 +24,26 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        supportFragmentManager.beginTransaction().add(R.id.fragment_placeholder, HomeFragment())
-            .addToBackStack(null).commit()
-
         initNavigationMenu()
 
+        val lottieAnimationView: LottieAnimationView = findViewById(R.id.lottie_anim)
+        lottieAnimationView.addAnimatorListener(object : Animator.AnimatorListener{
+            override fun onAnimationStart(p0: Animator?) {
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                lottieAnimationView.visibility = View.GONE
+                val fragmentHome = checkFragmentExistence("home")
+                changeFragment(fragmentHome?: HomeFragment(), "home")
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+            }
+
+            override fun onAnimationRepeat(p0: Animator?) {
+            }
+        })
+        lottieAnimationView.playAnimation()
     }
 
     fun initNavigationMenu() {
@@ -31,22 +52,28 @@ class MainActivity : AppCompatActivity() {
         val snackbar = Snackbar.make(main_container, "", Snackbar.LENGTH_SHORT)
         bottomNavMenu.setOnNavigationItemSelectedListener() {
             when (it.itemId) {
+                R.id.home -> {
+                    val tag = "home"
+                    val fragment = checkFragmentExistence(tag)
+                    changeFragment(fragment?: HomeFragment(), tag)
+                    true
+                }
                 R.id.favorites -> {
-                    if (supportFragmentManager.findFragmentById(R.id.fragment_placeholder) is FavoritesFragment)
-                        true
-                    else
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_placeholder,FavoritesFragment())
-                        .addToBackStack(null).commit()
+                    val tag = "favorites"
+                    val fragment = checkFragmentExistence(tag)
+                    changeFragment(fragment?: FavoritesFragment(), tag)
                     true
                 }
                 R.id.watch_later -> {
-                    snackbar.setText(R.string.btn_seelater)
-                    snackbar.show()
+                    val tag = "watch_later"
+                    val fragment = checkFragmentExistence(tag)
+                    changeFragment(fragment?: SeelaterFragment(), tag)
                     true
                 }
                 R.id.casts -> {
-                    Toast.makeText(this, R.string.btn_casts, Toast.LENGTH_SHORT).show()
+                    val tag = "casts"
+                    val fragment = checkFragmentExistence(tag)
+                    changeFragment(fragment?: CastsFragment(), tag)
                     true
                 }
                 else -> false
@@ -69,6 +96,11 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack(null).commit()
     }
 
+    private fun checkFragmentExistence(tag: String) : Fragment? = supportFragmentManager.findFragmentByTag(tag)
+    private fun changeFragment(fragment: Fragment, tag: String){
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_placeholder,fragment, tag)
+            .addToBackStack(null).commit()
+    }
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount == 1) {
             if (backPressed + TIME_INTERVAL > System.currentTimeMillis()) {

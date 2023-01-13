@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -20,7 +22,13 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //Получаем список при транзакции фрагмента
+        val favorites_fragment_root = requireActivity().findViewById<ConstraintLayout>(R.id.favorite_fragment_root)
+
+        initFavoriteRV()
+        AnimationHelper.performFragmentCircularRevealAnimation(favorites_fragment_root, requireActivity(),2)
+    }
+
+    private fun initFavoriteRV() {
         val favorites_rv = (requireContext() as MainActivity).findViewById<RecyclerView>(R.id.favorites_recycler)
         favorites_rv.apply {
             filmsAdapter =

@@ -10,11 +10,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,16 +35,36 @@ public class MainActivity_J extends AppCompatActivity {
         return dataBase;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_placeholder, new HomeFragment_J())
-                .addToBackStack(null).commit();
-
-        //initTopBar();
         initNavigationMenu();
+
+        LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_anim);
+
+//                  getSupportFragmentManager().beginTransaction().add(R.id.fragment_placeholder, new HomeFragment_J())
+//                 .addToBackStack(null).commit();
+
+        Animator.AnimatorListener listener = new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) { }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                lottieAnimationView.setVisibility(View.GONE);
+                Fragment fragmentHome = checkFragmentExistence("home");
+                changeFragment( (fragmentHome == null) ? new HomeFragment_J() : fragmentHome, "home");
+            }
+            @Override
+            public void onAnimationCancel(Animator animator) { }
+            @Override
+            public void onAnimationRepeat(Animator animator) { }
+        };
+        lottieAnimationView.addAnimatorListener(listener);
+        lottieAnimationView.playAnimation();
+        //initTopBar();
         //setSupportActionBar(findViewById(R.id.app_bar2));
     }
 
@@ -93,33 +117,42 @@ public class MainActivity_J extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Snackbar snackbar = Snackbar.make(main_container,"", Snackbar.LENGTH_SHORT);
-
+                String tag;
+                Fragment fragment;
                 switch (item.getItemId()){
+                    case (R.id.home):
+                        tag = "home";
+                        fragment = checkFragmentExistence(tag);
+                        changeFragment( (fragment == null) ? new HomeFragment_J() : fragment, tag);
+                        return true;
                     case (R.id.favorites):
-
-                        if (getSupportFragmentManager().findFragmentById(R.id.fragment_placeholder) instanceof FavoritesFragment_J){
-                            return true;
-                        } else{
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_placeholder,new FavoritesFragment_J())
-                                    .addToBackStack(null).commit();
-                            return true;
-
-                        }
-
-
+                        tag = "favorites";
+                        fragment = checkFragmentExistence(tag);
+                        changeFragment( (fragment == null) ? new FavoritesFragment_J() : fragment, tag);
+                        return true;
                     case (R.id.watch_later):
-                        snackbar.setText(R.string.btn_seelater);
-                        snackbar.show();
+                        tag = "watch_later";
+                        fragment = checkFragmentExistence(tag);
+                        changeFragment( (fragment == null) ? new SeelaterFragment_J() : fragment, tag);
                         return true;
                     case (R.id.casts):
-                        Toast.makeText(getApplicationContext(), R.string.btn_casts, Toast.LENGTH_LONG).show();
+                        tag = "casts";
+                        fragment = checkFragmentExistence(tag);
+                        changeFragment( (fragment == null) ? new CastsFragment_J() : fragment, tag);
                         return true;
                     default:
                         return false;
                 }
             }
         });
+    }
+
+    private Fragment checkFragmentExistence(String tag){
+        return  getSupportFragmentManager().findFragmentByTag(tag);
+    }
+    private void changeFragment(Fragment fragment, String tag){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_placeholder, fragment, tag)
+                .addToBackStack(null).commit();
     }
 
     @Override

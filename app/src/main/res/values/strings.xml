@@ -3,10 +3,12 @@
     <string name="app_name_j">FilmsLocaror_J</string>
     <string name="disclaimer">Картинки взяты с https://www.movieposters.com/</string>
     <string name="btn_menu">Меню</string>
-    <string name="btn_favorits">Избранное</string>
-    <string name="btn_seelater">Посмотреть позже</string>
-    <string name="btn_casts">Подборки</string>
-    <string name="btn_settings">Настройки</string>
+    <!-- Menu -->
+    <string name="menu_home_title_text">На главный экран</string>
+    <string name="menu_favorits_title_text">Избранное</string>
+    <string name="menu_seelater_title_text">Посмотреть позже</string>
+    <string name="menu_casts_title_text">Подборки</string>
+    <string name="menu_settings_title_text">Настройки</string>
     <string name="page_title">Поиск</string>
 
     <string name="mode_day">Поиск</string>

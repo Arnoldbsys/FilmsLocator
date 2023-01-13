@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -32,23 +33,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val home_fragment_root = requireActivity().findViewById<ConstraintLayout>(R.id.home_fragment_root)
-        val scene = Scene.getSceneForLayout(home_fragment_root, R.layout.merge_home_screen_content, requireContext())
-        //Создаем анимацию выезда поля поиска сверху
-        val searchSlider = Slide(Gravity.TOP).addTarget(R.id.search_view)
-        //Создаем анимацию выезда RV снизу
-        val recyclerSlider = Slide(Gravity.BOTTOM).addTarget(R.id.main_recycler)
-        //Создаем экземпляр TransitionSet, который объединит все наши анимации
-        val customTransition = TransitionSet().apply {
-            duration = 500
-            addTransition(recyclerSlider)
-            addTransition(searchSlider)
-        }
-        //scene.enter()
-        TransitionManager.go(scene, customTransition)
-
+        val home_fragment_root = requireActivity().findViewById<CoordinatorLayout>(R.id.home_fragment_root)
         initSearchView()
-        initRV()
+        initHomeRV()
+
+        AnimationHelper.performFragmentCircularRevealAnimation(home_fragment_root, requireActivity(),1)
 
     }
 
@@ -79,7 +68,7 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun initRV() {
+    private fun initHomeRV() {
         val main_recycler = (requireContext() as MainActivity).findViewById<RecyclerView>(R.id.main_recycler)
         //Инициализируем наш адаптер в конструктор передаем анонимно инициализированный интерфейс,
         //оставим его пока пустым, он нам понадобится во второй части задания
