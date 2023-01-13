@@ -1,9 +1,12 @@
 package ru.dombuketa.filmslocaror
 
 import android.app.Activity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import java.util.concurrent.Executors
 import kotlin.math.hypot
 import kotlin.math.roundToInt
@@ -26,9 +29,7 @@ object AnimationHelper {
                     //Возвращаемся в главный тред, чтобы выполнить анимацию
                     activity.runOnUiThread(){
                         //Cуперсложная математика вычисления старта анимации
-                        //val itemCenter = rootView.width / menuItems * 2
                         val itemCenter = rootView.width / (menuItems * 2)
-                        //val step = itemCenter * 2 * (position - 1) + itemCenter
                         val step = (itemCenter * 2) * (position - 1) + itemCenter
 
                         val x: Int = step
@@ -42,6 +43,11 @@ object AnimationHelper {
                             duration = 500
                             //Интерполятор для более естественной анимации
                             interpolator = AccelerateInterpolator()
+                            // Поставим background перехода на текущий
+                            doOnEnd {
+                                activity.findViewById<ConstraintLayout>(R.id.main_container).background =
+                                    rootView.background
+                            }
                             start()
                         }
                         //Выставляем видимость нашего элемента
