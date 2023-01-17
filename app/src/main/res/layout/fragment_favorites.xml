@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favorite_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:visibility="invisible"
+    android:background="@drawable/background_favorites"
+    tools:visibility="visible"
     tools:context=".FavoritesFragment">
 
 <androidx.recyclerview.widget.RecyclerView
@@ -15,4 +19,4 @@
 
 </androidx.recyclerview.widget.RecyclerView>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
