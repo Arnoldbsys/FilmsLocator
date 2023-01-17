@@ -22,23 +22,23 @@ class MainActivity : AppCompatActivity() {
         initNavigationMenu()
 
         val lottieAnimationView: LottieAnimationView = findViewById(R.id.lottie_anim)
-        lottieAnimationView.addAnimatorListener(object : Animator.AnimatorListener{
-            override fun onAnimationStart(p0: Animator?) {
-            }
-
-            override fun onAnimationEnd(p0: Animator?) {
+//        lottieAnimationView.addAnimatorListener(object : Animator.AnimatorListener{
+//            override fun onAnimationStart(p0: Animator?) {
+//            }
+//
+//            override fun onAnimationEnd(p0: Animator?) {
                 lottieAnimationView.visibility = View.GONE
                 val fragmentHome = checkFragmentExistence("home")
                 changeFragment(fragmentHome?: HomeFragment(), "home")
-            }
-
-            override fun onAnimationCancel(p0: Animator?) {
-            }
-
-            override fun onAnimationRepeat(p0: Animator?) {
-            }
-        })
-        lottieAnimationView.playAnimation()
+//            }
+//
+//            override fun onAnimationCancel(p0: Animator?) {
+//            }
+//
+//            override fun onAnimationRepeat(p0: Animator?) {
+//            }
+//        })
+//        lottieAnimationView.playAnimation()
     }
 
     fun initNavigationMenu() {
