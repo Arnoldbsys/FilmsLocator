@@ -22,6 +22,6 @@ class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .load(film.poster)
             .centerCrop()
             .into(poster)
-        description.text=film.description
+        description.text = film.description
     }
 }

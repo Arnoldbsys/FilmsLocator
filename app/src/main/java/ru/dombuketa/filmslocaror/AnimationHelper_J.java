@@ -7,13 +7,11 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class AnimationHelper_J {
-    private static final int menuItems = 4;
+    private static final int MENU_ITEMS_COUNT = 4;
+    private static final int ANIM_DURATION = 300;
     //В метод у нас приходит 3 параметра:
     //1 - наше rootView, которое одновременно является и контейнером
     //и объектом анимации
@@ -34,7 +32,7 @@ public class AnimationHelper_J {
                             public void run() {
                                 //Cуперсложная математика вычисления старта анимации
                                 //val itemCenter = rootView.width / menuItems * 2
-                                int itenCenter = rootView.getWidth() / (menuItems * 2);
+                                int itenCenter = rootView.getWidth() / (MENU_ITEMS_COUNT * 2);
                                 int step = (itenCenter * 2) * (position - 1) + itenCenter;
 
                                 int x = step;
@@ -44,7 +42,7 @@ public class AnimationHelper_J {
                                 int endRadius = (int) Math.hypot(rootView.getWidth(), rootView.getHeight());
                                 //Создаем саму анимацию
                                 Animator animator = ViewAnimationUtils.createCircularReveal(rootView, x, y , startRadius, endRadius);
-                                animator.setDuration(300);
+                                animator.setDuration(ANIM_DURATION);
                                 animator.setInterpolator(new AccelerateInterpolator());
                                 // Поставим background перехода на текущий
                                 animator.addListener(new AnimatorListenerAdapter() {

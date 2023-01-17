@@ -25,7 +25,7 @@ class FavoritesFragment : Fragment() {
         val favorites_fragment_root = requireActivity().findViewById<ConstraintLayout>(R.id.favorite_fragment_root)
 
         initFavoriteRV()
-        AnimationHelper.performFragmentCircularRevealAnimation(favorites_fragment_root, requireActivity(),2)
+        AnimationHelper.performFragmentCircularRevealAnimation(favorites_fragment_root, requireActivity(), 2)
     }
 
     private fun initFavoriteRV() {
