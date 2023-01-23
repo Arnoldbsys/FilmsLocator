@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RatingDonutView">
+        <attr name="progress" format="integer" />
+        <attr name="stroke" format="float" />
+        <attr name="hideWhenProgressIsZero" format="boolean" />
+        <attr name="textWhenProgressIsZero" format="string" />
+    </declare-styleable>
+</resources>

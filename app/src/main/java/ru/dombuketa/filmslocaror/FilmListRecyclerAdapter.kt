@@ -1,8 +1,10 @@
 package ru.dombuketa.filmslocaror
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import android.view.animation.AnimationUtils
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 
 //в параметр передаем слушатель, чтобы мы потом могли обрабатывать нажатия из класса Activity
@@ -10,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     //Здесь у нас хранится список элементов для RV
     private val items = mutableListOf<Film>()
-
+    private var lastPosition = -1
     //В этом методе мы привязываем наш ViewHolder и передаем туда "надутую" верстку нашего фильма
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return FilmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.film_item,parent,false))
@@ -26,14 +28,23 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
                 //Обрабатываем нажатие на весь элемент целиком(можно сделать на отдельный элемент
                 //например, картинку) и вызываем метод нашего листенера, который мы получаем из
                 //конструктора адаптера
-                val item_container = holder.itemView.findViewById<CardView>(R.id.item_container)
+                val item_container = holder.itemView.findViewById<ConstraintLayout>(R.id.item_container)
                 item_container.setOnClickListener {
                     clickListener.click(items[position])
                 }
+                setAnimation(holder.itemView.findViewById(R.id.rating_donut), position)
             }
         }
     }
 
+    private fun setAnimation(viewToAnimate: View, position: Int) {
+        if (position > lastPosition) {
+            val animation =
+                AnimationUtils.loadAnimation(viewToAnimate.context, R.anim.rating_animator)
+            viewToAnimate.startAnimation(animation)
+            lastPosition = position
+        }
+    }
     override fun getItemCount(): Int {
         return items.size
     }

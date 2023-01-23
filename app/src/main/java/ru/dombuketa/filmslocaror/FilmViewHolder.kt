@@ -1,6 +1,7 @@
 package ru.dombuketa.filmslocaror
 
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,8 @@ class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val title = itemView.findViewById<TextView>(R.id.title)
     private val poster = itemView.findViewById<ImageView>(R.id.poster)
     private val description = itemView.findViewById<TextView>(R.id.description)
-
+    //Вот здесь мы находим в верстке наш прогресс бар для рейтинга
+    private val ratingDonut = itemView.findViewById<RatingDonutView>(R.id.rating_donut)
     //В этом методе кладем данные из Film в наши View
     fun bind(film: Film){
         title.text = film.title
@@ -23,5 +25,7 @@ class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .into(poster)
         description.text = film.description
+        //Устанавливаем рэйтинг
+        ratingDonut.setProgress((film.rating * 10).toInt())
     }
 }

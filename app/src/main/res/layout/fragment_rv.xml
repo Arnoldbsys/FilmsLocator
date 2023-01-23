@@ -32,4 +32,7 @@
         tools:listitem="@layout/film_item">
     </androidx.recyclerview.widget.RecyclerView>
 
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

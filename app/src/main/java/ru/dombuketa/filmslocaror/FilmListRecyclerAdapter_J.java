@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,6 +17,8 @@ import java.util.List;
 public class FilmListRecyclerAdapter_J extends RecyclerView.Adapter {
     //Здесь у нас хранится список элементов для RV
     private ArrayList<Film> items = new ArrayList<Film>();
+    private int lastPosition = -1;
+
     //в параметр передаем слушатель, чтобы мы потом могли обрабатывать нажатия из класса Activity
     private OnItemClickListener1 onItemClickListener;
     public FilmListRecyclerAdapter_J(OnItemClickListener1 onItemClickListener) {
@@ -44,9 +48,20 @@ public class FilmListRecyclerAdapter_J extends RecyclerView.Adapter {
                     onItemClickListener.click(items.get(position));
                 }
             });
+            setAnimation(holder.itemView.findViewById(R.id.rating_donut), position);
         }
     }
 
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.rating_animator);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
     @Override
     public int getItemCount() {
         return items.size();
