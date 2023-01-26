@@ -7,8 +7,8 @@
 
     <ru.dombuketa.filmslocaror.RatingDonutView
         android:id="@+id/rating_donut"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/rating_donut_view_width"
+        android:layout_height="@dimen/rating_donut_view_height"
         android:translationZ="11dp"
         app:stroke="5"
         app:progress="32"

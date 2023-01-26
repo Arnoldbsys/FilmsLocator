@@ -48,20 +48,20 @@ public class FilmListRecyclerAdapter_J extends RecyclerView.Adapter {
                     onItemClickListener.click(items.get(position));
                 }
             });
-            setAnimation(holder.itemView.findViewById(R.id.rating_donut), position);
+  //          setAnimation(holder.itemView.findViewById(R.id.rating_donut), position);
         }
     }
 
-    private void setAnimation(View viewToAnimate, int position)
-    {
-        // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition)
-        {
-            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.rating_animator);
-            viewToAnimate.startAnimation(animation);
-            lastPosition = position;
-        }
-    }
+//    private void setAnimation(View viewToAnimate, int position)
+//    {
+//        // If the bound view wasn't previously displayed on screen, it's animated
+//        if (position > lastPosition)
+//        {
+//            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.rating_animator);
+//            viewToAnimate.startAnimation(animation);
+//            lastPosition = position;
+//        }
+//    }
     @Override
     public int getItemCount() {
         return items.size();

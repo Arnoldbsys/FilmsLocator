@@ -1,12 +1,12 @@
 package ru.dombuketa.filmslocaror
 
+import android.animation.ValueAnimator
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
 
 
 //В конструктор класс передается layout, который мы создали(film_item.xml)
@@ -26,6 +26,7 @@ class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .into(poster)
         description.text = film.description
         //Устанавливаем рэйтинг
-        ratingDonut.setProgress((film.rating * 10).toInt())
+        ratingDonut.setProgress((film.rating * RatingDonutView.KOEF_FOR_PAINT).toInt())
     }
 }
+

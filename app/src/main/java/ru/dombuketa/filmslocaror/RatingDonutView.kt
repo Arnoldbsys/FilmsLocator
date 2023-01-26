@@ -1,11 +1,18 @@
 package ru.dombuketa.filmslocaror
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
 
-class RatingDonutView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null) : View(context, attributeSet) {
+class RatingDonutView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null)
+        : View(context, attributeSet) {
+    // Аниматор
+    private lateinit var animatos : Animation
     //Овал для рисования сегментов прогресс бара
     private val oval = RectF()
     //Координаты центра View, а также Radius
@@ -46,12 +53,14 @@ class RatingDonutView @JvmOverloads constructor(context: Context, attributeSet: 
             drawRating(canvas)
             //Рисуем цифры
             drawText(canvas)
+            startAnim()
         }
     }
 
+
     private fun drawRating(canvas: Canvas){
         //Здесь мы можем регулировать размер нашего кольца
-        val scale = radius * .8f
+        val scale = radius * KOEF_FOR_SCALE_RADIUS
         //Сохраняем канвас
         canvas.save()
         //Перемещаем нулевые координаты канваса в центр, вы помните, так проще рисовать все круглое
@@ -61,14 +70,14 @@ class RatingDonutView @JvmOverloads constructor(context: Context, attributeSet: 
         //Рисуем задний фон(Желательно его отрисовать один раз в bitmap, так как он статичный)
         canvas.drawCircle(0f, 0f, radius, circlePaint)
         //Рисуем "арки", из них и будет состоять наше кольцо + у нас тут специальный метод
-        canvas.drawArc(oval, -90f, convertProgressToDegrees(progress), false, strokePaint)
+        canvas.drawArc(oval, START_ANGLE, convertProgressToDegrees(progress), false, strokePaint)
         //Восстанавливаем канвас
         canvas.restore()
     }
 
     private fun drawText(canvas: Canvas){
         //Форматируем текст, чтобы мы выводили дробное число с одной цифрой после точки
-        val message = if (progress == 0 ) textWhenProgressIsZero else  String.format("%.1f", progress / 10f)
+        val message = if (progress == 0 ) textWhenProgressIsZero else  String.format("%.1f", progress / KOEF_FOR_PAINT)
         //Получаем ширину и высоту текста, чтобы компенсировать их при отрисовке, чтобы текст был
         //точно в центре
         val widths = FloatArray(message.length)
@@ -88,7 +97,7 @@ class RatingDonutView @JvmOverloads constructor(context: Context, attributeSet: 
         invalidate()
     }
 
-    private fun convertProgressToDegrees(progress: Int): Float = progress * 3.6f
+    private fun convertProgressToDegrees(progress: Int): Float = progress * KOEF_FOR_DEGREE
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         radius = if (width > height) {
@@ -115,10 +124,11 @@ class RatingDonutView @JvmOverloads constructor(context: Context, attributeSet: 
         setMeasuredDimension(minSide, minSide)
     }
 
+
     private fun chooseDimension(mode: Int, size: Int) =
         when (mode) {
             MeasureSpec.AT_MOST, MeasureSpec.EXACTLY -> size
-            else -> 300
+            else -> DEFAULT_SIZE_VIEW
         }
 
     private fun initPaint(){
@@ -150,9 +160,31 @@ class RatingDonutView @JvmOverloads constructor(context: Context, attributeSet: 
     }
 
     private fun getPaintColor(progress: Int): Int = when(progress) {
-        in 0 .. 25 -> Color.parseColor("#e84258")
-        in 26 .. 50 -> Color.parseColor("#fd8060")
-        in 51 .. 75 -> Color.parseColor("#fee191")
-        else -> Color.parseColor("#b0d8a4")    }
+        in 0 .. RANGE_1 -> Color.parseColor("#e84258")
+        in RANGE_1 + 1 .. RANGE_2 -> Color.parseColor("#fd8060")
+        in RANGE_2 + 1 .. RANGE_3 -> Color.parseColor("#fee191")
+        else -> Color.parseColor("#b0d8a4")
+    }
+
+    fun startAnim() {
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.duration = 1000
+        animator.addUpdateListener {
+            this.alpha = it.animatedValue as Float
+        }
+        animator.start()
+    }
+
+    companion object{
+        const val KOEF_FOR_PAINT : Float = 10f
+        const val KOEF_FOR_DEGREE : Float = 3.6f
+        const val KOEF_FOR_SCALE_RADIUS : Float = 0.8f
+        const val START_ANGLE : Float = -90f
+        const val DEFAULT_SIZE_VIEW : Int = 300
+        const val RANGE_1 : Int = 25
+        const val RANGE_2 : Int = 50
+        const val RANGE_3 : Int = 75
+
+    }
 
 }

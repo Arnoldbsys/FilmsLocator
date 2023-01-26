@@ -1,5 +1,6 @@
 package ru.dombuketa.filmslocaror;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -9,10 +10,16 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import androidx.annotation.Nullable;
 
 public class RatingDonutView_J extends View {
+    public final static float KOEF_FOR_PAINT = 10f;
+    final float START_ANGLE  = -90f;
+
+
+    private Float XPoint = 20.0f;
     //Овал для рисования сегментов прогресс бара
     private RectF oval = new RectF();
     //Координаты центра View, а также Radius
@@ -67,6 +74,7 @@ public class RatingDonutView_J extends View {
             drawRating(canvas);
             //Рисуем цифры
             drawText(canvas);
+            startAnim();
         }
     }
 
@@ -82,7 +90,7 @@ public class RatingDonutView_J extends View {
         //Рисуем задний фон(Желательно его отрисовать один раз в bitmap, так как он статичный)
         canvas.drawCircle(0f, 0f, radius, circlePaint);
         //Рисуем "арки", из них и будет состоять наше кольцо + у нас тут специальный метод
-        canvas.drawArc(oval, -90f, convertProgressToDegrees(progress),false, strokePaint);
+        canvas.drawArc(oval, START_ANGLE, convertProgressToDegrees(progress),false, strokePaint);
         //Восстанавливаем канвас
         canvas.restore();
     }
@@ -175,6 +183,18 @@ public class RatingDonutView_J extends View {
 
     private Float convertProgressToDegrees(int progress){
         return  progress * 3.6f;
+    }
+
+    public void startAnim() {
+        final ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+        animator.setDuration(500);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                RatingDonutView_J.this.setAlpha((Float) animation.getAnimatedValue());
+            }
+        });
+        animator.start();
     }
 
 }

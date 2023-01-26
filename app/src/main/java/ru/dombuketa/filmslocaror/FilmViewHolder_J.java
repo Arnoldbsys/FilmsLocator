@@ -33,7 +33,7 @@ public class FilmViewHolder_J extends RecyclerView.ViewHolder {
             .centerCrop()
             .into(poster);
         description.setText(film.getDescription());
-        ratingDonut.setProgress((int) (film.getRating() * 10));
+        ratingDonut.setProgress((int) (film.getRating() * RatingDonutView_J.KOEF_FOR_PAINT));
     }
 
 

@@ -32,19 +32,10 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
                 item_container.setOnClickListener {
                     clickListener.click(items[position])
                 }
-                setAnimation(holder.itemView.findViewById(R.id.rating_donut), position)
             }
         }
     }
 
-    private fun setAnimation(viewToAnimate: View, position: Int) {
-        if (position > lastPosition) {
-            val animation =
-                AnimationUtils.loadAnimation(viewToAnimate.context, R.anim.rating_animator)
-            viewToAnimate.startAnimation(animation)
-            lastPosition = position
-        }
-    }
     override fun getItemCount(): Int {
         return items.size
     }
