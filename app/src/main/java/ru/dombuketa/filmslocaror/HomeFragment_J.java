@@ -28,8 +28,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import ru.dombuketa.filmslocaror.databinding.FragmentCastsBinding;
+import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding;
+
 
 public class HomeFragment_J extends Fragment {
+    private FragmentHomeBinding binding;
     //public List<Film> filmsDataBase = new ArrayList<Film>();
     private FilmListRecyclerAdapter_J filmsAdapter;
 
@@ -38,17 +42,16 @@ public class HomeFragment_J extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        initDatabase();
-        CoordinatorLayout home_fragment_root = requireActivity().findViewById(R.id.home_fragment_root);
+        //CoordinatorLayout home_fragment_root = requireActivity().findViewById(R.id.home_fragment_root);
 /* предыдущая анимация м28
         Scene scene = Scene.getSceneForLayout(home_fragment_root, R.layout.fragment_home, requireContext());
         //Создаем анимацию выезда поля поиска сверху
@@ -66,7 +69,7 @@ public class HomeFragment_J extends Fragment {
 */
         initSearchView();
         initHomeRV();
-        AnimationHelper_J.performFragmentCircularRevealAnimation(home_fragment_root, requireActivity(),1);
+        AnimationHelper_J.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(),1);
 
     }
 

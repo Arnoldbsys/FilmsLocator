@@ -15,7 +15,11 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import ru.dombuketa.filmslocaror.databinding.FragmentCastsBinding;
+import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding;
+
 public class DetailsFragment_J extends Fragment {
+    private FragmentDetailsBinding binding;
 /*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,8 @@ public class DetailsFragment_J extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_details, container, false); // super.onCreateView(inflater, container, savedInstanceState);
+        binding = FragmentDetailsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -55,12 +60,6 @@ public class DetailsFragment_J extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Film film = getArguments().getParcelable("film");
 
-        ImageView details_poster = requireActivity().findViewById(R.id.details_poster);
-        androidx.appcompat.widget.Toolbar details_toolbar = requireActivity().findViewById(R.id.details_toolbar);
-        TextView details_description = requireActivity().findViewById(R.id.details_description);
-
-        com.google.android.material.floatingactionbutton.FloatingActionButton details_fab_share =
-                requireActivity().findViewById(R.id.details_fab_share);
         com.google.android.material.floatingactionbutton.FloatingActionButton details_fab_favorites =
                 requireActivity().findViewById(R.id.details_fab_favorites);
 
@@ -70,22 +69,6 @@ public class DetailsFragment_J extends Fragment {
             details_fab_favorites.setImageResource(R.drawable.ic_favorite_border_24);
         }
 
-        details_poster.setImageResource(film.getPoster());
-        details_toolbar.setTitle(film.getTitle());
-        details_description.setText(film.getDescription());
-
-        details_fab_share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                //Указываем action с которым он запускается
-                intent.setAction(Intent.ACTION_SEND);
-                //Кладем данные о нашем фильме
-                intent.putExtra(Intent.EXTRA_TEXT,String.format("Отправить к %s /n/n %s",film.getTitle(), film.getDescription()));
-                intent.setType("text/plain");
-                startActivity(Intent.createChooser(intent, "Текст сообщения"));
-            }
-        });
         details_fab_favorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,6 +79,23 @@ public class DetailsFragment_J extends Fragment {
                     details_fab_favorites.setImageResource(R.drawable.ic_favorite_border_24);
                     film.setInFavorites(false);
                 }
+            }
+        });
+
+        binding.detailsPoster.setImageResource(film.getPoster());
+        binding.detailsToolbar.setTitle(film.getTitle());
+        binding.detailsDescription.setText(film.getDescription());
+
+        binding.detailsFabShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                //Указываем action с которым он запускается
+                intent.setAction(Intent.ACTION_SEND);
+                //Кладем данные о нашем фильме
+                intent.putExtra(Intent.EXTRA_TEXT,String.format("Отправить к %s /n/n %s",film.getTitle(), film.getDescription()));
+                intent.setType("text/plain");
+                startActivity(Intent.createChooser(intent, "Текст сообщения"));
             }
         });
 

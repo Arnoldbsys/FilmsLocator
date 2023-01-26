@@ -10,28 +10,28 @@ import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val dataBase = FilmsDataBase().getFilmsDataBase()
+    private lateinit var binding: ActivityMainBinding
     private var backPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initNavigationMenu()
 
-        val lottieAnimationView: LottieAnimationView = findViewById(R.id.lottie_anim)
-            lottieAnimationView.visibility = View.GONE
-            val fragmentHome = checkFragmentExistence("home")
-            changeFragment(fragmentHome?: HomeFragment(), "home")
+        binding.lottieAnim.visibility = View.GONE
+        val fragmentHome = checkFragmentExistence("home")
+        changeFragment(fragmentHome?: HomeFragment(), "home")
     }
 
     fun initNavigationMenu() {
-        val bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottom_nav)
-        val main_container = findViewById<ConstraintLayout>(R.id.main_container)
-        val snackbar = Snackbar.make(main_container, "", Snackbar.LENGTH_SHORT)
-        bottomNavMenu.setOnNavigationItemSelectedListener() {
+        val snackbar = Snackbar.make(binding.mainContainer, "", Snackbar.LENGTH_SHORT)
+        binding.bottomNav.setOnNavigationItemSelectedListener() {
             when (it.itemId) {
                 R.id.home -> {
                     val tag = "home"

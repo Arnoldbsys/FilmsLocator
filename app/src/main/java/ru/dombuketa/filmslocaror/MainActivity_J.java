@@ -26,7 +26,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding;
+
 public class MainActivity_J extends AppCompatActivity {
+    private ActivityMainBinding binding;
     private static final int TIME_INTERVAL = 2000;
     private long backPressed = 0L;
 
@@ -39,7 +42,10 @@ public class MainActivity_J extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        //setContentView(R.layout.activity_main);
+        setContentView(binding.getRoot());
+
         initNavigationMenu();
 
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_anim);
@@ -110,13 +116,10 @@ public class MainActivity_J extends AppCompatActivity {
 
 
     void initNavigationMenu() {
-        BottomNavigationView bottomNavMenu = findViewById(R.id.bottom_nav);
-        ConstraintLayout main_container = findViewById(R.id.main_container);
-
-        bottomNavMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        binding.bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Snackbar snackbar = Snackbar.make(main_container,"", Snackbar.LENGTH_SHORT);
+                Snackbar snackbar = Snackbar.make(binding.mainContainer,"", Snackbar.LENGTH_SHORT);
                 String tag;
                 Fragment fragment;
                 switch (item.getItemId()){

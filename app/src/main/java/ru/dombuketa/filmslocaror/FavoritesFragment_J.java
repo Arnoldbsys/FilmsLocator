@@ -17,13 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import ru.dombuketa.filmslocaror.databinding.FragmentCastsBinding;
+import ru.dombuketa.filmslocaror.databinding.FragmentFavoritesBinding;
+
 public class FavoritesFragment_J extends Fragment {
+    private FragmentFavoritesBinding binding;
     private FilmListRecyclerAdapter_J filmsAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_favorites, container, false);
+        binding = FragmentFavoritesBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -31,16 +36,10 @@ public class FavoritesFragment_J extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //Получаем список при транзакции фрагмента
         initFavoriteRV();
-
-        ConstraintLayout favorite_fragment_root = requireActivity().findViewById(R.id.favorite_fragment_root);
-        AnimationHelper_J.performFragmentCircularRevealAnimation(favorite_fragment_root, requireActivity(),2);
-
+        AnimationHelper_J.performFragmentCircularRevealAnimation(binding.favoriteFragmentRoot, requireActivity(),2);
     }
 
-
-
     void initFavoriteRV(){
-
         RecyclerView favorite_rv = requireActivity().findViewById(R.id.favorites_recycler);
         //Инициализируем наш адаптер в конструктор передаем анонимно инициализированный интерфейс,
         filmsAdapter = new FilmListRecyclerAdapter_J(new FilmListRecyclerAdapter_J.OnItemClickListener1() {

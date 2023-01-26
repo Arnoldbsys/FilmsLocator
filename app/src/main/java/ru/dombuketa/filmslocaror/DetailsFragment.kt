@@ -9,15 +9,18 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import ru.dombuketa.filmslocaror.databinding.FragmentCastsBinding
+import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding
 
 class DetailsFragment : Fragment() {
-
+    private lateinit var binding: FragmentDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_details, container, false)
+        binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        return binding.root;
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -25,23 +28,26 @@ class DetailsFragment : Fragment() {
 
         val film = arguments?.get("film") as Film
 
-        val details_toolbar = requireActivity().findViewById<androidx.appcompat.widget.Toolbar>(R.id.details_toolbar)
-        val details_poster = requireActivity().findViewById<AppCompatImageView>(R.id.details_poster)
-        val details_description = requireActivity().findViewById<TextView>(R.id.details_description)
-
-        val details_fab_share = requireActivity().findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.details_fab_share)
-        val details_fab_favorites = requireActivity().findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.details_fab_favorites)
-        details_fab_favorites.setImageResource(
+        binding.detailsFabFavorites.setImageResource(
             if (film.isInFavorites) R.drawable.ic_favorite_24
             else R.drawable.ic_favorite_border_24
         )
+        binding.detailsFabFavorites.setOnClickListener{
+            if (!film.isInFavorites){
+                binding.detailsFabFavorites.setImageResource(R.drawable.ic_favorite_24)
+                film.isInFavorites = true
+            } else {
+                binding.detailsFabFavorites.setImageResource(R.drawable.ic_favorite_border_24)
+                film.isInFavorites = false
+            }
+        }
 
 
-        details_toolbar.title = film.title
-        details_poster.setImageResource(film.poster)
-        details_description.text = film.description
+        binding.detailsToolbar.title = film.title
+        binding.detailsPoster.setImageResource(film.poster)
+        binding.detailsDescription.text = film.description
 
-        details_fab_share.setOnClickListener{
+        binding.detailsFabShare.setOnClickListener{
             val intent = Intent()
             //Указываем action с которым он запускается
             intent.action = Intent.ACTION_SEND
@@ -51,15 +57,6 @@ class DetailsFragment : Fragment() {
             startActivity(Intent.createChooser(intent,"Текст сообщения"))
         }
 
-        details_fab_favorites.setOnClickListener{
-            if (!film.isInFavorites){
-                details_fab_favorites.setImageResource(R.drawable.ic_favorite_24)
-                film.isInFavorites = true
-            } else {
-                details_fab_favorites.setImageResource(R.drawable.ic_favorite_border_24)
-                film.isInFavorites = false
-            }
-        }
     }
 
 }

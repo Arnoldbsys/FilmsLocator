@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.dombuketa.filmslocaror.databinding.FilmItemBinding;
+
 public class FilmListRecyclerAdapter_J extends RecyclerView.Adapter {
     //Здесь у нас хранится список элементов для RV
     private ArrayList<Film> items = new ArrayList<Film>();
@@ -29,7 +31,9 @@ public class FilmListRecyclerAdapter_J extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new FilmViewHolder_J(LayoutInflater.from(parent.getContext()).inflate(R.layout.film_item,parent,false));
+        //return new FilmViewHolder_J(LayoutInflater.from(parent.getContext()).inflate(R.layout.film_item,parent,false));
+        return new FilmViewHolder_J(FilmItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+
     }
     //В этом методе будет привязка полей из объекта Film к View из film_item.xml
     @Override

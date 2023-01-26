@@ -10,7 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import ru.dombuketa.filmslocaror.databinding.FragmentCastsBinding;
+import ru.dombuketa.filmslocaror.databinding.FragmentSeelaterBinding;
+
 public class SeelaterFragment_J extends Fragment {
+    private FragmentSeelaterBinding binding;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +23,8 @@ public class SeelaterFragment_J extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_seelater, container, false);
+        binding = FragmentSeelaterBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override

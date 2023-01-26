@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.dombuketa.filmslocaror.databinding.FilmItemBinding
 
 //в параметр передаем слушатель, чтобы мы потом могли обрабатывать нажатия из класса Activity
 
@@ -14,8 +16,9 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
     private val items = mutableListOf<Film>()
     private var lastPosition = -1
     //В этом методе мы привязываем наш ViewHolder и передаем туда "надутую" верстку нашего фильма
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return FilmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.film_item,parent,false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
+        val binding = FilmItemBinding.inflate(LayoutInflater.from(parent.context), parent,false)
+        return FilmViewHolder(binding)
     }
 
     //В этом методе будет привязка полей из объекта Film к View из film_item.xml
