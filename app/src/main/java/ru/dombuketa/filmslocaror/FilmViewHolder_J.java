@@ -31,7 +31,8 @@ public class FilmViewHolder_J extends RecyclerView.ViewHolder {
     private RatingDonutView_J ratingDonut = itemView.findViewById(R.id.rating_donut);
     //В этом методе кладем данные из Film в наши View
     void bind(Film film){
-        binding.title.setText(film.getTitle());
+        binding.setFilm(film);
+        //binding.title.setText(film.getTitle());
 
         //poster.setImageResource(film.getPoster());   // без Glide
         //Указываем контейнер, в котором будет "жить" наша картинка
@@ -39,7 +40,7 @@ public class FilmViewHolder_J extends RecyclerView.ViewHolder {
             .load(film.getPoster())
             .centerCrop()
             .into(binding.poster);
-        binding.description.setText(film.getDescription());
+        //binding.description.setText(film.getDescription());
         ratingDonut.setProgress((int) (film.getRating() * RatingDonutView_J.KOEF_FOR_PAINT));
     }
 

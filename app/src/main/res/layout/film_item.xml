@@ -1,67 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/film_item_container_height">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ru.dombuketa.filmslocaror.RatingDonutView_J
-        android:id="@+id/rating_donut"
-        android:layout_width="@dimen/rating_donut_view_width"
-        android:layout_height="@dimen/rating_donut_view_height"
-        android:translationZ="11dp"
-        app:stroke="5"
-        app:progress="32"
-        app:hideWhenProgressIsZero="true"
-        app:textWhenProgressIsZero="нет"
-        android:layout_gravity="bottom|left"
+    <data>
+        <variable
+            name="film"
+            type="ru.dombuketa.filmslocaror.Film" />
+    </data>
 
-        >
-    </ru.dombuketa.filmslocaror.RatingDonutView_J>
-
-
-    <androidx.cardview.widget.CardView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="6dp"
-        android:elevation="1dp"
-        app:cardCornerRadius="10dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/item_container"
+        android:layout_height="@dimen/film_item_container_height">
+
+        <ru.dombuketa.filmslocaror.RatingDonutView
+            android:id="@+id/rating_donut"
+            android:layout_width="@dimen/rating_donut_view_width"
+            android:layout_height="@dimen/rating_donut_view_height"
+            android:translationZ="11dp"
+            app:stroke="5"
+            app:progress="32"
+            app:hideWhenProgressIsZero="true"
+            app:textWhenProgressIsZero="нет"
+            android:layout_gravity="bottom|left"
+
+            ></ru.dombuketa.filmslocaror.RatingDonutView>
+
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/poster"
-                android:layout_width="@dimen/film_item_img_width"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@tools:sample/avatars"></ImageView>
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:padding="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                app:layout_constraintLeft_toRightOf="@id/poster"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="Title"></TextView>
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:padding="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/poster"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                tools:text="@tools:sample/lorem/random"></TextView>
+            android:layout_height="match_parent"
+            android:layout_margin="6dp"
+            android:elevation="1dp"
+            app:cardCornerRadius="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/poster"
+                    android:layout_width="@dimen/film_item_img_width"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/avatars"></ImageView>
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    app:layout_constraintLeft_toRightOf="@id/poster"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="@{film.title}"></TextView>
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:padding="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/poster"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    android:text="@{film.description}"
+                    tools:text="@tools:sample/lorem/random"></TextView>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
-</FrameLayout>
+    </FrameLayout>
+</layout>

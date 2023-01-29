@@ -16,12 +16,11 @@ class FilmViewHolder(var binding: FilmItemBinding) : RecyclerView.ViewHolder(bin
     //Привязываем View из layout к переменным
     //В этом методе кладем данные из Film в наши View
     fun bind(film: Film){
-        binding.title.text = film.title
+        binding.film = film
         Glide.with(itemView)
             .load(film.poster)
             .centerCrop()
             .into(binding.poster)
-        binding.description.text = film.description
         //Устанавливаем рэйтинг
         binding.ratingDonut.setProgress((film.rating * RatingDonutView.KOEF_FOR_PAINT).toInt())
     }
