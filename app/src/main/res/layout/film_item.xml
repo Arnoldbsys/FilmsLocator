@@ -6,14 +6,14 @@
     <data>
         <variable
             name="film"
-            type="ru.dombuketa.filmslocaror.Film" />
+            type="ru.dombuketa.filmslocaror.domain.Film" />
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/film_item_container_height">
 
-        <ru.dombuketa.filmslocaror.RatingDonutView
+        <ru.dombuketa.filmslocaror.view.customview.RatingDonutView
             android:id="@+id/rating_donut"
             android:layout_width="@dimen/rating_donut_view_width"
             android:layout_height="@dimen/rating_donut_view_height"
@@ -22,9 +22,9 @@
             app:progress="32"
             app:hideWhenProgressIsZero="true"
             app:textWhenProgressIsZero="нет"
-            android:layout_gravity="bottom|left"
+            android:layout_gravity="bottom|left">
 
-            ></ru.dombuketa.filmslocaror.RatingDonutView>
+        </ru.dombuketa.filmslocaror.view.customview.RatingDonutView>
 
 
         <androidx.cardview.widget.CardView

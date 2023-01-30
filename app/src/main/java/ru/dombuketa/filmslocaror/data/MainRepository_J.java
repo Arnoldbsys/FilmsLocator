@@ -1,19 +1,18 @@
-package ru.dombuketa.filmslocaror;
+package ru.dombuketa.filmslocaror.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.dombuketa.filmslocaror.R;
 import ru.dombuketa.filmslocaror.domain.Film;
 
-public class FilmsDataBase_J {
-    public FilmsDataBase_J() {
+public class MainRepository_J {
+
+    public MainRepository_J() {
         initDatabase();
     }
 
-    private List<Film> filmsDataBase = new ArrayList<Film>();
-    public List<Film> getFilmsDataBase() {
-        return filmsDataBase;
-    }
+    public List<Film> filmsDataBase = new ArrayList<Film>();
 
     private void initDatabase(){
         filmsDataBase = new ArrayList<Film>();
@@ -27,5 +26,6 @@ public class FilmsDataBase_J {
         filmsDataBase.add(new Film(8,"Е.Т.",R.drawable.poster_03,"Приключения велосипедиста на луне. Молодой человек после вечеринки обнаруживает себя на велосипеде на луне. Фильм, пропагандирующий трезвый образ жизни. Обязателен к просмотру молодежи. Сам не смотрел.", 0f, true));
         filmsDataBase.add(new Film(9,"Назад в будующее",R.drawable.poster_04,"Гениальный и неженатый профессор изобрел машину времени, которая помогла ему в итоге найти спутницу жизни при помощи паровоза.", 1f,false));
     }
+
 
 }

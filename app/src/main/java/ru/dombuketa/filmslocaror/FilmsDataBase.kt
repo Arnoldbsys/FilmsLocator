@@ -1,5 +1,7 @@
 package ru.dombuketa.filmslocaror
 
+import ru.dombuketa.filmslocaror.domain.Film
+
 class FilmsDataBase {
 
     private var filmsDataBase: MutableList<Film> = ArrayList()
