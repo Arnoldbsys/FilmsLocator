@@ -1,4 +1,4 @@
-package ru.dombuketa.filmslocaror
+package ru.dombuketa.filmslocaror.utils
 
 import android.content.res.Resources
 import android.graphics.Rect

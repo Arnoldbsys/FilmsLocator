@@ -1,5 +1,7 @@
 package ru.dombuketa.filmslocaror
 
+import ru.dombuketa.filmslocaror.domain.Film
+
 class FilmsDataBase {
 
     private var filmsDataBase: MutableList<Film> = ArrayList()
@@ -12,8 +14,8 @@ class FilmsDataBase {
     }
 
     fun initData(){
-        filmsDataBase.add(Film(1,"Титаник",R.drawable.poster_1,"Очень хороший фильм про любовь, но я его не смотрел."))
-        filmsDataBase.add(Film(2,"Тар",R.drawable.poster_2,"Не знаю, про что фильм, но по картинке похоже, что глубокомысленные, тоже не смотрел.",true))
+        filmsDataBase.add(Film(1,"Титаник",R.drawable.poster_1,"Очень хороший фильм про любовь, но я его не смотрел.", 3f))
+        filmsDataBase.add(Film(2,"Тар",R.drawable.poster_2,"Не знаю, про что фильм, но по картинке похоже, что глубокомысленные, тоже не смотрел.", 7.7f,true))
         filmsDataBase.add(Film(3,"ГудВилХантер",R.drawable.poster_3,"Кто-то кого-то искал и нашел, а может и не нашел, можно посмотреть если делать нечего."))
         filmsDataBase.add(Film(4,"Шининг",R.drawable.poster_4,"Фильм про мальчика на велосипеде и двух сестер в коридоре. Затронута тема безопасности езды в помещениях. Неплохой фильм для расширения кругозора."))
         filmsDataBase.add(Film(5,"Завтрак клуб",R.drawable.poster_5,"Фильм про то, что нужно брать с собой на природу чтобы не выглядеть глупо перед сверстниками во время приема пищи. Старый добрый фильм про взаимовыручку и жадность."))

@@ -7,7 +7,7 @@
     android:visibility="invisible"
     tools:visibility="visible"
     android:background="@drawable/background_casts"
-    tools:context=".CastsFragment">
+    tools:context=".view.fragments.CastsFragment">
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

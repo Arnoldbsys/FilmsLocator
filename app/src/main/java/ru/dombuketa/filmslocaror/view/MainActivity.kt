@@ -1,48 +1,37 @@
-package ru.dombuketa.filmslocaror
+package ru.dombuketa.filmslocaror.view
 
-import android.animation.Animator
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import com.airbnb.lottie.LottieAnimationView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
-import java.util.*
+import ru.dombuketa.filmslocaror.FilmsDataBase
+import ru.dombuketa.filmslocaror.R
+import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding
+import ru.dombuketa.filmslocaror.domain.Film
+import ru.dombuketa.filmslocaror.view.fragments.*
 
 class MainActivity : AppCompatActivity() {
-    val dataBase = FilmsDataBase().getFilmsDataBase()
+    //val dataBase = FilmsDataBase().getFilmsDataBase()
+    private lateinit var binding: ActivityMainBinding
     private var backPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initNavigationMenu()
 
-        val lottieAnimationView: LottieAnimationView = findViewById(R.id.lottie_anim)
-        lottieAnimationView.addAnimatorListener(object : Animator.AnimatorListener{
-            override fun onAnimationStart(p0: Animator?) {
-            }
-            override fun onAnimationEnd(p0: Animator?) {
-                lottieAnimationView.visibility = View.GONE
-                val fragmentHome = checkFragmentExistence("home")
-                changeFragment(fragmentHome?: HomeFragment(), "home")
-            }
-            override fun onAnimationCancel(p0: Animator?) {
-            }
-            override fun onAnimationRepeat(p0: Animator?) {
-            }
-        })
-        lottieAnimationView.playAnimation()
+        binding.lottieAnim.visibility = View.GONE
+        val fragmentHome = checkFragmentExistence("home")
+        changeFragment(fragmentHome?: HomeFragment(), "home")
+
     }
 
     fun initNavigationMenu() {
-        val bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottom_nav)
-        val main_container = findViewById<ConstraintLayout>(R.id.main_container)
-        val snackbar = Snackbar.make(main_container, "", Snackbar.LENGTH_SHORT)
-        bottomNavMenu.setOnNavigationItemSelectedListener() {
+        val snackbar = Snackbar.make(binding.mainContainer, "", Snackbar.LENGTH_SHORT)
+        binding.bottomNav.setOnNavigationItemSelectedListener() {
             when (it.itemId) {
                 R.id.home -> {
                     val tag = "home"
@@ -73,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun lanunchDetailsFragment(film:Film){
+    fun lanunchDetailsFragment(film: Film){
         //Создаем "посылку"
         val bundle = Bundle()
         //Кладем наш фильм в "посылку"

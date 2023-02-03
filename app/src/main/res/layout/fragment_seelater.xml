@@ -8,7 +8,7 @@
     android:visibility="invisible"
     tools:visibility="visible"
     android:background="@drawable/background_seelater"
-    tools:context=".SeelaterFragment">
+    tools:context=".view.fragments.SeelaterFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/seelater_recycler"

@@ -25,7 +25,7 @@
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/drawable/shape_roundcorner.xml" value="0.2435" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/activity_details.xml" value="0.2635416666666667" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/activity_main.xml" value="0.2740740740740741" />
-        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/film_item.xml" value="0.41203703703703703" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/film_item.xml" value="0.1" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/fragment_casts.xml" value="0.2109375" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/fragment_details.xml" value="0.25833333333333336" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/fragment_favorites.xml" value="0.25833333333333336" />
@@ -35,6 +35,7 @@
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/fragment_rv.xml" value="0.3723958333333333" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/fragment_seelater.xml" value="0.2109375" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/merge_home_screen_content.xml" value="0.190625" />
+        <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/rating_donut_view.xml" value="0.4401041666666667" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/layout/rv.xml" value="0.3723958333333333" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/menu/navigation_menu.xml" value="0.2109375" />
         <entry key="..\:/Dev/Android/Projects/FilmsLocaror/app/src/main/res/menu/settings_menu.xml" value="0.2625" />
