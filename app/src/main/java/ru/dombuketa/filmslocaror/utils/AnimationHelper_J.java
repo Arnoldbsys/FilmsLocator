@@ -14,6 +14,7 @@ import ru.dombuketa.filmslocaror.R;
 public class AnimationHelper_J {
     private static final int MENU_ITEMS_COUNT = 4;
     private static final int ANIM_DURATION = 300;
+    private static final int SIDES = 2;
     //В метод у нас приходит 3 параметра:
     //1 - наше rootView, которое одновременно является и контейнером
     //и объектом анимации
@@ -34,8 +35,8 @@ public class AnimationHelper_J {
                             public void run() {
                                 //Cуперсложная математика вычисления старта анимации
                                 //val itemCenter = rootView.width / menuItems * 2
-                                int itenCenter = rootView.getWidth() / (MENU_ITEMS_COUNT * 2);
-                                int step = (itenCenter * 2) * (position - 1) + itenCenter;
+                                int itenCenter = rootView.getWidth() / (MENU_ITEMS_COUNT * SIDES);
+                                int step = (itenCenter * SIDES) * (position - 1) + itenCenter;
 
                                 int x = step;
                                 int y = rootView.getTop() + rootView.getHeight();

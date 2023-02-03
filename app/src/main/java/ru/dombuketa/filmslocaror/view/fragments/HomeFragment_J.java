@@ -52,7 +52,8 @@ public class HomeFragment_J extends Fragment {
 
     private ViewModel getViewModel() {
         if (viewModel == null){
-            viewModel = ViewModelProvider.NewInstanceFactory.getInstance().create(HomeFragmentViewModel_J.class);
+            //viewModel = ViewModelProvider.NewInstanceFactory.getInstance().create(HomeFragmentViewModel_J.class);
+            viewModel = new ViewModelProvider(this).get(HomeFragmentViewModel_J.class);
         }
         return viewModel;
     }
