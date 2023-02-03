@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/film_item_container_height">
 
-        <ru.dombuketa.filmslocaror.view.customview.RatingDonutView
+        <ru.dombuketa.filmslocaror.view.customview.RatingDonutView_J
             android:id="@+id/rating_donut"
             android:layout_width="@dimen/rating_donut_view_width"
             android:layout_height="@dimen/rating_donut_view_height"
@@ -24,7 +24,7 @@
             app:textWhenProgressIsZero="нет"
             android:layout_gravity="bottom|left">
 
-        </ru.dombuketa.filmslocaror.view.customview.RatingDonutView>
+        </ru.dombuketa.filmslocaror.view.customview.RatingDonutView_J>
 
 
         <androidx.cardview.widget.CardView
