@@ -17,7 +17,7 @@ class HomeFragmentViewModel : ViewModel() {
             }
 
             override fun onFailure() {
-                println("!!! ошибка сервиса")
+                println("!!! ошибка сервиса from HomeFragVM")
             }
 
         })

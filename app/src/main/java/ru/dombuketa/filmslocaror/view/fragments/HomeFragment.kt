@@ -19,7 +19,6 @@ import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration
 import ru.dombuketa.filmslocaror.view.MainActivity
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
-import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J
 import java.util.*
 
 
@@ -126,7 +125,7 @@ class HomeFragment : Fragment() {
                                 }
 
                                 override fun onFailure() {
-
+                                    println("!!! Error connection from HomeFrag")
                                 }
 
                             })

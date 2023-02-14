@@ -2,6 +2,7 @@ package ru.dombuketa.filmslocaror
 
 import android.app.Application
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,9 +21,10 @@ class App : Application() {
         instance = this
         //Создаём кастомный клиент
         val  okHttpClient = OkHttpClient.Builder()
+            //.protocols(listOf(Protocol.HTTP_1_1))
             //Настраиваем таймауты для медленного интернета
-            .callTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30,TimeUnit.SECONDS)
+            .callTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60,TimeUnit.SECONDS)
             //Добавляем логгер
             .addInterceptor(HttpLoggingInterceptor().apply {
                 if (BuildConfig.DEBUG) {
