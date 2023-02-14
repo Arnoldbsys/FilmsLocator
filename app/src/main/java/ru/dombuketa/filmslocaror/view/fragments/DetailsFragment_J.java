@@ -10,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+
 import ru.dombuketa.filmslocaror.R;
+import ru.dombuketa.filmslocaror.data.ApiConstants;
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding;
 import ru.dombuketa.filmslocaror.domain.Film;
 
@@ -78,7 +81,12 @@ public class DetailsFragment_J extends Fragment {
             }
         });
 
-        binding.detailsPoster.setImageResource(film.getPoster());
+        //binding.detailsPoster.setImageResource(film.getPoster());
+        Glide.with(this)
+                .load(ApiConstants.IMAGES_URL + "w780" + film.getPoster())
+                .centerCrop()
+                .into(binding.detailsPoster);
+
         binding.detailsToolbar.setTitle(film.getTitle());
         binding.detailsDescription.setText(film.getDescription());
 

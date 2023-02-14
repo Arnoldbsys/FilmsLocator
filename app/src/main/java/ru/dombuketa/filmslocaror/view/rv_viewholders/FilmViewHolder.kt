@@ -2,6 +2,7 @@ package ru.dombuketa.filmslocaror.view.rv_viewholders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import ru.dombuketa.filmslocaror.data.ApiConstants
 import ru.dombuketa.filmslocaror.view.customview.RatingDonutView
 import ru.dombuketa.filmslocaror.databinding.FilmItemBinding
 import ru.dombuketa.filmslocaror.domain.Film
@@ -15,7 +16,7 @@ class FilmViewHolder(var binding: FilmItemBinding) : RecyclerView.ViewHolder(bin
     fun bind(film: Film){
         binding.film = film
         Glide.with(itemView)
-            .load(film.poster)
+            .load(ApiConstants.IMAGES_URL + "w342/" + film.poster)
             .centerCrop()
             .into(binding.poster)
         //Устанавливаем рэйтинг

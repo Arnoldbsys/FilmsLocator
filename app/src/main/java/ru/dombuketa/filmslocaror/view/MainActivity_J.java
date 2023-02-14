@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Arrays;
 import java.util.List;
 
+import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.FilmsDataBase_J;
 import ru.dombuketa.filmslocaror.R;
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding;
@@ -32,7 +33,7 @@ public class MainActivity_J extends AppCompatActivity {
     private static final int TIME_INTERVAL = 2000;
     private long backPressed = 0L;
 
-    private List<Film> dataBase = new FilmsDataBase_J().getFilmsDataBase();
+    private List<Film> dataBase = App_J.getInstance().repo.filmsDataBase; // new FilmsDataBase_J().getFilmsDataBase();
     public List<Film> getDataBase() {
         return dataBase;
     }

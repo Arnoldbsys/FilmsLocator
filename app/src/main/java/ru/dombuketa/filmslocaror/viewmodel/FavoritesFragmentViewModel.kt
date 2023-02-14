@@ -12,7 +12,7 @@ class FavoritesFragmentViewModel : ViewModel() {
 
     init {
         //TODO init interactor
-        val films = interactor.getFilmsDB() //.filter { it.isInFavorites == true }
-        filmsListLiveData.postValue(films)
+        //val films = interactor.getFilmsDB() //.filter { it.isInFavorites == true }
+        //filmsListLiveData.postValue(films)
     }
 }

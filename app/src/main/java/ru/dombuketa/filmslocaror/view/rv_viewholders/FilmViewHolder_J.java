@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import ru.dombuketa.filmslocaror.R;
+import ru.dombuketa.filmslocaror.data.ApiConstants;
 import ru.dombuketa.filmslocaror.view.customview.RatingDonutView_J;
 import ru.dombuketa.filmslocaror.databinding.FilmItemBinding;
 import ru.dombuketa.filmslocaror.domain.Film;
@@ -33,7 +34,7 @@ public class FilmViewHolder_J extends RecyclerView.ViewHolder {
         //poster.setImageResource(film.getPoster());   // без Glide
         //Указываем контейнер, в котором будет "жить" наша картинка
         Glide.with(itemView)
-            .load(film.getPoster())
+            .load(ApiConstants.IMAGES_URL + "w342" + film.getPoster()) // .load(film.getPoster())
             .centerCrop()
             .into(binding.poster);
         //binding.description.setText(film.getDescription());

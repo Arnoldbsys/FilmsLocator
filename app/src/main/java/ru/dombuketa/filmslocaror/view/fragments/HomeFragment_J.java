@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter_J;
 import ru.dombuketa.filmslocaror.view.MainActivity_J;
 import ru.dombuketa.filmslocaror.R;
@@ -37,10 +39,17 @@ import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J;
 public class HomeFragment_J extends Fragment {
     private FragmentHomeBinding binding;
     private ViewModel viewModel; //  = ViewModelProvider.NewInstanceFactory.getInstance().create(HomrFragmentViewModel_J.class);
+    private static final int FILMS_ITEM_SHIFT = 4;
+    private static final int FILMS_PER_PAGE = 20;
+    private int pageNumber = 1;
+    private int lastVisibleItem = 0;
+    LinearLayoutManager layoutManager;
+
 
     private FilmListRecyclerAdapter_J filmsAdapter;
 
     private List<Film> filmsDataBase = new ArrayList<Film>();
+
     public void setFilmsDataBase(List<Film> value) {
         //Если придет такое же значение, то мы выходим из метода
         if (filmsDataBase == value) return;
@@ -161,11 +170,12 @@ public class HomeFragment_J extends Fragment {
         main_recycler.setAdapter(filmsAdapter); //Присваиваем адаптер
         //Присвои layoutmanager
         main_recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        layoutManager = ((LinearLayoutManager)main_recycler.getLayoutManager());
+
         //Применяем декоратор для отступов
         main_recycler.addItemDecoration(new TopSpacingItemDecoration_J(8));
         //Кладем нашу БД в RV
         //filmsAdapter.addItems(filmsDataBase);
-
         main_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -174,14 +184,32 @@ public class HomeFragment_J extends Fragment {
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                SearchView search_view = requireActivity().findViewById(R.id.search_view);
-                if (dy < 0)
-                    //search_view.
-                    Toast.makeText(requireActivity(), "dy < 0", Toast.LENGTH_SHORT).show();
-                else if (dy > 0)
-                    Toast.makeText(requireActivity(), "dy > 0", Toast.LENGTH_SHORT).show();
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && layoutManager.findLastVisibleItemPosition() > lastVisibleItem) // Прокрутка вниз
+                {
+                    int totalItemCount = layoutManager.getItemCount();
+                    lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                    System.out.println("!!! " + " totalItemCount=" + totalItemCount + " lastVisiblesItems=" + lastVisibleItem);
+
+                    if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1) {
+                        App_J.getInstance().interactor.getFilmsFromApi(pageNumber + 1, new HomeFragmentViewModel_J.IApiCallback() {
+                            @Override
+                            public void onSuc(List<Film> films) {
+                                List<Film> newfilmsDataBase = ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.getValue();
+                                newfilmsDataBase.addAll(films);
+                                ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.postValue(newfilmsDataBase);
+                                filmsAdapter.addItems(newfilmsDataBase);
+                                pageNumber++;
+                            }
+                            @Override
+                            public void onFal() {
+
+                            }
+                        });
+                    }
+                }
             }
-                //super.onScrolled(recyclerView, dx, dy);
 
         });
 

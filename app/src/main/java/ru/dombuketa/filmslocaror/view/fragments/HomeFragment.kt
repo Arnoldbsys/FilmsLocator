@@ -1,31 +1,36 @@
 package ru.dombuketa.filmslocaror.view.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.databinding.ObservableBoolean
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
-import ru.dombuketa.filmslocaror.view.MainActivity
-import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration
+import androidx.recyclerview.widget.RecyclerView
+import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
 import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.utils.AnimationHelper
+import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration
+import ru.dombuketa.filmslocaror.view.MainActivity
+import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
+import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J
 import java.util.*
 
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
+    private var pageNumber = 1
+    private var lastVisibleItem = 0
 
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
     }
-
     private var filmsDataBase = listOf<Film>()
     //Используем backing field
     set(value){
@@ -97,12 +102,46 @@ class HomeFragment : Fragment() {
             //Присваиваем адаптер
             adapter = filmsAdapter
             //Присвои layoutmanager
-            layoutManager= LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(requireContext())
             //Применяем декоратор для отступов
             val decorator = TopSpacingItemDecoration(8)
             addItemDecoration(decorator)
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                }
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if ( dy > 0 && (layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > lastVisibleItem) { // Прокрутка вниз.
+                        lastVisibleItem = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                        if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1){
+                            App.instance.interactor.getFilmsFromAPI(pageNumber + 1, object : HomeFragmentViewModel.ApiCallback{
+                                override fun onSuccess(films: List<Film>) {
+                                    val newfilmsDataBase: MutableList<Film> = viewModel.filmsListLiveData.value as MutableList<Film>
+                                    newfilmsDataBase.addAll(films)
+                                    viewModel.filmsListLiveData.postValue(newfilmsDataBase)
+                                    filmsAdapter.addItems(newfilmsDataBase)
+                                    pageNumber++
+                                }
+
+                                override fun onFailure() {
+
+                                }
+
+                            })
+                        }
+                    }
+
+                }
+
+            })
         }
-        //filmsAdapter.addItems((requireActivity() as MainActivity).dataBase)
+
     }
 
+    companion object {
+        const val FILMS_ITEM_SHIFT: Int = 4
+        const val FILMS_PER_PAGE: Int = 20
+    }
 }
