@@ -13,6 +13,7 @@ import ru.dombuketa.filmslocaror.domain.Interactor
 import java.util.concurrent.TimeUnit
 
 class App : Application() {
+
     lateinit var repo: MainRepository
     lateinit var interactor: Interactor
     override fun onCreate() {
@@ -21,10 +22,9 @@ class App : Application() {
         instance = this
         //Создаём кастомный клиент
         val  okHttpClient = OkHttpClient.Builder()
-            //.protocols(listOf(Protocol.HTTP_1_1))
             //Настраиваем таймауты для медленного интернета
-            .callTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60,TimeUnit.SECONDS)
+            .callTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
             //Добавляем логгер
             .addInterceptor(HttpLoggingInterceptor().apply {
                 if (BuildConfig.DEBUG) {
@@ -47,11 +47,6 @@ class App : Application() {
         repo = MainRepository()
         //Инициализируем интерактор
         interactor = Interactor(repo, retrofitService)
-
-        //Инициализируем интерактор
-        //interactor = Interactor(repo)
-
-
     }
 
     companion object{
@@ -59,5 +54,6 @@ class App : Application() {
         lateinit var instance: App
         //Приватный сеттер, чтобы нельзя было в эту переменную присвоить что-либо другое
         private set
+        const val NETWORKTIMEOUT = 60L
     }
 }

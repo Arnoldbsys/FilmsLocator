@@ -14,6 +14,7 @@ import ru.dombuketa.filmslocaror.data.MainRepository_J;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
 
 public class App_J extends Application {
+    private static final long NETWORKTIMEOUT = 60L;
     private static App_J instance;
     public static App_J getInstance() {
         return instance;
@@ -33,8 +34,8 @@ public class App_J extends Application {
         if (BuildConfig.DEBUG) logI.setLevel(HttpLoggingInterceptor.Level.BASIC);
         //Создаём кастомный клиент
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .callTimeout(30, TimeUnit.SECONDS) //Настраиваем таймауты для медленного интернета
-                .readTimeout(30, TimeUnit.SECONDS)
+                .callTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS) //Настраиваем таймауты для медленного интернета
+                .readTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(logI)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
