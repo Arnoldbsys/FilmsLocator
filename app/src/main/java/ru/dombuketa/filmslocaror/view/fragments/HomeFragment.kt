@@ -14,18 +14,22 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
 import ru.dombuketa.filmslocaror.domain.Film
+import ru.dombuketa.filmslocaror.domain.Interactor
 import ru.dombuketa.filmslocaror.utils.AnimationHelper
 import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration
 import ru.dombuketa.filmslocaror.view.MainActivity
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
 import java.util.*
+import javax.inject.Inject
 
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var pageNumber = 1
     private var lastVisibleItem = 0
+    @Inject
+    lateinit var interactor: Interactor
 
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
@@ -48,7 +52,7 @@ class HomeFragment : Fragment() {
         viewModel.filmsListLiveData.observe(viewLifecycleOwner, Observer<List<Film>>{
             filmsDataBase = it
         })
-
+        App.instance.dagger.injectt(this)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root;
     }
@@ -115,7 +119,7 @@ class HomeFragment : Fragment() {
                     if ( dy > 0 && (layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > lastVisibleItem) { // Прокрутка вниз.
                         lastVisibleItem = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                         if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1){
-                            App.instance.interactor.getFilmsFromAPI(pageNumber + 1, object : HomeFragmentViewModel.ApiCallback{
+                            interactor.getFilmsFromAPI(pageNumber + 1, object : HomeFragmentViewModel.ApiCallback{
                                 override fun onSuccess(films: List<Film>) {
                                     val newfilmsDataBase: MutableList<Film> = viewModel.filmsListLiveData.value as MutableList<Film>
                                     newfilmsDataBase.addAll(films)

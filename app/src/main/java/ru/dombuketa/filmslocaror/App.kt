@@ -9,44 +9,47 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.dombuketa.filmslocaror.data.ApiConstants
 import ru.dombuketa.filmslocaror.data.ITmdbApi
 import ru.dombuketa.filmslocaror.data.MainRepository
+import ru.dombuketa.filmslocaror.di.DaggerIAppComponent
+import ru.dombuketa.filmslocaror.di.IAppComponent
 import ru.dombuketa.filmslocaror.domain.Interactor
 import java.util.concurrent.TimeUnit
 
 class App : Application() {
-
-    lateinit var repo: MainRepository
-    lateinit var interactor: Interactor
+    lateinit var dagger: IAppComponent
+//    lateinit var repo: MainRepository
+//    lateinit var interactor: Interactor
     override fun onCreate() {
         super.onCreate()
         //Инициализируем экземпляр App, через который будем получать доступ к остальным переменным
         instance = this
         //Создаём кастомный клиент
-        val  okHttpClient = OkHttpClient.Builder()
-            //Настраиваем таймауты для медленного интернета
-            .callTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
-            //Добавляем логгер
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                if (BuildConfig.DEBUG) {
-                    level = HttpLoggingInterceptor.Level.BASIC
-                }
-            })
-            .build()
+//        val  okHttpClient = OkHttpClient.Builder()
+//            //Настраиваем таймауты для медленного интернета
+//            .callTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
+//            .readTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
+//            //Добавляем логгер
+//            .addInterceptor(HttpLoggingInterceptor().apply {
+//                if (BuildConfig.DEBUG) {
+//                    level = HttpLoggingInterceptor.Level.BASIC
+//                }
+//            })
+//            .build()
         //Создаем Ретрофит
-        val retrofit = Retrofit.Builder()
-            //Указываем базовый URL из констант
-            .baseUrl(ApiConstants.BASE_URL)
-            //Добавляем конвертер
-            .addConverterFactory(GsonConverterFactory.create())
-            //Добавляем кастомный клиент
-            .client(okHttpClient)
-            .build()
+//        val retrofit = Retrofit.Builder()
+//            //Указываем базовый URL из констант
+//            .baseUrl(ApiConstants.BASE_URL)
+//            //Добавляем конвертер
+//            .addConverterFactory(GsonConverterFactory.create())
+//            //Добавляем кастомный клиент
+//            .client(okHttpClient)
+//            .build()
         //Создаем сам сервис с методами для запросов
-        val retrofitService = retrofit.create(ITmdbApi::class.java)
+//        val retrofitService = retrofit.create(ITmdbApi::class.java)
         //Инициализируем репозиторий
-        repo = MainRepository()
+//        repo = MainRepository()
         //Инициализируем интерактор
-        interactor = Interactor(repo, retrofitService)
+//        interactor = Interactor(repo, retrofitService)
+        dagger = DaggerIAppComponent.create()
     }
 
     companion object{

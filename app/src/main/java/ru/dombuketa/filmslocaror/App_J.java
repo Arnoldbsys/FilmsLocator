@@ -11,17 +11,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.dombuketa.filmslocaror.data.ApiConstants;
 import ru.dombuketa.filmslocaror.data.ITmdbApi_J;
 import ru.dombuketa.filmslocaror.data.MainRepository_J;
+import ru.dombuketa.filmslocaror.di.DaggerIAppComponent_J;
+import ru.dombuketa.filmslocaror.di.IAppComponent_J;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
 
 public class App_J extends Application {
-    private static final long NETWORKTIMEOUT = 60L;
+    public static final long NETWORKTIMEOUT = 60L;
     private static App_J instance;
     public static App_J getInstance() {
         return instance;
     }
 
-    public MainRepository_J repo;
-    public Interactor_J interactor;
+//    public MainRepository_J repo;
+//    public Interactor_J interactor;
+    public IAppComponent_J daggerj;
 
     @Override
     public void onCreate() {
@@ -30,25 +33,26 @@ public class App_J extends Application {
         instance = this;
         // Работа с сетью
         //Добавляем логгер
-        HttpLoggingInterceptor logI = new HttpLoggingInterceptor();
-        if (BuildConfig.DEBUG) logI.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        //Создаём кастомный клиент
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .callTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS) //Настраиваем таймауты для медленного интернета
-                .readTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
-                .addInterceptor(logI)
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiConstants.BASE_URL) //Указываем базовый URL из констант
-                .addConverterFactory(GsonConverterFactory.create()) //Добавляем конвертер
-                .client(okHttpClient) //Добавляем кастомный клиент
-                .build();
-        ITmdbApi_J retrofitService = retrofit.create(ITmdbApi_J.class);
+//        HttpLoggingInterceptor logI = new HttpLoggingInterceptor();
+//        if (BuildConfig.DEBUG) logI.setLevel(HttpLoggingInterceptor.Level.BASIC);
+//        //Создаём кастомный клиент
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//                .callTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS) //Настраиваем таймауты для медленного интернета
+//                .readTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
+//                .addInterceptor(logI)
+//                .build();
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(ApiConstants.BASE_URL) //Указываем базовый URL из констант
+//                .addConverterFactory(GsonConverterFactory.create()) //Добавляем конвертер
+//                .client(okHttpClient) //Добавляем кастомный клиент
+//                .build();
+//        ITmdbApi_J retrofitService = retrofit.create(ITmdbApi_J.class);
 
         //Инициализируем репозиторий
-        repo = new MainRepository_J();
+//        repo = new MainRepository_J();
         //Инициализируем интерактор
         //interactor = new Interactor_J(repo); // локальная БД
-        interactor = new Interactor_J(repo, retrofitService);
+//        interactor = new Interactor_J(repo, retrofitService);
+        daggerj = DaggerIAppComponent_J.create();
     }
 }

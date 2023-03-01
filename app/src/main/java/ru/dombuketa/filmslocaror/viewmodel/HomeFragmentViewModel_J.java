@@ -6,15 +6,20 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.domain.Film;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
 
 public class HomeFragmentViewModel_J extends ViewModel {
     public MutableLiveData<List<Film>> filmsListLiveData = new MutableLiveData<List<Film>>();
-    private Interactor_J interactor = App_J.getInstance().interactor;
+    //private Interactor_J interactor = App_J.getInstance().interactor;
+    @Inject
+    public Interactor_J interactor;
 
     public HomeFragmentViewModel_J() {
+        App_J.getInstance().daggerj.injectj(this);
         // для локальной БД
         //List<Film> films = interactor.getFilmsDB();
         //filmsListLiveData.postValue(films);

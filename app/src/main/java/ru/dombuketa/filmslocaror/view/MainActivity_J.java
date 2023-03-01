@@ -33,7 +33,7 @@ public class MainActivity_J extends AppCompatActivity {
     private static final int TIME_INTERVAL = 2000;
     private long backPressed = 0L;
 
-    private List<Film> dataBase = App_J.getInstance().repo.filmsDataBase; // new FilmsDataBase_J().getFilmsDataBase();
+    private List<Film> dataBase = null; //App_J.getInstance().repo.filmsDataBase; // new FilmsDataBase_J().getFilmsDataBase();
     public List<Film> getDataBase() {
         return dataBase;
     }

@@ -25,7 +25,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import ru.dombuketa.filmslocaror.App_J;
+import ru.dombuketa.filmslocaror.domain.Interactor_J;
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter_J;
 import ru.dombuketa.filmslocaror.view.MainActivity_J;
 import ru.dombuketa.filmslocaror.R;
@@ -37,6 +40,8 @@ import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J;
 
 
 public class HomeFragment_J extends Fragment {
+    @Inject
+    public Interactor_J interactor;
     private FragmentHomeBinding binding;
     private ViewModel viewModel; //  = ViewModelProvider.NewInstanceFactory.getInstance().create(HomrFragmentViewModel_J.class);
     private static final int FILMS_ITEM_SHIFT = 4;
@@ -74,6 +79,7 @@ public class HomeFragment_J extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        App_J.getInstance().daggerj.injectj(this);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         ((HomeFragmentViewModel_J)getViewModel()).filmsListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Film>>() {
             @Override
@@ -193,7 +199,7 @@ public class HomeFragment_J extends Fragment {
                     System.out.println("!!! " + " totalItemCount=" + totalItemCount + " lastVisiblesItems=" + lastVisibleItem);
 
                     if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1) {
-                        App_J.getInstance().interactor.getFilmsFromApi(pageNumber + 1, new HomeFragmentViewModel_J.IApiCallback() {
+                        interactor.getFilmsFromApi(pageNumber + 1, new HomeFragmentViewModel_J.IApiCallback() {
                             @Override
                             public void onSuc(List<Film> films) {
                                 List<Film> newfilmsDataBase = ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.getValue();
