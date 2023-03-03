@@ -15,6 +15,7 @@ object AnimationHelper {
     //Это переменная для того, чтобы круг проявления расходился именно от иконки меню навигации
     private const val MENU_ITEMS_COUNT = 4
     private const val ANIM_DURATION = 500L
+    private const val SIDES = 2
     //В метод у нас приходит 3 параметра:
     //1 - наше rootView, которое одновременно является и контейнером
     //и объектом анимации
@@ -30,8 +31,8 @@ object AnimationHelper {
                     //Возвращаемся в главный тред, чтобы выполнить анимацию
                     activity.runOnUiThread(){
                         //Cуперсложная математика вычисления старта анимации
-                        val itemCenter = rootView.width / (MENU_ITEMS_COUNT * 2)
-                        val step = (itemCenter * 2) * (position - 1) + itemCenter
+                        val itemCenter = rootView.width / (MENU_ITEMS_COUNT * SIDES)
+                        val step = (itemCenter * SIDES) * (position - 1) + itemCenter
 
                         val x: Int = step
                         val y: Int = rootView.y.roundToInt() + rootView.height

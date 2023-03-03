@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.dombuketa.filmslocaror.FilmsDataBase
@@ -21,7 +22,8 @@ class FavoritesFragment : Fragment() {
     private lateinit var binding: FragmentFavoritesBinding
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private val viewModel by lazy {
-        ViewModelProvider.NewInstanceFactory().create(FavoritesFragmentViewModel::class.java)
+        //ViewModelProvider.NewInstanceFactory().create(FavoritesFragmentViewModel::class.java)
+        ViewModelProvider(this).get(FavoritesFragmentViewModel::class.java)
     }
     private var filmsDataBase = listOf<Film>()
     set(value){
@@ -30,12 +32,12 @@ class FavoritesFragment : Fragment() {
         filmsAdapter.addItems(field)
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
-        viewModel.filmsListLiveData.observe(viewLifecycleOwner, Observer<List<Film>>{
+        viewModel.filmsListLiveData.observe(viewLifecycleOwner) {
             filmsDataBase = it
-        })
+        }
+
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         return binding.root;
     }

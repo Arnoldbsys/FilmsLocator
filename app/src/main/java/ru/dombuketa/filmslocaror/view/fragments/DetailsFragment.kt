@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import ru.dombuketa.filmslocaror.R
+import ru.dombuketa.filmslocaror.data.ApiConstants
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding
 import ru.dombuketa.filmslocaror.domain.Film
 
@@ -42,7 +44,10 @@ class DetailsFragment : Fragment() {
 
 
         binding.detailsToolbar.title = film.title
-        binding.detailsPoster.setImageResource(film.poster)
+        Glide.with(this)
+            .load(ApiConstants.IMAGES_URL + "w780" + film.poster)
+            .centerCrop()
+            .into(binding.detailsPoster)
         binding.detailsDescription.text = film.description
 
         binding.detailsFabShare.setOnClickListener{
