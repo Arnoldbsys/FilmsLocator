@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import ru.dombuketa.filmslocaror.R;
 
 public class AnimationHelper_J {
-    private static final int MENU_ITEMS_COUNT = 4;
+    private static final int MENU_ITEMS_COUNT = 5;
     private static final int ANIM_DURATION = 300;
     private static final int SIDES = 2;
     //В метод у нас приходит 3 параметра:

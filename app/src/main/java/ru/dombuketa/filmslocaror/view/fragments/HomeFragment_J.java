@@ -1,5 +1,7 @@
 package ru.dombuketa.filmslocaror.view.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import ru.dombuketa.filmslocaror.App_J;
+import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter_J;
 import ru.dombuketa.filmslocaror.view.MainActivity_J;
@@ -40,16 +44,14 @@ import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J;
 
 
 public class HomeFragment_J extends Fragment {
-    @Inject
-    public Interactor_J interactor;
+    @Inject public Interactor_J interactor;
     private FragmentHomeBinding binding;
-    private ViewModel viewModel; //  = ViewModelProvider.NewInstanceFactory.getInstance().create(HomrFragmentViewModel_J.class);
+    private HomeFragmentViewModel_J viewModel; //  = ViewModelProvider.NewInstanceFactory.getInstance().create(HomrFragmentViewModel_J.class);
     private static final int FILMS_ITEM_SHIFT = 4;
     private static final int FILMS_PER_PAGE = 20;
     private int pageNumber = 1;
     private int lastVisibleItem = 0;
     LinearLayoutManager layoutManager;
-
 
     private FilmListRecyclerAdapter_J filmsAdapter;
 
@@ -64,7 +66,7 @@ public class HomeFragment_J extends Fragment {
         filmsAdapter.addItems(filmsDataBase);
     }
 
-    private ViewModel getViewModel() {
+    private HomeFragmentViewModel_J getViewModel() {
         if (viewModel == null){
             //viewModel = ViewModelProvider.NewInstanceFactory.getInstance().create(HomeFragmentViewModel_J.class);
             viewModel = new ViewModelProvider(this).get(HomeFragmentViewModel_J.class);
@@ -74,20 +76,33 @@ public class HomeFragment_J extends Fragment {
 
 
     public HomeFragment_J() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         App_J.getInstance().daggerj.injectj(this);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        ((HomeFragmentViewModel_J)getViewModel()).filmsListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Film>>() {
+
+        getViewModel().filmsListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Film>>() {
             @Override
             public void onChanged(List<Film> films) {
                 //filmsDataBase = films;
+                //Кладем нашу БД в RV
                 setFilmsDataBase(films);
             }
         });
+
+/*//--38*         getViewModel().currentCategory.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                filmsAdapter.clearItems();
+                //Делаем новый запрос фильмов на сервер
+                viewModel.getFilms();
+                //Убираем крутящееся колечко
+            }
+        });*/
+
+
         return binding.getRoot();
     }
 
@@ -114,8 +129,24 @@ public class HomeFragment_J extends Fragment {
         initSearchView();
         initHomeRV();
         AnimationHelper_J.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(),1);
-
+        initPullToRefresh();
     }
+
+
+
+    private void initPullToRefresh(){
+        //Вешаем слушатель, чтобы вызвался pull to refresh
+        binding.pullToRefresh.setOnRefreshListener(() -> {
+            //Чистим адаптер(items нужно будет сделать паблик или создать для этого публичный метод)
+            filmsAdapter.clearItems();
+            //Делаем новый запрос фильмов на сервер
+            viewModel.getFilms();
+            //Убираем крутящееся колечко
+            binding.pullToRefresh.setRefreshing(false);
+        });
+    }
+
+
 
     private void initSearchView() {
         SearchView search_view = requireActivity().findViewById(R.id.search_view);

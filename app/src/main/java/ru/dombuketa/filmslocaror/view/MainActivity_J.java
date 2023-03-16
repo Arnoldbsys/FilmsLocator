@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.animation.Animator;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ import java.util.List;
 import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.FilmsDataBase_J;
 import ru.dombuketa.filmslocaror.R;
+import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding;
 import ru.dombuketa.filmslocaror.domain.Film;
 import ru.dombuketa.filmslocaror.view.fragments.CastsFragment_J;
@@ -27,6 +30,7 @@ import ru.dombuketa.filmslocaror.view.fragments.DetailsFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.FavoritesFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.HomeFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.SeelaterFragment_J;
+import ru.dombuketa.filmslocaror.view.fragments.SettingsFragment_J;
 
 public class MainActivity_J extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -37,6 +41,7 @@ public class MainActivity_J extends AppCompatActivity {
     public List<Film> getDataBase() {
         return dataBase;
     }
+
 
 
     @Override
@@ -72,7 +77,11 @@ public class MainActivity_J extends AppCompatActivity {
         lottieAnimationView.playAnimation();
         //initTopBar();
         //setSupportActionBar(findViewById(R.id.app_bar2));
+
+
     }
+
+
 
 
     public void launchDetailsFragment(Film film){
@@ -142,6 +151,11 @@ public class MainActivity_J extends AppCompatActivity {
                         tag = "casts";
                         fragment = checkFragmentExistence(tag);
                         changeFragment( (fragment == null) ? new CastsFragment_J() : fragment, tag);
+                        return true;
+                    case (R.id.settings):
+                        tag = "settings";
+                        fragment = checkFragmentExistence(tag);
+                        changeFragment( (fragment == null) ? new SettingsFragment_J() : fragment, tag);
                         return true;
                     default:
                         return false;

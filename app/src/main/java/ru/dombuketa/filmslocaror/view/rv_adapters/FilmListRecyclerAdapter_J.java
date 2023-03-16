@@ -77,7 +77,9 @@ public class FilmListRecyclerAdapter_J extends RecyclerView.Adapter {
         items.addAll(list);
         notifyDataSetChanged();
     }
-
+    public void clearItems(){
+        items.clear();
+    }
     //Интерфейс для обработки кликов
     public interface OnItemClickListener {
         void click(Film film);
