@@ -11,6 +11,9 @@ import ru.dombuketa.filmslocaror.data.ITmdbApi
 import ru.dombuketa.filmslocaror.data.MainRepository
 import ru.dombuketa.filmslocaror.di.DaggerIAppComponent
 import ru.dombuketa.filmslocaror.di.IAppComponent
+import ru.dombuketa.filmslocaror.di.modules.DatabaseModule
+import ru.dombuketa.filmslocaror.di.modules.DomainModule
+import ru.dombuketa.filmslocaror.di.modules.RemoteModule
 import ru.dombuketa.filmslocaror.domain.Interactor
 import java.util.concurrent.TimeUnit
 
@@ -49,7 +52,11 @@ class App : Application() {
 //        repo = MainRepository()
         //Инициализируем интерактор
 //        interactor = Interactor(repo, retrofitService)
-        dagger = DaggerIAppComponent.create()
+        dagger = DaggerIAppComponent.builder()
+            .remoteModule(RemoteModule())
+            .databaseModule(DatabaseModule())
+            .domainModule(DomainModule(this))
+            .build()
     }
 
     companion object{

@@ -6,6 +6,7 @@ import ru.dombuketa.filmslocaror.di.modules.DomainModule
 import ru.dombuketa.filmslocaror.di.modules.RemoteModule
 import ru.dombuketa.filmslocaror.view.fragments.HomeFragment
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
+import ru.dombuketa.filmslocaror.viewmodel.SettingsFragmentViewModel
 import javax.inject.Singleton
 
 @Singleton
@@ -14,4 +15,7 @@ interface IAppComponent {
     //метод для того, чтобы появилась внедрять зависимости в HomeFragmentViewModel
     fun injectt(homeFragmentViewModel: HomeFragmentViewModel)
     fun injectt(homeFragment: HomeFragment)
+
+    //метод для того, чтобы появилась возможность внедрять зависимости в SettingsFragmentViewModel
+    fun injectt(settingsFragmentViewModel: SettingsFragmentViewModel)
 }
