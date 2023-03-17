@@ -8,9 +8,6 @@ import javax.inject.Singleton
 
 @Module
 class DatabaseModule{
-//    @Binds
-
-//    abstract fun bindRepository(mainRepository: MainRepository) : IRepository
 
     @Provides
     @Singleton

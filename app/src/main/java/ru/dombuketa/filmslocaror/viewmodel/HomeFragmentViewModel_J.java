@@ -18,11 +18,13 @@ import ru.dombuketa.filmslocaror.domain.Interactor_J;
 public class HomeFragmentViewModel_J extends ViewModel {
     public MutableLiveData<List<Film>> filmsListLiveData = new MutableLiveData<List<Film>>();
 
-    //--38* public MutableLiveData<String> currentCategory = new MutableLiveData<>();
 
     //private Interactor_J interactor = App_J.getInstance().interactor;
     @Inject public Interactor_J interactor;
-    //--38* @Inject public PreferenceProvider_J prefs;
+    //38*
+    public MutableLiveData<String> currentCategory = new MutableLiveData<>();
+    @Inject public PreferenceProvider_J prefs;
+    //38*_
 
 
     public HomeFragmentViewModel_J() {
@@ -32,15 +34,14 @@ public class HomeFragmentViewModel_J extends ViewModel {
         //filmsListLiveData.postValue(films);
         // По сети в APP_J создать интерактор с другим конструктором
         getFilms();
-/*//--38*
+        //38*
         prefs.currentCategory.observeForever(new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 currentCategory.setValue(prefs.currentCategory.getValue());
             }
         });
-*/
-
+        //38*_
 
     }
 

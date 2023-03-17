@@ -92,16 +92,16 @@ public class HomeFragment_J extends Fragment {
             }
         });
 
-/*//--38*         getViewModel().currentCategory.observe(getViewLifecycleOwner(), new Observer<String>() {
+//38*
+        getViewModel().currentCategory.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 filmsAdapter.clearItems();
                 //Делаем новый запрос фильмов на сервер
                 viewModel.getFilms();
-                //Убираем крутящееся колечко
             }
-        });*/
-
+        });
+//38*_
 
         return binding.getRoot();
     }

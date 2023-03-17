@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,6 +53,12 @@ class HomeFragment : Fragment() {
             filmsDataBase = it
             filmsAdapter.addItems(it)
         })
+        //38*
+        viewModel.currentCategory.observe(viewLifecycleOwner, {
+            filmsAdapter.items.clear()
+            viewModel.getFilms()
+        })
+        //38*_
 
         App.instance.dagger.injectt(this)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
