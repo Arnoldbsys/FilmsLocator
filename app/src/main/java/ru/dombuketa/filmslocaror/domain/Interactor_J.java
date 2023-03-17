@@ -1,5 +1,8 @@
 package ru.dombuketa.filmslocaror.domain;
 
+import android.os.Build;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,8 +37,13 @@ public class Interactor_J {
         retrofitService.getFilms(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page).enqueue(new Callback<TmdbResultsDTO>() {
             @Override
             public void onResponse(Call<TmdbResultsDTO> call, Response<TmdbResultsDTO> response) {
+                List<Film> list = new ArrayList<>();
                 if (response.body() != null)
-                    callback.onSuc(new ConverterFilm_J().convertApiListToDTOList(response.body().getTmdbFilms()));
+                    list = ConverterFilm_J.convertApiListToDTOList(response.body().getTmdbFilms());
+                    for (Film film : list) {
+                        repo.putToDB(film);
+                    }
+                callback.onSuc(list);
             }
 
             @Override
@@ -49,9 +57,14 @@ public class Interactor_J {
     public void saveDefaultCategoryToPreferences(String category){
         preferences_j.saveDefaultCategory(category);
     }
+
     //Метод для получения настроек
     public String getDefaultCategoryFromPreferences(){
         return preferences_j.getDefaultCategory();
     }
 
+    //И вот такой метод у нас будет дергать метод репозитория, чтобы тот забрал для нас фильмы из БД
+    List<Film> getFilmsFromDB(){
+        return repo.getALLFromDB();
+    }
 }

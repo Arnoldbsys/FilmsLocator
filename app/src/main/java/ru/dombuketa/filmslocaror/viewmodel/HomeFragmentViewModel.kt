@@ -30,11 +30,13 @@ class HomeFragmentViewModel : ViewModel() {
     fun getFilms(){
         interactor.getFilmsFromAPI(1, object : ApiCallback{
             override fun onSuccess(films: List<Film>) {
+                println("!!! HomeFragVM - данные из сети")
                 filmsListLiveData.postValue(films)
             }
 
             override fun onFailure() {
-                println("!!! ошибка сервиса from HomeFragVM")
+                println("!!! HomeFragVM - ошибка доступа к сети - данные из DB")
+                filmsListLiveData.postValue(interactor.getFilmsFromDB())
             }
 
         })

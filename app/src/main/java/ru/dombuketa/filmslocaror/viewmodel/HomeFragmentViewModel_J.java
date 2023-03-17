@@ -49,11 +49,13 @@ public class HomeFragmentViewModel_J extends ViewModel {
         interactor.getFilmsFromApi(1, new IApiCallback() {
             @Override
             public void onSuc(List<Film> films) {
+                System.out.println("!!!J HomeFragVM - данные из сети");
                 filmsListLiveData.postValue(films);
             }
             @Override
             public void onFal() {
-                System.out.println("!!! ошибка сервиса");
+                System.out.println("!!!J HomeFragVM - ошибка доступа к сети - данные из DB");
+                filmsListLiveData.postValue(interactor.getFilmsDB());
             }
         });
     }

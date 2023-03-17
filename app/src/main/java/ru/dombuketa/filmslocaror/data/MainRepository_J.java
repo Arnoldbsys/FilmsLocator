@@ -1,15 +1,60 @@
 package ru.dombuketa.filmslocaror.data;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.sql.SQLData;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.dombuketa.filmslocaror.R;
+import ru.dombuketa.filmslocaror.data.db.DatabaseHelper_J;
 import ru.dombuketa.filmslocaror.domain.Film;
 
 public class MainRepository_J {
+    private DatabaseHelper_J databaseHelper_j ;
+    private SQLiteDatabase sqlDB;
+    //Создаем курсор для обработки запросов из БД
+    private Cursor cursor;
 
-    public MainRepository_J() {
-        initDatabase();
+
+    public MainRepository_J(DatabaseHelper_J dbh) {
+        databaseHelper_j = dbh;
+        //Инициализируем объект для взаимодействия с БД
+        sqlDB = dbh.getReadableDatabase();
+        //initDatabase();
+    }
+
+    public void putToDB(Film film){
+        //Создаем объект, который будет хранить пары ключ-значение, для того
+        //чтобы класть нужные данные в нужные столбцы
+        ContentValues cv = new ContentValues();
+        cv.put(DatabaseHelper_J.COLUMN_TITLE, film.getTitle());
+        cv.put(DatabaseHelper_J.COLUMN_POSTER, film.getPoster());
+        cv.put(DatabaseHelper_J.COLUMN_DESCRIPTION, film.getDescription());
+        cv.put(DatabaseHelper_J.COLUMN_RATING, film.getRating());
+        //Кладем фильм в БД
+        sqlDB.insert(DatabaseHelper_J.TABLE_NAME, null, cv);
+    }
+
+    public ArrayList<Film> getALLFromDB(){
+        //Создаем курсор на основании запроса "Получить все из таблицы"
+        cursor = sqlDB.rawQuery("SELECT * FROM " + DatabaseHelper_J.TABLE_NAME, null );
+        //Сюда будем сохранять результат получения данных
+        ArrayList<Film> result = new ArrayList<>();
+        //Проверяем, есть ли хоть одна строка в ответе на запрос
+        if (cursor.moveToFirst()){
+            //Итерируемся по таблице, пока есть записи, и создаем на основании объект Film
+            do {
+                String title = cursor.getString(1);
+                String poster = cursor.getString(2);
+                String description = cursor.getString(3);
+                Double rating = cursor.getDouble(4);
+                result.add(new Film(0, title, poster, description, rating, false));
+            } while (cursor.moveToNext());
+        }
+        return result;
     }
 
     public List<Film> filmsDataBase = new ArrayList<Film>();

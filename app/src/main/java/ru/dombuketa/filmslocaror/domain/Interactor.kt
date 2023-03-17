@@ -20,7 +20,11 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
         retrofitService.getFilms(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page).enqueue(object : Callback<TmdbResultsDTO>{
             override fun onResponse(call: Call<TmdbResultsDTO>, response: Response<TmdbResultsDTO>) {
                 //При успехе мы вызываем метод передаем onSuccess и в этот коллбэк список фильмов
-                callback.onSuccess(ConverterFilm.convertApiListToDTOList(response.body()?.tmdbFilms))
+                val list = ConverterFilm.convertApiListToDTOList(response.body()?.tmdbFilms);
+                list.forEach {
+                    repo.putToDB(film = it)
+                }
+                callback.onSuccess(list)
             }
 
             override fun onFailure(call: Call<TmdbResultsDTO>, t: Throwable) {
@@ -35,4 +39,6 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     fun savaDefaultCategoryToPreferences(category: String) = preferences.saveDefaultCategory(category)
     //Метод для получения настроек
     fun getDefaultCategoryFromPreferences() = preferences.getDefaultCategory()
+    //И вот такой метод у нас будет дергать метод репозитория, чтобы тот забрал для нас фильмы из БД
+    fun getFilmsFromDB(): List<Film> = repo.getAllFromDB()
 }

@@ -7,7 +7,7 @@ import ru.dombuketa.filmslocaror.data.entity.TmdbFilm;
 import ru.dombuketa.filmslocaror.domain.Film;
 
 public class ConverterFilm_J {
-    public List<Film> convertApiListToDTOList(List<TmdbFilm> list){
+    public static List<Film> convertApiListToDTOList(List<TmdbFilm> list){
         List<Film> result = new ArrayList<Film>();
         if (list != null){
             for (TmdbFilm it : list) {
