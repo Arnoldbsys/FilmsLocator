@@ -50,7 +50,15 @@ class PreferenceProvider(context: Context) {
         preference.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
     }
     //38*_
+    //40*
+    open fun getLastTimeInternetOK(): Long {
+        return preference.getLong(LAST_TIME_INTERNET_OK, 1672520400000L) // 01.01.2023
+    }
 
+    fun setLastTimeInternetOK(time: Long) {
+        preference.edit().putLong(LAST_TIME_INTERNET_OK, time).apply()
+    }
+    //40*_
 
 
 
@@ -59,5 +67,7 @@ class PreferenceProvider(context: Context) {
         private const val KEY_FIRST_LAUNCH = "first_launch"
         private const val KEY_DEFAULT_CATEGORY = "default_category"
         private const val DEFAULT_CATEGORY = "popular"
+        private const val LAST_TIME_INTERNET_OK = "last_time_internet_ok" //40*
+
     }
 }

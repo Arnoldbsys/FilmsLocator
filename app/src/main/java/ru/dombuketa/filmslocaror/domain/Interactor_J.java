@@ -3,6 +3,7 @@ package ru.dombuketa.filmslocaror.domain;
 import android.os.Build;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,6 +24,11 @@ public class Interactor_J {
     private ITmdbApi_J retrofitService;
     private PreferenceProvider_J preferences_j;
 
+    //40*
+    private final int TIMEDEVIDER = 60000;
+    private final int TIME_ACTUAL_CACHE_MINUTES = 10;
+    //40*_
+
     public Interactor_J(MainRepository_J repo, ITmdbApi_J retrofitService, PreferenceProvider_J prefs) {
         this.repo = repo;
         this.retrofitService = retrofitService;
@@ -33,7 +39,11 @@ public class Interactor_J {
         //return repo.filmsDataBase;
         return repo.getALLFromDB();
     }
-
+    //40*
+    public void clearFilmsDB(){
+        repo.clearAllinDB();
+    }
+    //40*_
     public void getFilmsFromApi(int page, HomeFragmentViewModel_J.IApiCallback callback){
         retrofitService.getFilms(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page).enqueue(new Callback<TmdbResultsDTO>() {
             @Override
@@ -46,12 +56,19 @@ public class Interactor_J {
 //                    }
                     repo.putToDB(list);
                 }
+                preferences_j.setLastTimeInternetOK(new Date().getTime()); //40*
                 callback.onSuc(list);
             }
 
             @Override
             public void onFailure(Call<TmdbResultsDTO> call, Throwable t) {
-                    callback.onFal();
+                //40*
+                if ((new Date().getTime() - preferences_j.getLastTimeInternetOK()) / TIMEDEVIDER > TIME_ACTUAL_CACHE_MINUTES){
+                    System.out.println("!!! - Удаляем кэш - более " + TIME_ACTUAL_CACHE_MINUTES + "минут прошло.");
+                    repo.clearAllinDB();
+                }
+                //40*_
+                callback.onFal();
             }
         });
     }

@@ -1,6 +1,7 @@
 package ru.dombuketa.filmslocaror.data.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -20,4 +21,8 @@ public interface IFilmDao_J {
     //Кладём списком в БД, в случае конфликта перезаписываем
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAll(List<Film> list);
+    //40* Очистка таблицы
+    @Query("DELETE FROM cached_films")
+    public void clearAllFilms();
+    //40*_
 }

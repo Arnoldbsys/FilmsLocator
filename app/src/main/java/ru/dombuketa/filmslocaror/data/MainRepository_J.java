@@ -58,6 +58,12 @@ public class MainRepository_J {
         return filmDao_j.getCachedFilms();
     }
 
+    //40*
+    public void clearAllinDB() {
+        Executors.newSingleThreadExecutor().execute(() -> filmDao_j.clearAllFilms());
+    }
+    //40*_
+
     public ArrayList<Film> getALLFromDBbyDBH(){
         //Создаем курсор на основании запроса "Получить все из таблицы"
         cursor = sqlDB.rawQuery("SELECT * FROM " + DatabaseHelper_J.TABLE_NAME, null );

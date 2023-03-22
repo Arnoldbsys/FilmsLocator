@@ -1,14 +1,13 @@
-﻿package ru.dombuketa.filmslocaror.data
+package ru.dombuketa.filmslocaror.data
 
 import android.content.ContentValues
 import android.database.Cursor
-import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.data.dao.IFilmDao
 import ru.dombuketa.filmslocaror.data.db.DatabaseHelper
 import ru.dombuketa.filmslocaror.domain.Film
 import java.util.concurrent.Executors
-import javax.inject.Inject
 
+//class MainRepository(databaseHelper: DatabaseHelper)  {
 class MainRepository(private val filmDao: IFilmDao, databaseHelper: DatabaseHelper)  {
     //Инициализируем объект для взаимодействия с БД
     private val sqlDB = databaseHelper.readableDatabase
@@ -38,6 +37,12 @@ class MainRepository(private val filmDao: IFilmDao, databaseHelper: DatabaseHelp
         return filmDao.getCachedFilms()
     }
 
+    //40*
+    fun clearAllinDB() {
+        Executors.newSingleThreadExecutor().execute { filmDao.clearAllFilms() }
+    }
+
+    //40*_
     fun getAllFromDBbyDBH(): List<Film>{
         //Создаем курсор на основании запроса "Получить все из таблицы"
         cursor = sqlDB.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME}", null)

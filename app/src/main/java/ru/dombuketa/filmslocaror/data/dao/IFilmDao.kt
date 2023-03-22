@@ -16,4 +16,9 @@ interface IFilmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(list: List<Film>)
 
+    //40* Очистка таблицы
+    @Query("DELETE FROM cached_films")
+    fun clearAllFilms()
+    //40*_
+
 }

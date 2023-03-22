@@ -19,6 +19,7 @@ public class PreferenceProvider_J {
     private final String KEY_FIRST_LAUNCH = "first_launch";
     public static final String KEY_DEFAULT_CATEGORY = "default_category";
     private final String DEFAULT_CATEGORY = "popular";
+    private final String LAST_TIME_INTERNET_OK = "last_time_internet_ok"; //40*
     //Нам нужен контекст приложения
     private Context appContext;
     //Создаем экземпляр SharedPreferences
@@ -63,4 +64,12 @@ public class PreferenceProvider_J {
         preferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }
     //38*_
+    //40*
+    public long getLastTimeInternetOK(){
+        return preferences.getLong(LAST_TIME_INTERNET_OK, 1672520400000L); // 01.01.2023
+    }
+    public void setLastTimeInternetOK(long time){
+        preferences.edit().putLong(LAST_TIME_INTERNET_OK, time).apply();
+    }
+    //40*_
 }
