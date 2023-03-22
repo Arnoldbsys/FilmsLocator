@@ -6,6 +6,7 @@ import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.domain.Interactor
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
@@ -36,7 +37,9 @@ class HomeFragmentViewModel : ViewModel() {
 
             override fun onFailure() {
                 println("!!! HomeFragVM - ошибка доступа к сети - данные из DB")
-                filmsListLiveData.postValue(interactor.getFilmsFromDB())
+                Executors.newSingleThreadExecutor().execute {
+                    filmsListLiveData.postValue(interactor.getFilmsFromDB())
+                }
             }
 
         })

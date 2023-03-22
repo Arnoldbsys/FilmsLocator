@@ -30,7 +30,8 @@ public class Interactor_J {
     }
 
     public List<Film> getFilmsDB(){
-        return repo.filmsDataBase;
+        //return repo.filmsDataBase;
+        return repo.getALLFromDB();
     }
 
     public void getFilmsFromApi(int page, HomeFragmentViewModel_J.IApiCallback callback){
@@ -38,11 +39,13 @@ public class Interactor_J {
             @Override
             public void onResponse(Call<TmdbResultsDTO> call, Response<TmdbResultsDTO> response) {
                 List<Film> list = new ArrayList<>();
-                if (response.body() != null)
+                if (response.body() != null) {
                     list = ConverterFilm_J.convertApiListToDTOList(response.body().getTmdbFilms());
-                    for (Film film : list) {
-                        repo.putToDB(film);
-                    }
+//                    for (Film film : list) {
+//                        repo.putToDB(film);
+//                    }
+                    repo.putToDB(list);
+                }
                 callback.onSuc(list);
             }
 

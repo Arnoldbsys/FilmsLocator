@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -55,7 +56,12 @@ public class HomeFragmentViewModel_J extends ViewModel {
             @Override
             public void onFal() {
                 System.out.println("!!!J HomeFragVM - ошибка доступа к сети - данные из DB");
-                filmsListLiveData.postValue(interactor.getFilmsDB());
+                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        filmsListLiveData.postValue(interactor.getFilmsDB());
+                    }
+                });
             }
         });
     }

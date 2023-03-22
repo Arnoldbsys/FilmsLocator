@@ -1,17 +1,24 @@
-package ru.dombuketa.filmslocaror.data
+﻿package ru.dombuketa.filmslocaror.data
 
 import android.content.ContentValues
 import android.database.Cursor
 import ru.dombuketa.filmslocaror.R
+import ru.dombuketa.filmslocaror.data.dao.IFilmDao
 import ru.dombuketa.filmslocaror.data.db.DatabaseHelper
 import ru.dombuketa.filmslocaror.domain.Film
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
-class MainRepository(databaseHelper: DatabaseHelper)  {
+class MainRepository(private val filmDao: IFilmDao, databaseHelper: DatabaseHelper)  {
     //Инициализируем объект для взаимодействия с БД
     private val sqlDB = databaseHelper.readableDatabase
     //Создаем курсор для обработки запросов из БД
     private lateinit var cursor: Cursor
+
+    fun putToDB(films: List<Film>){
+        //Запросы в БД должны быть в отдельном потоке
+        Executors.newSingleThreadExecutor().execute { filmDao.insertAll(films) }
+    }
 
     fun putToDB(film: Film){
         //Создаем объект, который будет хранить пары ключ-значение, для того
@@ -27,7 +34,11 @@ class MainRepository(databaseHelper: DatabaseHelper)  {
         sqlDB.insert(DatabaseHelper.TABLE_NAME, null, cv)
     }
 
-    fun getAllFromDB(): List<Film>{
+    fun getAllFromDB() : List<Film>{
+        return filmDao.getCachedFilms()
+    }
+
+    fun getAllFromDBbyDBH(): List<Film>{
         //Создаем курсор на основании запроса "Получить все из таблицы"
         cursor = sqlDB.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME}", null)
         //Сюда будем сохранять результат получения данных
