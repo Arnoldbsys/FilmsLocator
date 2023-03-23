@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
+import ru.dombuketa.filmslocaror.domain.Interactor;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter_J;
 import ru.dombuketa.filmslocaror.view.MainActivity_J;
@@ -103,6 +104,12 @@ public class HomeFragment_J extends Fragment {
         });
 //38*_
 
+        getViewModel().showProgressBar.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer isVis) {
+                binding.progressBar.setVisibility(isVis);
+            }
+        });
         return binding.getRoot();
     }
 
@@ -232,12 +239,12 @@ public class HomeFragment_J extends Fragment {
                     if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1) {
                         interactor.getFilmsFromApi(pageNumber + 1, new HomeFragmentViewModel_J.IApiCallback() {
                             @Override
-                            public void onSuc(List<Film> films) {
-                                List<Film> newfilmsDataBase = ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.getValue();
-                                newfilmsDataBase.addAll(films);
-                                ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.postValue(newfilmsDataBase);
-                                filmsAdapter.addItems(newfilmsDataBase);
-                                pageNumber++;
+                            public void onSuc() {
+//                                List<Film> newfilmsDataBase = ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.getValue();
+//                                newfilmsDataBase.addAll(films);
+//                                ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.postValue(newfilmsDataBase);
+//                                filmsAdapter.addItems(newfilmsDataBase);
+//                                pageNumber++;
                             }
                             @Override
                             public void onFal() {

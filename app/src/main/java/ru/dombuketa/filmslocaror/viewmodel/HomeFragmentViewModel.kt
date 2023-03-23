@@ -1,5 +1,6 @@
 package ru.dombuketa.filmslocaror.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.dombuketa.filmslocaror.App
@@ -10,8 +11,9 @@ import java.util.concurrent.Executors
 import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
-    val filmsListLiveData = MutableLiveData<List<Film>>()
+    val filmsListLiveData : LiveData<List<Film>>
     @Inject lateinit var interactor: Interactor
+    val showProgressBar: MutableLiveData<Boolean> = MutableLiveData()
 
     //38*
     var currentCategory = MutableLiveData<String>()
@@ -20,6 +22,7 @@ class HomeFragmentViewModel : ViewModel() {
 
     init {
         App.instance.dagger.injectt(this)
+        filmsListLiveData = interactor.getFilmsFromDB()
         getFilms()
         //38*
         prefs!!.currentCategory.observeForever {
@@ -29,25 +32,28 @@ class HomeFragmentViewModel : ViewModel() {
     }
 
     fun getFilms(){
-        interactor.getFilmsFromAPI(1, object : ApiCallback{
-            override fun onSuccess(films: List<Film>) {
+        showProgressBar.postValue(true)
+        interactor.getFilmsFromAPI(1, object : IApiCallback{
+            override fun onSuccess() {
                 println("!!! HomeFragVM - данные из сети")
-                filmsListLiveData.postValue(films)
+                //filmsListLiveData.postValue(films)
+                showProgressBar.postValue(false)
             }
 
             override fun onFailure() {
                 println("!!! HomeFragVM - ошибка доступа к сети - данные из DB")
-                Executors.newSingleThreadExecutor().execute {
-                    filmsListLiveData.postValue(interactor.getFilmsFromDB())
-                }
+//                Executors.newSingleThreadExecutor().execute {
+//                    filmsListLiveData.postValue(interactor.getFilmsFromDB())
+//                }
+                showProgressBar.postValue(false)
             }
 
         })
     }
 
 
-    interface ApiCallback{
-        fun onSuccess(films: List<Film>)
+    interface IApiCallback{
+        fun onSuccess()
         fun onFailure()
     }
 }

@@ -2,6 +2,7 @@ package ru.dombuketa.filmslocaror.data
 
 import android.content.ContentValues
 import android.database.Cursor
+import androidx.lifecycle.LiveData
 import ru.dombuketa.filmslocaror.data.dao.IFilmDao
 import ru.dombuketa.filmslocaror.data.db.DatabaseHelper
 import ru.dombuketa.filmslocaror.domain.Film
@@ -33,7 +34,7 @@ class MainRepository(private val filmDao: IFilmDao, databaseHelper: DatabaseHelp
         sqlDB.insert(DatabaseHelper.TABLE_NAME, null, cv)
     }
 
-    fun getAllFromDB() : List<Film>{
+    fun getAllFromDB() : LiveData<List<Film>> {
         return filmDao.getCachedFilms()
     }
 

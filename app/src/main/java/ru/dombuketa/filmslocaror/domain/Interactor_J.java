@@ -2,6 +2,8 @@ package ru.dombuketa.filmslocaror.domain;
 
 import android.os.Build;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +37,7 @@ public class Interactor_J {
         this.preferences_j = prefs;
     }
 
-    public List<Film> getFilmsDB(){
+    public LiveData<List<Film>> getFilmsDB(){
         //return repo.filmsDataBase;
         return repo.getALLFromDB();
     }
@@ -57,7 +59,7 @@ public class Interactor_J {
                     repo.putToDB(list);
                 }
                 preferences_j.setLastTimeInternetOK(new Date().getTime()); //40*
-                callback.onSuc(list);
+                callback.onSuc();
             }
 
             @Override
@@ -84,7 +86,7 @@ public class Interactor_J {
     }
 
     //И вот такой метод у нас будет дергать метод репозитория, чтобы тот забрал для нас фильмы из БД
-    List<Film> getFilmsFromDB(){
+    LiveData<List<Film>> getFilmsFromDB(){
         return repo.getALLFromDB();
     }
 }

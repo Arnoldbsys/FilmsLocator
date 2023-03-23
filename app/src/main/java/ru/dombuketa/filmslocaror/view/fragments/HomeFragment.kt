@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -59,7 +60,9 @@ class HomeFragment : Fragment() {
             viewModel.getFilms()
         })
         //38*_
-
+        viewModel.showProgressBar.observe(viewLifecycleOwner, Observer<Boolean>{
+            binding.progressBar.isVisible = it
+        })
         App.instance.dagger.injectt(this)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root;
@@ -140,19 +143,17 @@ class HomeFragment : Fragment() {
                     if ( dy > 0 && (layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > lastVisibleItem) { // Прокрутка вниз.
                         lastVisibleItem = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                         if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1){
-                            interactor.getFilmsFromAPI(pageNumber + 1, object : HomeFragmentViewModel.ApiCallback{
-                                override fun onSuccess(films: List<Film>) {
-                                    val newfilmsDataBase: MutableList<Film> = viewModel.filmsListLiveData.value as MutableList<Film>
-                                    newfilmsDataBase.addAll(films)
-                                    viewModel.filmsListLiveData.postValue(newfilmsDataBase)
-                                    filmsAdapter.addItems(newfilmsDataBase)
-                                    pageNumber++
+                            interactor.getFilmsFromAPI(pageNumber + 1, object : HomeFragmentViewModel.IApiCallback{
+                                override fun onSuccess() {
+//                                    val newfilmsDataBase: MutableList<Film> = viewModel.filmsListLiveData.value as MutableList<Film>
+//                                    newfilmsDataBase.addAll(films)
+//                                    viewModel.filmsListLiveData.postValue(newfilmsDataBase)
+//                                    filmsAdapter.addItems(newfilmsDataBase)
+//                                    pageNumber++
                                 }
-
                                 override fun onFailure() {
                                     println("!!! Error connection from HomeFrag")
                                 }
-
                             })
                         }
                     }

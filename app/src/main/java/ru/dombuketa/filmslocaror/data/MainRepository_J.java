@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 
+import androidx.lifecycle.LiveData;
+
 import java.sql.SQLData;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,7 @@ public class MainRepository_J {
         });
     }
 
-    public List<Film> getALLFromDB(){
+    public LiveData<List<Film>> getALLFromDB(){
         return filmDao_j.getCachedFilms();
     }
 

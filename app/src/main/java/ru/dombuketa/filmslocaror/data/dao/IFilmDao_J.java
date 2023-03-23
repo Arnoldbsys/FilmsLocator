@@ -1,5 +1,6 @@
 package ru.dombuketa.filmslocaror.data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,7 +18,7 @@ import ru.dombuketa.filmslocaror.domain.Film;
 public interface IFilmDao_J {
     //Запрос на всю таблицу
     @Query("SELECT * FROM cached_films")
-    public List<Film> getCachedFilms();
+    public LiveData<List<Film>> getCachedFilms();
     //Кладём списком в БД, в случае конфликта перезаписываем
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAll(List<Film> list);
