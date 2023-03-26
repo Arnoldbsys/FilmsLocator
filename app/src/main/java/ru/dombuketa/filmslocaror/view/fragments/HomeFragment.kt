@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -63,6 +64,14 @@ class HomeFragment : Fragment() {
         viewModel.showProgressBar.observe(viewLifecycleOwner, Observer<Boolean>{
             binding.progressBar.isVisible = it
         })
+        //41*
+        viewModel.errorNetworkConnection.observe(viewLifecycleOwner, Observer<String>{
+            if (!it.isNullOrEmpty()) {
+                Toast.makeText(requireActivity(), it, Toast.LENGTH_SHORT).show()
+                viewModel.clearErrorConnectionError()
+            }
+        })
+        //41*_
         App.instance.dagger.injectt(this)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root;

@@ -94,13 +94,10 @@ public class HomeFragment_J extends Fragment {
         });
 
 //38*
-        getViewModel().currentCategory.observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                filmsAdapter.clearItems();
-                //Делаем новый запрос фильмов на сервер
-                viewModel.getFilms();
-            }
+        getViewModel().currentCategory.observe(getViewLifecycleOwner(), s -> {
+            filmsAdapter.clearItems();
+            //Делаем новый запрос фильмов на сервер
+            viewModel.getFilms();
         });
 //38*_
 
@@ -110,6 +107,17 @@ public class HomeFragment_J extends Fragment {
                 binding.progressBar.setVisibility(isVis);
             }
         });
+        //41*
+        getViewModel().errorNetworkConnection.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (!s.isEmpty()) {
+                    Toast.makeText(requireActivity(), s, Toast.LENGTH_SHORT).show();
+                    getViewModel().clearErrorConnectionError();
+                }
+            }
+        });
+        //41*_
         return binding.getRoot();
     }
 

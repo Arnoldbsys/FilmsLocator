@@ -16,11 +16,14 @@ import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Film;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
+import ru.dombuketa.filmslocaror.utils.SingleLiveEvent_J;
 
 public class HomeFragmentViewModel_J extends ViewModel {
     //public MutableLiveData<List<Film>> filmsListLiveData = new MutableLiveData<List<Film>>();
+    private final String ERROR_CONNECTION_MSG = "Ошибка соединения."; //41*
     public LiveData<List<Film>> filmsListLiveData;
     public MutableLiveData<Integer> showProgressBar = new MutableLiveData<>();
+    public SingleLiveEvent_J<String> errorNetworkConnection = new SingleLiveEvent_J<>(); //41*
 
     //private Interactor_J interactor = App_J.getInstance().interactor;
     @Inject public Interactor_J interactor;
@@ -46,7 +49,7 @@ public class HomeFragmentViewModel_J extends ViewModel {
             }
         });
         //38*_
-
+        errorNetworkConnection.postValue(""); //41*
     }
 
     public void getFilms(){
@@ -68,9 +71,16 @@ public class HomeFragmentViewModel_J extends ViewModel {
 //                    }
 //                });
                 showProgressBar.postValue(8);
+                errorNetworkConnection.postValue(ERROR_CONNECTION_MSG); //41*
             }
         });
     }
+
+    //41*
+    public void clearErrorConnectionError(){
+        errorNetworkConnection.postValue("");
+    }
+    //41*_
 
     public interface IApiCallback{
         void onSuc();

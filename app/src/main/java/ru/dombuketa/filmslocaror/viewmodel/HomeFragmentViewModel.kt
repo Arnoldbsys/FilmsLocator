@@ -7,6 +7,7 @@ import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.domain.Interactor
+import ru.dombuketa.filmslocaror.utils.SingleLiveEvent
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
@@ -14,6 +15,7 @@ class HomeFragmentViewModel : ViewModel() {
     val filmsListLiveData : LiveData<List<Film>>
     @Inject lateinit var interactor: Interactor
     val showProgressBar: MutableLiveData<Boolean> = MutableLiveData()
+    val errorNetworkConnection = SingleLiveEvent<String>() //41*
 
     //38*
     var currentCategory = MutableLiveData<String>()
@@ -29,6 +31,7 @@ class HomeFragmentViewModel : ViewModel() {
             currentCategory.value = prefs!!.currentCategory.value
         }
         //38*_
+        errorNetworkConnection.postValue("") //41*
     }
 
     fun getFilms(){
@@ -46,15 +49,24 @@ class HomeFragmentViewModel : ViewModel() {
 //                    filmsListLiveData.postValue(interactor.getFilmsFromDB())
 //                }
                 showProgressBar.postValue(false)
+                errorNetworkConnection.postValue(ERROR_CONNECTION_MSG) //41*
             }
 
         })
     }
-
+    //41*
+    fun clearErrorConnectionError() {
+        errorNetworkConnection.postValue("")
+    }
+    //41*_
 
     interface IApiCallback{
         fun onSuccess()
         fun onFailure()
+    }
+
+    companion object{
+        const val ERROR_CONNECTION_MSG = "Ошибка соединения." //41*
     }
 }
 
