@@ -28,5 +28,9 @@
     <string name="alert_2clickToExit">Нажмите дважды для выхода.</string>
     <string name="alert_tellToFriends">Поделюсь с друзьями</string>
 
+    <string name="permission_storage">Нет разрешения. Пожалуйста, предоставьте разрешение</string>
+    <string name="downloaded_to_gallery">"Сохранено в галерею"</string>
+    <string name="open">В галерею</string>
+
 
 </resources>
