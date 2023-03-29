@@ -28,7 +28,7 @@ public class Interactor_J {
 
     //40*
     private final int TIMEDEVIDER = 60000;
-    private final int TIME_ACTUAL_CACHE_MINUTES = 10;
+    private final int TIME_ACTUAL_CACHE_MINUTES = 1440; //Сутки
     //40*_
 
     public Interactor_J(MainRepository_J repo, ITmdbApi_J retrofitService, PreferenceProvider_J prefs) {

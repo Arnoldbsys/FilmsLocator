@@ -87,7 +87,7 @@ class DetailsFragment : Fragment() {
         val result = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
         return result == PackageManager.PERMISSION_DENIED
     }
-
+    //Запрашиваем разрешение
     private fun requestPermission(){
         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
     }
@@ -118,14 +118,14 @@ class DetailsFragment : Fragment() {
         else {
             //То же, но для более старых версий ОС
             @Suppress("DEPRICATION")
-            MediaStore.Images.Media.insertImage(requireActivity().contentResolver, bitmap, film.title.handleSingleQuote(), film.description.handleSingleQuote())
+            MediaStore.Images.Media.insertImage(requireActivity().contentResolver, bitmap, film.title.handleSingleQuote(),
+                film.description.handleSingleQuote())
         }
     }
 
     private fun String.handleSingleQuote(): String = this.replace("'", "")
 
     private fun performAsyncLoadOfPoster(){
-
         //Проверяем есть ли разрешение
         if (!checkPermission()){
             //Если нет, то запрашиваем и выходим из метода

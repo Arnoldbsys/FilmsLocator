@@ -51,7 +51,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     companion object{
         //40*
         private const val TIMEDEVIDER = 60000
-        private const val TIME_ACTUAL_CACHE_MINUTES = 10
+        private const val TIME_ACTUAL_CACHE_MINUTES = 1440 //Сутки
         //40*_
     }
 }
