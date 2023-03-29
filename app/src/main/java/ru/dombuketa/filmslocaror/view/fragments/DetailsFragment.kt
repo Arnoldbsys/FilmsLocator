@@ -11,8 +11,8 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -25,7 +25,6 @@ import ru.dombuketa.filmslocaror.data.ApiConstants
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding
 import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.viewmodel.DetailsFragmentViewModel
-import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
 
 class DetailsFragment : Fragment() {
     private lateinit var binding: FragmentDetailsBinding
@@ -39,6 +38,13 @@ class DetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        //42*
+        viewModel.error.observe(viewLifecycleOwner, {
+            if (!it.isNullOrEmpty()){
+                Toast.makeText(requireActivity(), it, Toast.LENGTH_SHORT).show()
+                viewModel.clearError()
+            }
+        }) //42*_
         return binding.root;
     }
 
@@ -92,7 +98,7 @@ class DetailsFragment : Fragment() {
         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
     }
 
-    private fun saveToGellery(bitmap: Bitmap){
+    private fun saveToGellery(bitmap: Bitmap?){
         //Проверяем версию системы
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
             //Создаем объект для передачи данных
@@ -111,7 +117,7 @@ class DetailsFragment : Fragment() {
             //Открываем канал для записи на диск
             val outputStream = contentResolver.openOutputStream(uri!!)
             //Передаем нашу картинку, может сделать компрессию
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             //Закрываем поток
             outputStream?.close()
         }
@@ -140,18 +146,22 @@ class DetailsFragment : Fragment() {
             val job = scope.async {
                 viewModel.loadWallpaper(ApiConstants.IMAGES_URL + "original" + film.poster)
             }
-            //Сохраняем в галерею, как только файл загрузится
-            saveToGellery(job.await())
-            //Выводим снекбар с кнопкой перейти в галерею
-            Snackbar.make(binding.root, R.string.downloaded_to_gallery, Snackbar.LENGTH_LONG)
-                .setAction(R.string.open){
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_VIEW
-                    intent.type = "image/*"
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                }
-                .show()
+            //42*
+            val bitmap = job.await()
+            if (bitmap != null) {
+                //Сохраняем в галерею, как только файл загрузится
+                saveToGellery(bitmap)
+                //Выводим снекбар с кнопкой перейти в галерею
+                Snackbar.make(binding.root, R.string.downloaded_to_gallery, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.open) {
+                        val intent = Intent()
+                        intent.action = Intent.ACTION_VIEW
+                        intent.type = "image/*"
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                    }
+                    .show()
+            } //42*_
             //Отключаем Прогресс-бар
             binding.progressBar.isVisible = false
         }
