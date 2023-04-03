@@ -1,6 +1,7 @@
 package ru.dombuketa.filmslocaror.domain
 
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -9,7 +10,6 @@ import ru.dombuketa.filmslocaror.data.ITmdbApi
 import ru.dombuketa.filmslocaror.data.MainRepository
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.data.entity.TmdbResultsDTO
-import ru.dombuketa.filmslocaror.utils.ConverterFilm
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
 import java.util.*
 
@@ -21,8 +21,16 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
         retrofitService.getFilms(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page).enqueue(object : Callback<TmdbResultsDTO>{
             override fun onResponse(call: Call<TmdbResultsDTO>, response: Response<TmdbResultsDTO>) {
                 //При успехе мы вызываем метод передаем onSuccess и в этот коллбэк список фильмов
-                val list = ConverterFilm.convertApiListToDTOList(response.body()?.tmdbFilms);
-                repo.putToDB(list)
+                //42* отказ от конвертера val list = ConverterFilm.convertApiListToDTOList(response.body()?.tmdbFilms).asFlow();
+                val list = response.body()?.tmdbFilms?.asFlow();
+                val res  = list?.map { film -> Film(id = film.id, title = film.title,
+                    poster = film.posterPath,
+                    description = film.overview,
+                    rating = film.voteAverage,
+                    isInFavorites = false)
+                }
+                //42*_
+                repo.putToDB(res)
                 preferences.setLastTimeInternetOK(Date().time) //40*
                 callback.onSuccess()
             }
@@ -41,12 +49,14 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
 
 
     }
-    //Метод для сохранения настроек
+
+
+//Метод для сохранения настроек
     fun savaDefaultCategoryToPreferences(category: String) = preferences.saveDefaultCategory(category)
     //Метод для получения настроек
     fun getDefaultCategoryFromPreferences() = preferences.getDefaultCategory()
     //И вот такой метод у нас будет дергать метод репозитория, чтобы тот забрал для нас фильмы из БД
-    fun getFilmsFromDB(): LiveData<List<Film>> = repo.getAllFromDB()
+    fun getFilmsFromDB(): Flow<List<Film>> = repo.getAllFromDB()
 
     companion object{
         //40*

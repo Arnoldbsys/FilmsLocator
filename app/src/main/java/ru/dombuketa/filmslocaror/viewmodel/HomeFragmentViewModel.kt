@@ -3,6 +3,9 @@ package ru.dombuketa.filmslocaror.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.domain.Film
@@ -10,9 +13,12 @@ import ru.dombuketa.filmslocaror.domain.Interactor
 import ru.dombuketa.filmslocaror.utils.SingleLiveEvent
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import kotlin.coroutines.EmptyCoroutineContext
 
 class HomeFragmentViewModel : ViewModel() {
-    val filmsListLiveData : LiveData<List<Film>>
+    lateinit var filmsListLiveData : LiveData<List<Film>>
+    lateinit var filmsListFlowData : Flow<List<Film>>
+
     @Inject lateinit var interactor: Interactor
     val showProgressBar: MutableLiveData<Boolean> = MutableLiveData()
     val errorNetworkConnection = SingleLiveEvent<String>() //41*
@@ -22,9 +28,14 @@ class HomeFragmentViewModel : ViewModel() {
     @Inject lateinit var prefs: PreferenceProvider
     //38*_
 
+
+    suspend fun <T> Flow<List<T>>.flattenToList() =
+        flatMapConcat { it.asFlow() }.toList()
+
     init {
         App.instance.dagger.injectt(this)
-        filmsListLiveData = interactor.getFilmsFromDB()
+        filmsListFlowData = interactor.getFilmsFromDB()
+
         getFilms()
         //38*
         prefs!!.currentCategory.observeForever {

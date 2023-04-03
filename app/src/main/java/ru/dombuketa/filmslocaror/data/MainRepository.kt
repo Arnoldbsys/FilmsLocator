@@ -3,10 +3,15 @@ package ru.dombuketa.filmslocaror.data
 import android.content.ContentValues
 import android.database.Cursor
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import ru.dombuketa.filmslocaror.data.dao.IFilmDao
 import ru.dombuketa.filmslocaror.data.db.DatabaseHelper
 import ru.dombuketa.filmslocaror.domain.Film
 import java.util.concurrent.Executors
+import kotlin.coroutines.EmptyCoroutineContext
 
 //class MainRepository(databaseHelper: DatabaseHelper)  {
 class MainRepository(private val filmDao: IFilmDao, databaseHelper: DatabaseHelper)  {
@@ -15,9 +20,13 @@ class MainRepository(private val filmDao: IFilmDao, databaseHelper: DatabaseHelp
     //Создаем курсор для обработки запросов из БД
     private lateinit var cursor: Cursor
 
-    fun putToDB(films: List<Film>){
+    fun putToDB(films: Flow<Film>?){
         //Запросы в БД должны быть в отдельном потоке
-        Executors.newSingleThreadExecutor().execute { filmDao.insertAll(films) }
+        CoroutineScope(EmptyCoroutineContext).launch {
+            if (films != null) {
+                filmDao.insertAll(films.toList())
+            }
+        }
     }
 
     fun putToDB(film: Film){
@@ -34,7 +43,7 @@ class MainRepository(private val filmDao: IFilmDao, databaseHelper: DatabaseHelp
         sqlDB.insert(DatabaseHelper.TABLE_NAME, null, cv)
     }
 
-    fun getAllFromDB() : LiveData<List<Film>> {
+    fun getAllFromDB() : Flow<List<Film>> {
         return filmDao.getCachedFilms()
     }
 

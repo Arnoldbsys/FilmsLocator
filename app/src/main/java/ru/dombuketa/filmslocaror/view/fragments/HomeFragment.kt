@@ -12,6 +12,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
 import ru.dombuketa.filmslocaror.domain.Film
@@ -23,14 +28,15 @@ import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
 import java.util.*
 import javax.inject.Inject
+import kotlin.coroutines.EmptyCoroutineContext
 
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var pageNumber = 1
     private var lastVisibleItem = 0
-    @Inject
-    lateinit var interactor: Interactor
+    private lateinit var filmsAdapter: FilmListRecyclerAdapter
+    @Inject lateinit var interactor: Interactor
 
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
@@ -46,15 +52,20 @@ class HomeFragment : Fragment() {
         filmsAdapter.addItems(field)
     }
 
-    private lateinit var filmsAdapter: FilmListRecyclerAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         //Кладем нашу БД в RV
-        viewModel.filmsListLiveData.observe(viewLifecycleOwner, Observer<List<Film>>{
-            filmsDataBase = it
-            filmsAdapter.addItems(it)
-        })
+        initHomeRV()
+        val scope = CoroutineScope(Dispatchers.IO).launch {
+            viewModel.filmsListFlowData.collect() {
+                withContext(Dispatchers.Main) {
+                    filmsDataBase = it
+                    filmsAdapter.addItems(it)
+                }
+            }
+        }
         //38*
         viewModel.currentCategory.observe(viewLifecycleOwner, {
             filmsAdapter.items.clear()
@@ -73,14 +84,12 @@ class HomeFragment : Fragment() {
         })
         //41*_
         App.instance.dagger.injectt(this)
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root;
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSearchView()
-        initHomeRV()
         AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(),1)
         initPullToRefresh()
     }
