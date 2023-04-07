@@ -12,11 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
 import ru.dombuketa.filmslocaror.domain.Film
@@ -37,6 +34,7 @@ class HomeFragment : Fragment() {
     private var lastVisibleItem = 0
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     @Inject lateinit var interactor: Interactor
+    private lateinit var scope: CoroutineScope
 
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
@@ -56,25 +54,15 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        //Кладем нашу БД в RV
-        initHomeRV()
-        val scope = CoroutineScope(Dispatchers.IO).launch {
-            viewModel.filmsListFlowData.collect() {
-                withContext(Dispatchers.Main) {
-                    filmsDataBase = it
-                    filmsAdapter.addItems(it)
-                }
-            }
-        }
         //38*
         viewModel.currentCategory.observe(viewLifecycleOwner, {
             filmsAdapter.items.clear()
             viewModel.getFilms()
         })
         //38*_
-        viewModel.showProgressBar.observe(viewLifecycleOwner, Observer<Boolean>{
-            binding.progressBar.isVisible = it
-        })
+//        viewModel.showProgressBar.observe(viewLifecycleOwner, Observer<Boolean>{
+//            binding.progressBar.isVisible = it
+//        })
         //41*
         viewModel.errorNetworkConnection.observe(viewLifecycleOwner, Observer<String>{
             if (!it.isNullOrEmpty()) {
@@ -87,11 +75,35 @@ class HomeFragment : Fragment() {
         return binding.root;
     }
 
+    override fun onStop() {
+        super.onStop()
+        scope.cancel()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSearchView()
         AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(),1)
         initPullToRefresh()
+        //Кладем нашу БД в RV
+        scope = CoroutineScope(Dispatchers.IO).also { scope ->
+            scope.launch {
+                viewModel.filmsListFlowData.collect {
+                    withContext(Dispatchers.Main) {
+                        filmsDataBase = it
+                        filmsAdapter.addItems(it)
+                    }
+                }
+            }
+        }
+        scope.launch {
+            for (element in viewModel.showProgressBar){
+                launch(Dispatchers.Main) {
+                    binding.progressBar.isVisible = element
+                }
+            }
+        }
+        initHomeRV()
     }
 
     private fun initSearchView() {
