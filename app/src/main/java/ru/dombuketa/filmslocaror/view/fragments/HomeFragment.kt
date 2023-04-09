@@ -12,21 +12,21 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.toList
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
 import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.domain.Interactor
 import ru.dombuketa.filmslocaror.utils.AnimationHelper
+import ru.dombuketa.filmslocaror.utils.AutoDisposable
 import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration
+import ru.dombuketa.filmslocaror.utils.addTo
 import ru.dombuketa.filmslocaror.view.MainActivity
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
 import java.util.*
 import javax.inject.Inject
-import kotlin.coroutines.EmptyCoroutineContext
-
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
     private var lastVisibleItem = 0
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     @Inject lateinit var interactor: Interactor
-    private lateinit var scope: CoroutineScope
+    private val autoDisposable = AutoDisposable()
 
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
@@ -50,19 +50,16 @@ class HomeFragment : Fragment() {
         filmsAdapter.addItems(field)
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        autoDisposable.bindTo(lifecycle)
         //38*
         viewModel.currentCategory.observe(viewLifecycleOwner, {
             filmsAdapter.items.clear()
             viewModel.getFilms()
         })
         //38*_
-//        viewModel.showProgressBar.observe(viewLifecycleOwner, Observer<Boolean>{
-//            binding.progressBar.isVisible = it
-//        })
         //41*
         viewModel.errorNetworkConnection.observe(viewLifecycleOwner, Observer<String>{
             if (!it.isNullOrEmpty()) {
@@ -75,34 +72,22 @@ class HomeFragment : Fragment() {
         return binding.root;
     }
 
-    override fun onStop() {
-        super.onStop()
-        scope.cancel()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSearchView()
         AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(),1)
         initPullToRefresh()
         //Кладем нашу БД в RV
-        scope = CoroutineScope(Dispatchers.IO).also { scope ->
-            scope.launch {
-                viewModel.filmsListFlowData.collect {
-                    withContext(Dispatchers.Main) {
-                        filmsDataBase = it
-                        filmsAdapter.addItems(it)
-                    }
-                }
+        viewModel.filmsListRxJavaData.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe{ list ->
+                filmsAdapter.addItems(list)
+                filmsDataBase = list
             }
-        }
-        scope.launch {
-            for (element in viewModel.showProgressBar){
-                launch(Dispatchers.Main) {
-                    binding.progressBar.isVisible = element
-                }
+            .addTo(autoDisposable)
+        viewModel.showProgressBar.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe{
+                binding.progressBar.isVisible = it
             }
-        }
         initHomeRV()
     }
 
@@ -130,7 +115,6 @@ class HomeFragment : Fragment() {
                     }
                     return true
                 }
-
             })
         }
     }
@@ -173,6 +157,7 @@ class HomeFragment : Fragment() {
                     if ( dy > 0 && (layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > lastVisibleItem) { // Прокрутка вниз.
                         lastVisibleItem = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                         if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1){
+/*
                             interactor.getFilmsFromAPI(pageNumber + 1, object : HomeFragmentViewModel.IApiCallback{
                                 override fun onSuccess() {
 //                                    val newfilmsDataBase: MutableList<Film> = viewModel.filmsListLiveData.value as MutableList<Film>
@@ -185,14 +170,12 @@ class HomeFragment : Fragment() {
                                     println("!!! Error connection from HomeFrag")
                                 }
                             })
+*/
                         }
                     }
-
                 }
-
             })
         }
-
     }
 
     companion object {
