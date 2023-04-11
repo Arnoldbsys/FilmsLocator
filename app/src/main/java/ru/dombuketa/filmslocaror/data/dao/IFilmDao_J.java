@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.core.Observable;
 import ru.dombuketa.filmslocaror.domain.Film;
 
 //Помечаем, что это не просто интерфейс, а Dao-объект
@@ -18,7 +19,8 @@ import ru.dombuketa.filmslocaror.domain.Film;
 public interface IFilmDao_J {
     //Запрос на всю таблицу
     @Query("SELECT * FROM cached_films")
-    public LiveData<List<Film>> getCachedFilms();
+    //public LiveData<List<Film>> getCachedFilms();
+    public Observable<List<Film>> getCachedFilms();
     //Кладём списком в БД, в случае конфликта перезаписываем
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAll(List<Film> list);

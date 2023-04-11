@@ -35,8 +35,6 @@ class HomeFragmentViewModel : ViewModel() {
         App.instance.dagger.injectt(this)
         showProgressBar = interactor.progressBarStateRx
         filmsListRxJavaData = interactor.getFilmsFromDB()
-
-        getFilms()
         //38*
         prefs!!.currentCategory.observeForever {
             currentCategory.value = prefs!!.currentCategory.value
@@ -45,19 +43,14 @@ class HomeFragmentViewModel : ViewModel() {
         errorNetworkConnection.postValue("") //41*
     }
 
-    fun getFilms(){
-        interactor.getFilmsFromAPI(1)
+    fun getFilms(page: Int){
+        interactor.getFilmsFromAPI(page)
     }
     //41*
     fun clearErrorConnectionError() {
         errorNetworkConnection.postValue("")
     }
     //41*_
-
-    interface IApiCallback{
-        fun onSuccess()
-        fun onFailure()
-    }
 
     companion object{
         const val ERROR_CONNECTION_MSG = "Ошибка соединения." //41*

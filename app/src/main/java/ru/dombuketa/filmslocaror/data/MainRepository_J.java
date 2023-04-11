@@ -2,16 +2,13 @@ package ru.dombuketa.filmslocaror.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+//import android.database.Observable;
 import android.database.sqlite.SQLiteDatabase;
-
-
-import androidx.lifecycle.LiveData;
-
-import java.sql.SQLData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
+import io.reactivex.rxjava3.core.Observable;
 import ru.dombuketa.filmslocaror.R;
 import ru.dombuketa.filmslocaror.data.dao.IFilmDao_J;
 import ru.dombuketa.filmslocaror.data.db.DatabaseHelper_J;
@@ -20,7 +17,6 @@ import ru.dombuketa.filmslocaror.domain.Film;
 public class MainRepository_J {
     private DatabaseHelper_J databaseHelper_j;
     private IFilmDao_J filmDao_j;
-
     private SQLiteDatabase sqlDB;
     //Создаем курсор для обработки запросов из БД
     private Cursor cursor;
@@ -47,16 +43,19 @@ public class MainRepository_J {
     }
 
     public void putToDB(List<Film> films){
-        //Запросы в БД должны быть в отдельном потоке
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                filmDao_j.insertAll(films);
-            }
-        });
+        //Запросы в БД должны быть в отдельном потоке - до RxJava
+//        Executors.newSingleThreadExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                filmDao_j.insertAll(films);
+//            }
+//        });
+        if (films != null) {
+            filmDao_j.insertAll(films);
+        }
     }
 
-    public LiveData<List<Film>> getALLFromDB(){
+    public Observable<List<Film>> getALLFromDB(){
         return filmDao_j.getCachedFilms();
     }
 

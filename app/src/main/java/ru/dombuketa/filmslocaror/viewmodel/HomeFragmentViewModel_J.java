@@ -12,17 +12,21 @@ import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Film;
+import ru.dombuketa.filmslocaror.domain.Interactor;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
 import ru.dombuketa.filmslocaror.utils.SingleLiveEvent_J;
 
 public class HomeFragmentViewModel_J extends ViewModel {
     //public MutableLiveData<List<Film>> filmsListLiveData = new MutableLiveData<List<Film>>();
     private final String ERROR_CONNECTION_MSG = "Ошибка соединения."; //41*
-    public LiveData<List<Film>> filmsListLiveData;
-    public MutableLiveData<Integer> showProgressBar = new MutableLiveData<>();
+    //public LiveData<List<Film>> filmsListLiveData;
+    public Observable<List<Film>> filmsListLiveDataRx;
+    public BehaviorSubject<Integer> showProgressBar;
     public SingleLiveEvent_J<String> errorNetworkConnection = new SingleLiveEvent_J<>(); //41*
 
     //private Interactor_J interactor = App_J.getInstance().interactor;
@@ -35,12 +39,13 @@ public class HomeFragmentViewModel_J extends ViewModel {
 
     public HomeFragmentViewModel_J() {
         App_J.getInstance().daggerj.injectj(this);
-        filmsListLiveData = interactor.getFilmsDB();
+        showProgressBar = interactor.progressBarStateRx;
+        filmsListLiveDataRx = interactor.getFilmsDB();
         // для локальной БД
         //List<Film> films = interactor.getFilmsDB();
         //filmsListLiveData.postValue(films);
         // По сети в APP_J создать интерактор с другим конструктором
-        getFilms();
+        //getFilms();
         //38*
         prefs.currentCategory.observeForever(new Observer<String>() {
             @Override
@@ -52,28 +57,8 @@ public class HomeFragmentViewModel_J extends ViewModel {
         errorNetworkConnection.postValue(""); //41*
     }
 
-    public void getFilms(){
-        showProgressBar.postValue(0);
-        interactor.getFilmsFromApi(1, new IApiCallback() {
-            @Override
-            public void onSuc() {
-                System.out.println("!!!J HomeFragVM - данные из сети");
-                //filmsListLiveData.postValue(films);
-                showProgressBar.postValue(8);
-            }
-            @Override
-            public void onFal() {
-                System.out.println("!!!J HomeFragVM - ошибка доступа к сети - данные из DB");
-//                Executors.newSingleThreadExecutor().execute(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        filmsListLiveData.postValue(interactor.getFilmsDB());
-//                    }
-//                });
-                showProgressBar.postValue(8);
-                errorNetworkConnection.postValue(ERROR_CONNECTION_MSG); //41*
-            }
-        });
+    public void getFilms(Integer page){
+        interactor.getFilmsFromApi(page);
     }
 
     //41*

@@ -17,7 +17,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
 import ru.dombuketa.filmslocaror.domain.Film
-import ru.dombuketa.filmslocaror.domain.Interactor
 import ru.dombuketa.filmslocaror.utils.AnimationHelper
 import ru.dombuketa.filmslocaror.utils.AutoDisposable
 import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration
@@ -26,15 +25,14 @@ import ru.dombuketa.filmslocaror.view.MainActivity
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
 import java.util.*
-import javax.inject.Inject
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var pageNumber = 1
     private var lastVisibleItem = 0
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
-    @Inject lateinit var interactor: Interactor
     private val autoDisposable = AutoDisposable()
+    private lateinit var layoutManagerRV: LinearLayoutManager
 
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
@@ -57,7 +55,7 @@ class HomeFragment : Fragment() {
         //38*
         viewModel.currentCategory.observe(viewLifecycleOwner, {
             filmsAdapter.items.clear()
-            viewModel.getFilms()
+            viewModel.getFilms(pageNumber)
         })
         //38*_
         //41*
@@ -125,7 +123,7 @@ class HomeFragment : Fragment() {
             //Чистим адаптер(items нужно будет сделать паблик или создать для этого публичный метод)
             filmsAdapter.items.clear()
             //Делаем новый запрос фильмов на сервер
-            viewModel.getFilms()
+            viewModel.getFilms(1)
             //Убираем крутящееся колечко
             binding.pullToRefresh.isRefreshing = false
         }
@@ -144,6 +142,8 @@ class HomeFragment : Fragment() {
             adapter = filmsAdapter
             //Присвои layoutmanager
             layoutManager = LinearLayoutManager(requireContext())
+            layoutManagerRV = layoutManager as LinearLayoutManager
+
             //Применяем декоратор для отступов
             val decorator = TopSpacingItemDecoration(8)
             addItemDecoration(decorator)
@@ -154,23 +154,10 @@ class HomeFragment : Fragment() {
                 }
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if ( dy > 0 && (layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > lastVisibleItem) { // Прокрутка вниз.
-                        lastVisibleItem = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    if ( dy > 0 && layoutManagerRV.findLastVisibleItemPosition() > lastVisibleItem) { // Прокрутка вниз.
+                        lastVisibleItem = layoutManagerRV.findLastVisibleItemPosition()
                         if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1){
-/*
-                            interactor.getFilmsFromAPI(pageNumber + 1, object : HomeFragmentViewModel.IApiCallback{
-                                override fun onSuccess() {
-//                                    val newfilmsDataBase: MutableList<Film> = viewModel.filmsListLiveData.value as MutableList<Film>
-//                                    newfilmsDataBase.addAll(films)
-//                                    viewModel.filmsListLiveData.postValue(newfilmsDataBase)
-//                                    filmsAdapter.addItems(newfilmsDataBase)
-//                                    pageNumber++
-                                }
-                                override fun onFailure() {
-                                    println("!!! Error connection from HomeFrag")
-                                }
-                            })
-*/
+                            viewModel.getFilms(++pageNumber)
                         }
                     }
                 }

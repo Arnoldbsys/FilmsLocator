@@ -1,5 +1,6 @@
 package ru.dombuketa.filmslocaror.domain
 
+import android.util.Log
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -42,6 +43,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                 }.subscribeOn(Schedulers.io()).subscribe()
                 progressBarStateRx.onNext(false)
                 preferences.setLastTimeInternetOK(Date().time) //40*
+                Log.i("interactor","data from NET")
             }
 
             override fun onFailure(call: Call<TmdbResultsDTO>, t: Throwable) {
@@ -53,13 +55,11 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                 //40*_
                 //В случае провала выключаем ProgressBar
                 progressBarStateRx.onNext(false)
+                Log.i("interactor","data from DB")
             }
 
         })
     }
-
-
-
 
     //Метод для сохранения настроек
     fun savaDefaultCategoryToPreferences(category: String) = preferences.saveDefaultCategory(category)

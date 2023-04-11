@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +31,15 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Interactor;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
+import ru.dombuketa.filmslocaror.utils.AutoDisposable_J;
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter_J;
 import ru.dombuketa.filmslocaror.view.MainActivity_J;
 import ru.dombuketa.filmslocaror.R;
@@ -45,7 +51,7 @@ import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J;
 
 
 public class HomeFragment_J extends Fragment {
-    @Inject public Interactor_J interactor;
+//    @Inject public Interactor_J interactor;
     private FragmentHomeBinding binding;
     private HomeFragmentViewModel_J viewModel; //  = ViewModelProvider.NewInstanceFactory.getInstance().create(HomrFragmentViewModel_J.class);
     private static final int FILMS_ITEM_SHIFT = 4;
@@ -55,8 +61,8 @@ public class HomeFragment_J extends Fragment {
     LinearLayoutManager layoutManager;
 
     private FilmListRecyclerAdapter_J filmsAdapter;
-
     private List<Film> filmsDataBase = new ArrayList<Film>();
+    private AutoDisposable_J autoDisposable_j = new AutoDisposable_J();
 
     public void setFilmsDataBase(List<Film> value) {
         //Если придет такое же значение, то мы выходим из метода
@@ -68,45 +74,24 @@ public class HomeFragment_J extends Fragment {
     }
 
     private HomeFragmentViewModel_J getViewModel() {
-        if (viewModel == null){
-            //viewModel = ViewModelProvider.NewInstanceFactory.getInstance().create(HomeFragmentViewModel_J.class);
-            viewModel = new ViewModelProvider(this).get(HomeFragmentViewModel_J.class);
-        }
-        return viewModel;
+        return viewModel == null ? viewModel = new ViewModelProvider(this).get(HomeFragmentViewModel_J.class) : viewModel;
     }
 
-
-    public HomeFragment_J() {
-    }
+    public HomeFragment_J() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         App_J.getInstance().daggerj.injectj(this);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-
-        getViewModel().filmsListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Film>>() {
-            @Override
-            public void onChanged(List<Film> films) {
-                //filmsDataBase = films;
-                //Кладем нашу БД в RV
-                setFilmsDataBase(films);
-            }
-        });
-
+        autoDisposable_j.bindTo(getLifecycle());
 //38*
         getViewModel().currentCategory.observe(getViewLifecycleOwner(), s -> {
             filmsAdapter.clearItems();
             //Делаем новый запрос фильмов на сервер
-            viewModel.getFilms();
+            viewModel.getFilms(1);
+            Log.i("onCreateView", s);
         });
 //38*_
-
-        getViewModel().showProgressBar.observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer isVis) {
-                binding.progressBar.setVisibility(isVis);
-            }
-        });
         //41*
         getViewModel().errorNetworkConnection.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -142,9 +127,24 @@ public class HomeFragment_J extends Fragment {
         TransitionManager.go(scene, customTransition);
 */
         initSearchView();
-        initHomeRV();
         AnimationHelper_J.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(),1);
         initPullToRefresh();
+        autoDisposable_j.add(
+            getViewModel().filmsListLiveDataRx
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(list -> {
+                    //Кладем нашу БД в RV
+                    setFilmsDataBase(list);
+                })
+            );
+        getViewModel().showProgressBar
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(sw -> {
+                binding.progressBar.setVisibility(sw);
+            });
+        initHomeRV();
     }
 
 
@@ -153,9 +153,10 @@ public class HomeFragment_J extends Fragment {
         //Вешаем слушатель, чтобы вызвался pull to refresh
         binding.pullToRefresh.setOnRefreshListener(() -> {
             //Чистим адаптер(items нужно будет сделать паблик или создать для этого публичный метод)
+            Log.i("HomeFragment","InitPullRefresh");
             filmsAdapter.clearItems();
             //Делаем новый запрос фильмов на сервер
-            viewModel.getFilms();
+            viewModel.getFilms(1);
             //Убираем крутящееся колечко
             binding.pullToRefresh.setRefreshing(false);
         });
@@ -245,6 +246,9 @@ public class HomeFragment_J extends Fragment {
                     System.out.println("!!! " + " totalItemCount=" + totalItemCount + " lastVisiblesItems=" + lastVisibleItem);
 
                     if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1) {
+                        viewModel.getFilms(++pageNumber);
+
+/*
                         interactor.getFilmsFromApi(pageNumber + 1, new HomeFragmentViewModel_J.IApiCallback() {
                             @Override
                             public void onSuc() {
@@ -259,6 +263,7 @@ public class HomeFragment_J extends Fragment {
 
                             }
                         });
+*/
                     }
                 }
             }
