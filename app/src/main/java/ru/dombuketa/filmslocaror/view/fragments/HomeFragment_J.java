@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.util.StringUtil;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
@@ -24,16 +25,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableEmitter;
+import io.reactivex.rxjava3.core.ObservableOnSubscribe;
+import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.exceptions.UndeliverableException;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
@@ -126,7 +138,8 @@ public class HomeFragment_J extends Fragment {
         customTransition.addTransition(searchFade);
         TransitionManager.go(scene, customTransition);
 */
-        initSearchView();
+        //initSearchView();
+        initSearchViewByAPI();
         AnimationHelper_J.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(),1);
         initPullToRefresh();
         autoDisposable_j.add(
@@ -145,6 +158,7 @@ public class HomeFragment_J extends Fragment {
                 binding.progressBar.setVisibility(sw);
             });
         initHomeRV();
+        initRxErrorhandler();
     }
 
 
@@ -152,11 +166,20 @@ public class HomeFragment_J extends Fragment {
     private void initPullToRefresh(){
         //Вешаем слушатель, чтобы вызвался pull to refresh
         binding.pullToRefresh.setOnRefreshListener(() -> {
+            //Сбрасываем строку поиска
             //Чистим адаптер(items нужно будет сделать паблик или создать для этого публичный метод)
-            Log.i("HomeFragment","InitPullRefresh");
             filmsAdapter.clearItems();
+            String query = binding.searchView.getQuery().toString().trim();
             //Делаем новый запрос фильмов на сервер
-            viewModel.getFilms(1);
+            if (query.isEmpty() || query.trim() == ""){
+                viewModel.getFilms(1);
+            } else {
+                viewModel.getFilmsBySearch(query, 1)
+                        //.doOnError(err -> System.out.println(err.getMessage()))
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(films -> filmsAdapter.addItems(films),
+                                    err -> System.out.println(err.getMessage()));
+            }
             //Убираем крутящееся колечко
             binding.pullToRefresh.setRefreshing(false);
         });
@@ -164,6 +187,60 @@ public class HomeFragment_J extends Fragment {
 
 
 
+    // Поиск через API запрос
+    private void initSearchViewByAPI(){
+        binding.searchView.setOnClickListener(cl -> binding.searchView.setIconified(false));
+        Disposable data = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@io.reactivex.rxjava3.annotations.NonNull ObservableEmitter<String> emitter) throws Throwable {
+                binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        filmsAdapter.clearItems();
+                        emitter.onNext(newText);
+                        return false;
+                    }
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        filmsAdapter.clearItems();
+                        emitter.onNext(query);
+                        return false;
+                    }
+                });
+            }
+        }).subscribeOn(Schedulers.io())
+                .map(t -> t.toLowerCase(Locale.getDefault()).trim())
+                .debounce(1200, TimeUnit.MILLISECONDS)
+                .filter(t -> {
+                    if (t.isEmpty()) viewModel.getFilms(1);
+                    return !t.isEmpty();
+                })
+                .flatMap(s -> viewModel.getFilmsBySearch(s, 1))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn(err -> {
+                    Log.e("InitSearchView", "onErrorReturn null" + err.getMessage());
+                    viewModel.showProgressBar.onNext(0);
+                    return null;
+                })
+                .subscribe(films -> {
+                    filmsAdapter.addItems(films);
+                        if (layoutManager.getItemCount() > 0) {
+                            layoutManager.scrollToPosition(1);
+                        }
+                        pageNumber = 1;
+                    },
+                    throwable -> {
+                        Toast.makeText(requireContext(),"Ошибка загрузки данных из сети.", Toast.LENGTH_SHORT).show();
+                        Log.i("subscribe", throwable.getMessage());
+                    });
+        autoDisposable_j.add(data);
+
+
+    }
+
+
+    // Поиск по уже загруженным данным
     private void initSearchView() {
         SearchView search_view = requireActivity().findViewById(R.id.search_view);
         search_view.setOnClickListener(new View.OnClickListener() {
@@ -224,11 +301,13 @@ public class HomeFragment_J extends Fragment {
         //Присвои layoutmanager
         main_recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         layoutManager = ((LinearLayoutManager)main_recycler.getLayoutManager());
-
+        Log.i("layoutManager", String.valueOf(layoutManager.getItemCount()));
         //Применяем декоратор для отступов
         main_recycler.addItemDecoration(new TopSpacingItemDecoration_J(8));
+        initRvScroller();
         //Кладем нашу БД в RV
         //filmsAdapter.addItems(filmsDataBase);
+        /*
         main_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -242,34 +321,148 @@ public class HomeFragment_J extends Fragment {
                 {
                     int totalItemCount = layoutManager.getItemCount();
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-
-                    System.out.println("!!! " + " totalItemCount=" + totalItemCount + " lastVisiblesItems=" + lastVisibleItem);
-
+                    System.out.println("!!! " + " totalItemCount=" + totalItemCount + " lastVisiblesItems=" + lastVisibleItem + " pageNumber=" + pageNumber);
                     if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1) {
-                        viewModel.getFilms(++pageNumber);
+                        String query = binding.searchView.getQuery().toString().trim();
+                        //Делаем новый запрос фильмов на сервер
+                        if (query.isEmpty()){
+                            viewModel.getFilms(++pageNumber);
+                        } else {
+                            //filmsAdapter.addItems(viewModel.getFilmsBySearch(query, ++pageNumber).map());
 
-/*
-                        interactor.getFilmsFromApi(pageNumber + 1, new HomeFragmentViewModel_J.IApiCallback() {
-                            @Override
-                            public void onSuc() {
-//                                List<Film> newfilmsDataBase = ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.getValue();
-//                                newfilmsDataBase.addAll(films);
-//                                ((HomeFragmentViewModel_J)viewModel).filmsListLiveData.postValue(newfilmsDataBase);
-//                                filmsAdapter.addItems(newfilmsDataBase);
-//                                pageNumber++;
-                            }
-                            @Override
-                            public void onFal() {
+                            viewModel.getFilmsBySearch(query, ++pageNumber).map(films -> films).
+                                    observeOn(Schedulers.io()).
+                                    subscribeOn(AndroidSchedulers.mainThread()).
+                                    subscribe(films -> filmsAdapter.addItems(films), throwable -> {
+                                Toast.makeText(requireContext(),"Ошибка загрузки данных из сети.", Toast.LENGTH_SHORT).show();
+                                Log.i("subscribe", throwable.getMessage());
+                            });
 
-                            }
-                        });
-*/
+                            //Disposable subs = new Observer<>()
+
+                            //viewModel.getFilmsBySearch(query, ++pageNumber);
+                        }
                     }
                 }
+            }
+        });
+        */
+    }
+
+    private void initRvScroller() {
+        Disposable dataRvScroller = Observable.create(new ObservableOnSubscribe<Integer>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Integer> emitter) throws Throwable {
+                        binding.mainRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                            }
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                if (dy > 0 && layoutManager.findLastVisibleItemPosition() > lastVisibleItem) // Прокрутка вниз
+                                {
+                                    int totalItemCount = layoutManager.getItemCount();
+                                    lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                                    Log.i("initRvScroller", "!!!Rx " + " totalItemCount=" + totalItemCount + " lastVisiblesItems=" + lastVisibleItem + " pageNumber=" + pageNumber);
+                                    if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1) {
+                                        emitter.onNext(++pageNumber);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }).observeOn(Schedulers.io())
+                .retry(5)
+//                .subscribe()
+               .subscribe(page -> {
+                   String query = binding.searchView.getQuery().toString().trim();
+                   if (query.isEmpty() || query.trim() == "") {
+                       viewModel.getFilms(page);
+                   } else {
+                       viewModel.getFilmsBySearch(query, page)
+                           .subscribeOn(Schedulers.io())
+                           .subscribe(
+                               films -> filmsAdapter.addItems(films),
+                               err -> {
+                                   Toast.makeText(requireContext(), "Ошибка загрузки данных из сети.", Toast.LENGTH_SHORT).show();
+                                   Log.e("subscribe 1", err.getMessage());
+                               });
+                           }
+                        },
+                   err -> {
+                   Toast.makeText(requireContext(),"Ошибка загрузки данных из сети.", Toast.LENGTH_SHORT).show();
+                   Log.e("subscribe 2", err.getMessage());
+                });
+        autoDisposable_j.add(dataRvScroller);
+    }
+
+    private void initRxErrorhandler(){
+        RxJavaPlugins.setErrorHandler(e -> {
+            Log.e("RxJava", e.getMessage());
+            if (e instanceof UndeliverableException){
+                e = e.getCause();
+            }
+            if (e instanceof IOException || e instanceof SocketException){
+                return;
+            }
+            if (e instanceof InterruptedException){
+                return;
+            }
+            if (e instanceof NullPointerException || e instanceof IllegalArgumentException){
+                Thread.currentThread().getUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                return;
+            }
+            if (e instanceof IllegalStateException){
+
             }
 
         });
 
     }
+
+    private void initRvScroller2() {
+        Disposable dataRvScroller = Observable.create(new ObservableOnSubscribe<Integer>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Integer> emitter) throws Throwable {
+                        binding.mainRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                            }
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                if (dy > 0 && layoutManager.findLastVisibleItemPosition() > lastVisibleItem) // Прокрутка вниз
+                                {
+                                    int totalItemCount = layoutManager.getItemCount();
+                                    lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                                    Log.i("initRvScroller", "!!!Rx " + " totalItemCount=" + totalItemCount + " lastVisiblesItems=" + lastVisibleItem + " pageNumber=" + pageNumber);
+                                    if (lastVisibleItem + FILMS_ITEM_SHIFT == FILMS_PER_PAGE * pageNumber - 1) {
+                                        String query = binding.searchView.getQuery().toString().trim();
+                                        //emitter.onNext(++pageNumber);
+                                        if (query.isEmpty() || query.trim() == ""){
+                                            viewModel.getFilms(++pageNumber);
+                                        } else {
+                                            viewModel.getFilmsBySearch(query, ++pageNumber)
+                                                    .subscribeOn(Schedulers.io())
+                                                    .subscribe(films -> filmsAdapter.addItems(films),
+                                                            err -> {
+                                                                Toast.makeText(requireContext(),"Ошибка загрузки данных из сети.", Toast.LENGTH_SHORT).show();
+                                                                Log.i("subscribe", err.getMessage());
+                                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }).observeOn(Schedulers.io())
+                .retry(5)
+                .subscribe();
+        autoDisposable_j.add(dataRvScroller);
+    }
+
 
 }

@@ -58,9 +58,9 @@ public class FavoritesFragment_J extends Fragment {
         //Применяем декоратор для отступов
         favorite_rv.addItemDecoration(new TopSpacingItemDecoration_J(8));
         //Кладем нашу БД в RV
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            filmsAdapter.addItems(((MainActivity_J)requireActivity()).getDataBase().stream()
-                    .filter(p->p.isInFavorites() == true).collect(Collectors.toList()));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            filmsAdapter.addItems(((MainActivity_J)requireActivity()).getDataBase().stream()
+//                    .filter(p->p.isInFavorites() == true).collect(Collectors.toList()));
+//        }
     }
 }

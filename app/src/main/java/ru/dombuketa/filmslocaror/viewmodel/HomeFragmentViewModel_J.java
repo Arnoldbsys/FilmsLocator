@@ -61,6 +61,14 @@ public class HomeFragmentViewModel_J extends ViewModel {
         interactor.getFilmsFromApi(page);
     }
 
+    public Observable<List<Film>> getFilmsRx(Integer page){
+        return interactor.getFilmsFromApiRx(page);
+    }
+
+    public Observable<List<Film>> getFilmsBySearch(String searchString, Integer page){
+        return interactor.getFilmsFromApiBySearch(searchString, page);
+    }
+
     //41*
     public void clearErrorConnectionError(){
         errorNetworkConnection.postValue("");

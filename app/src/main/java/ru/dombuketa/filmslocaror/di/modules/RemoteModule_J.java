@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -38,6 +39,7 @@ public class RemoteModule_J {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiConstants.BASE_URL) //Указываем базовый URL из констант
                 .addConverterFactory(GsonConverterFactory.create()) //Добавляем конвертер
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .client(okHttpClient) //Добавляем кастомный клиент
                 .build();
         return retrofit;

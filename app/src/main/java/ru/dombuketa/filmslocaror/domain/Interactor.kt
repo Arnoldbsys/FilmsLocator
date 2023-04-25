@@ -7,12 +7,14 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Converter
 import retrofit2.Response
 import ru.dombuketa.filmslocaror.data.API
 import ru.dombuketa.filmslocaror.data.ITmdbApi
 import ru.dombuketa.filmslocaror.data.MainRepository
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.data.entity.TmdbResultsDTO
+import ru.dombuketa.filmslocaror.utils.ConverterFilm
 import java.util.*
 
 class Interactor(private val repo: MainRepository, private val retrofitService: ITmdbApi, private val preferences: PreferenceProvider) {
@@ -59,6 +61,15 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             }
 
         })
+    }
+
+    fun getFilmsFromAPIBySearch(searchString: String, page: Int) : Observable<List<Film>>{
+        progressBarStateRx.onNext(true)
+        return retrofitService.getFilmsBySearch(API.KEY, "ru-RU", searchString, 1)
+            .map {
+                progressBarStateRx.onNext(false)
+                ConverterFilm.convertApiListToDTOList(it.tmdbFilms)
+            }
     }
 
     //Метод для сохранения настроек

@@ -1,5 +1,6 @@
 package ru.dombuketa.filmslocaror.data;
 
+import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -12,5 +13,18 @@ public interface ITmdbApi_J {
             @Path("category") String category,
             @Query("api_key") String apiKey,
             @Query("language") String language,
+            @Query("page") int page);
+    @GET("3/movie/{category}")
+    Observable<TmdbResultsDTO> getFilmsRx(
+            @Path("category") String category,
+            @Query("api_key") String apiKey,
+            @Query("language") String language,
+            @Query("page") int page);
+    // Поиск
+    @GET("3/search/movie")
+    Observable<TmdbResultsDTO> getFilmsBySearch(
+            @Query("api_key") String apiKey,
+            @Query("language") String language,
+            @Query("query") String query,
             @Query("page") int page);
 }

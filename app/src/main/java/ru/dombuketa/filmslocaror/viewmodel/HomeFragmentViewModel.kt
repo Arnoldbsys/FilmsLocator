@@ -46,6 +46,9 @@ class HomeFragmentViewModel : ViewModel() {
     fun getFilms(page: Int){
         interactor.getFilmsFromAPI(page)
     }
+    fun getFilmsBySearch(searchString : String, page: Int) =
+        interactor.getFilmsFromAPIBySearch(searchString, page)
+
     //41*
     fun clearErrorConnectionError() {
         errorNetworkConnection.postValue("")

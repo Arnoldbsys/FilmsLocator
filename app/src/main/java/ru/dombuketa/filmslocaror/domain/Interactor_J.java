@@ -15,6 +15,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import retrofit2.Call;
@@ -27,6 +28,7 @@ import ru.dombuketa.filmslocaror.data.MainRepository_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.data.entity.TmdbFilm;
 import ru.dombuketa.filmslocaror.data.entity.TmdbResultsDTO;
+import ru.dombuketa.filmslocaror.utils.ConverterFilm;
 import ru.dombuketa.filmslocaror.utils.ConverterFilm_J;
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J;
 
@@ -101,7 +103,25 @@ public class Interactor_J {
         });
     }
 
+    public Observable<List<Film>> getFilmsFromApiBySearch(String searchString, int page){
+        progressBarStateRx.onNext(View.VISIBLE);
+        return retrofitService.getFilmsBySearch(API.KEY, "ru-RU", searchString, page)
+                .map(tmdbResultsDTO -> {
+                    progressBarStateRx.onNext(View.GONE);
+                    return ConverterFilm_J.convertApiListToDTOList(tmdbResultsDTO.getTmdbFilms());
+                });
+    }
 
+    public Observable<List<Film>> getFilmsFromApiRx(int page){
+        progressBarStateRx.onNext(View.VISIBLE);
+        return retrofitService.getFilmsRx(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU",  page)
+            .map(tmdbResultsDTO -> {
+                progressBarStateRx.onNext(View.GONE);
+                return ConverterFilm_J.convertApiListToDTOList(tmdbResultsDTO.getTmdbFilms());
+            });
+    }
+
+    // Первый способ - CallBack
     public void getFilmsFromApi(int page, HomeFragmentViewModel_J.IApiCallback callback){
         retrofitService.getFilms(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page).enqueue(new Callback<TmdbResultsDTO>() {
             @Override

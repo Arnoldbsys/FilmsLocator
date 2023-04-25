@@ -2,6 +2,7 @@ package ru.dombuketa.filmslocaror.di.modules
 
 import dagger.Module
 import dagger.Provides
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -41,6 +42,7 @@ class RemoteModule {
         //Добавляем конвертер
         .addConverterFactory(GsonConverterFactory.create())
         //Добавляем кастомный клиент
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .client(okHttpClient)
         .build()
 
