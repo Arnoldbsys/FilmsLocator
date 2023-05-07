@@ -1,14 +1,10 @@
 package ru.dombuketa.filmslocaror.viewmodel;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -17,7 +13,6 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Film;
-import ru.dombuketa.filmslocaror.domain.Interactor;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
 import ru.dombuketa.filmslocaror.utils.SingleLiveEvent_J;
 
@@ -58,11 +53,12 @@ public class HomeFragmentViewModel_J extends ViewModel {
     }
 
     public void getFilms(Integer page){
-        interactor.getFilmsFromApi(page);
+        //interactor.getFilmsFromApi(page);
+        interactor.getFilmsFromApiRx(page);
     }
 
-    public Observable<List<Film>> getFilmsRx(Integer page){
-        return interactor.getFilmsFromApiRx(page);
+    public void getFilmsRx(Integer page){
+        interactor.getFilmsFromApiRx(page);
     }
 
     public Observable<List<Film>> getFilmsBySearch(String searchString, Integer page){

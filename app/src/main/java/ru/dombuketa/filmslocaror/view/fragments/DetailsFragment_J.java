@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.airbnb.lottie.animation.content.Content;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -33,12 +31,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.Executors;
 
-import kotlin.Suppress;
 import ru.dombuketa.filmslocaror.R;
-import ru.dombuketa.filmslocaror.data.ApiConstants;
+//import ru.dombuketa.filmslocaror.data.ApiConstants;
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding;
 import ru.dombuketa.filmslocaror.domain.Film;
 import ru.dombuketa.filmslocaror.viewmodel.DetailsFragmentViewModel_J;
+import ru.dombuketa.net_module.entity.ApiConstants;
 
 public class DetailsFragment_J extends Fragment {
     private FragmentDetailsBinding binding;

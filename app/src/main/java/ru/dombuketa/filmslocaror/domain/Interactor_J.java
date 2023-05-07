@@ -4,8 +4,6 @@ import android.os.Build;
 import android.util.Log;
 import android.view.View;
 
-import androidx.lifecycle.LiveData;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,24 +11,21 @@ import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Converter;
-import retrofit2.Response;
+//import retrofit2.Call;
+//import retrofit2.Callback;
+//import retrofit2.Response;
 import ru.dombuketa.filmslocaror.data.API;
-import ru.dombuketa.filmslocaror.data.ITmdbApi_J;
+import ru.dombuketa.net_module.ITmdbApi_J;
 import ru.dombuketa.filmslocaror.data.MainRepository_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
-import ru.dombuketa.filmslocaror.data.entity.TmdbFilm;
-import ru.dombuketa.filmslocaror.data.entity.TmdbResultsDTO;
-import ru.dombuketa.filmslocaror.utils.ConverterFilm;
+//import ru.dombuketa.filmslocaror.data.entity.TmdbFilm;
+//import ru.dombuketa.filmslocaror.data.entity.TmdbResultsDTO;
 import ru.dombuketa.filmslocaror.utils.ConverterFilm_J;
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J;
+import ru.dombuketa.net_module.entity.TmdbFilm;
+import ru.dombuketa.net_module.entity.TmdbResultsDTO;
 
 public class Interactor_J {
     private MainRepository_J repo;
@@ -58,7 +53,7 @@ public class Interactor_J {
         repo.clearAllinDB();
     }
     //40*_
-
+    /*
     public void getFilmsFromApi(int page){
         progressBarStateRx.onNext(View.VISIBLE);
 
@@ -101,7 +96,7 @@ public class Interactor_J {
                 Log.i("interactor J","data from DB");
             }
         });
-    }
+    }*/
 
     public Observable<List<Film>> getFilmsFromApiBySearch(String searchString, int page){
         progressBarStateRx.onNext(View.VISIBLE);
@@ -112,16 +107,26 @@ public class Interactor_J {
                 });
     }
 
-    public Observable<List<Film>> getFilmsFromApiRx(int page){
+    public void getFilmsFromApiRx(int page){
         progressBarStateRx.onNext(View.VISIBLE);
-        return retrofitService.getFilmsRx(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU",  page)
-            .map(tmdbResultsDTO -> {
-                progressBarStateRx.onNext(View.GONE);
-                return ConverterFilm_J.convertApiListToDTOList(tmdbResultsDTO.getTmdbFilms());
-            });
+        retrofitService.getFilmsRx(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU",  page)
+            .subscribeOn(Schedulers.io())
+            .map( result -> {
+                        return ConverterFilm_J.convertApiListToDTOList(result.getTmdbFilms());
+                    }
+            )
+            .subscribe(
+                list -> {
+                    progressBarStateRx.onNext(View.GONE);
+                    repo.putToDB(list);
+                    },
+                err -> {
+                    progressBarStateRx.onNext(View.GONE);
+                    }
+                );
     }
 
-    // Первый способ - CallBack
+    /*// Первый способ - CallBack
     public void getFilmsFromApi(int page, HomeFragmentViewModel_J.IApiCallback callback){
         retrofitService.getFilms(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page).enqueue(new Callback<TmdbResultsDTO>() {
             @Override
@@ -149,7 +154,7 @@ public class Interactor_J {
                 callback.onFal();
             }
         });
-    }
+    }*/
 
     //Метод для сохранения настроек
     public void saveDefaultCategoryToPreferences(String category){

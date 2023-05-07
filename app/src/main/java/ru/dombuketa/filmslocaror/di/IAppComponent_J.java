@@ -5,18 +5,20 @@ import javax.inject.Singleton;
 import dagger.Component;
 import ru.dombuketa.filmslocaror.di.modules.DatabaseModule_J;
 import ru.dombuketa.filmslocaror.di.modules.DomainModule_J;
-import ru.dombuketa.filmslocaror.di.modules.RemoteModule_J;
+import ru.dombuketa.net_module.IRemoteComponent_J;
+import ru.dombuketa.net_module.IRemoteProvider_J;
+import ru.dombuketa.net_module.RemoteModule_J;
 import ru.dombuketa.filmslocaror.view.fragments.HomeFragment_J;
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J;
 import ru.dombuketa.filmslocaror.viewmodel.SettingsFragmentViewModel_J;
 
 @Singleton
-@Component(modules = {DatabaseModule_J.class, DomainModule_J.class, RemoteModule_J.class})
+@Component(dependencies = {IRemoteProvider_J.class}, modules = {DatabaseModule_J.class, DomainModule_J.class})
 public interface IAppComponent_J {
     //метод для того, чтобы появилась внедрять зависимости в HomeFragmentViewModel
-    void injectj(HomeFragmentViewModel_J homeFragmentViewModel_j);
-    void injectj(HomeFragment_J homeFragment_j);
+    public void injectj(HomeFragmentViewModel_J homeFragmentViewModel_j);
+    public void injectj(HomeFragment_J homeFragment_j);
     //метод для того, чтобы появилась возможность внедрять зависимости в SettingsFragmentViewModel
-    void injectj(SettingsFragmentViewModel_J settingsFragmentViewModel_j);
+    public void injectj(SettingsFragmentViewModel_J settingsFragmentViewModel_j);
 
 }

@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import ru.dombuketa.filmslocaror.R
-import ru.dombuketa.filmslocaror.data.ApiConstants
+import ru.dombuketa.net_module.entity.ApiConstants
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding
 import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.viewmodel.DetailsFragmentViewModel
@@ -70,7 +70,7 @@ class DetailsFragment : Fragment() {
 
         binding.detailsToolbar.title = film.title
         Glide.with(this)
-            .load(ApiConstants.IMAGES_URL + "w780" + film.poster)
+            .load(ru.dombuketa.net_module.entity.ApiConstants.IMAGES_URL + "w780" + film.poster)
             .centerCrop()
             .into(binding.detailsPoster)
         binding.detailsDescription.text = film.description
@@ -144,7 +144,7 @@ class DetailsFragment : Fragment() {
             binding.progressBar.isVisible = true
             //Создаем через async, так как нам нужен результат от работы, то есть Bitmap
             val job = scope.async {
-                viewModel.loadWallpaper(ApiConstants.IMAGES_URL + "original" + film.poster)
+                viewModel.loadWallpaper(ru.dombuketa.net_module.entity.ApiConstants.IMAGES_URL + "original" + film.poster)
             }
             //42*
             val bitmap = job.await()

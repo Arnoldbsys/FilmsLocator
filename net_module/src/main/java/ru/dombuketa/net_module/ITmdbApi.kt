@@ -1,11 +1,11 @@
-package ru.dombuketa.filmslocaror.data
+package ru.dombuketa.net_module
 
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.dombuketa.filmslocaror.data.entity.TmdbResultsDTO
+import ru.dombuketa.net_module.entity.TmdbResultsDTO
 
 interface ITmdbApi {
     @GET("3/movie/{category}")

@@ -1,4 +1,4 @@
-package ru.dombuketa.filmslocaror.di.modules;
+package ru.dombuketa.net_module;
 
 import java.util.concurrent.TimeUnit;
 
@@ -11,13 +11,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.dombuketa.filmslocaror.App_J;
-import ru.dombuketa.filmslocaror.BuildConfig;
-import ru.dombuketa.filmslocaror.data.ApiConstants;
-import ru.dombuketa.filmslocaror.data.ITmdbApi_J;
+import ru.dombuketa.net_module.entity.ApiConstants;
 
 @Module
 public class RemoteModule_J {
+    public static final long NETWORKTIMEOUT = 60L;
+
     @Singleton
     @Provides
     OkHttpClient provideOkHttpClient(){
@@ -27,8 +26,8 @@ public class RemoteModule_J {
         if (BuildConfig.DEBUG) logI.setLevel(HttpLoggingInterceptor.Level.BASIC);
         //Создаём кастомный клиент
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .callTimeout(App_J.NETWORKTIMEOUT, TimeUnit.SECONDS) //Настраиваем таймауты для медленного интернета
-                .readTimeout(App_J.NETWORKTIMEOUT, TimeUnit.SECONDS)
+                .callTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS) //Настраиваем таймауты для медленного интернета
+                .readTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(logI)
                 .build();
         return okHttpClient;

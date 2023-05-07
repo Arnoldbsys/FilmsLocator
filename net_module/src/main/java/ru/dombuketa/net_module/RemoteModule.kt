@@ -1,4 +1,4 @@
-package ru.dombuketa.filmslocaror.di.modules
+package ru.dombuketa.net_module
 
 import dagger.Module
 import dagger.Provides
@@ -7,10 +7,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.dombuketa.filmslocaror.App
-import ru.dombuketa.filmslocaror.BuildConfig
-import ru.dombuketa.filmslocaror.data.ApiConstants
-import ru.dombuketa.filmslocaror.data.ITmdbApi
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -22,13 +18,11 @@ class RemoteModule {
         //Создаём кастомный клиент
         OkHttpClient.Builder()
         //Настраиваем таймауты для медленного интернета
-        .callTimeout(App.NETWORKTIMEOUT, TimeUnit.SECONDS)
-        .readTimeout(App.NETWORKTIMEOUT, TimeUnit.SECONDS)
+        .callTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
+        .readTimeout(NETWORKTIMEOUT, TimeUnit.SECONDS)
         //Добавляем логгер
         .addInterceptor(HttpLoggingInterceptor().apply {
-            if (BuildConfig.DEBUG) {
                 level = HttpLoggingInterceptor.Level.BASIC
-            }
         })
         .build()
 
@@ -38,7 +32,7 @@ class RemoteModule {
         //Создаем Ретрофит
         Retrofit.Builder()
         //Указываем базовый URL из констант
-        .baseUrl(ApiConstants.BASE_URL)
+        .baseUrl(ru.dombuketa.net_module.entity.ApiConstants.BASE_URL)
         //Добавляем конвертер
         .addConverterFactory(GsonConverterFactory.create())
         //Добавляем кастомный клиент
@@ -52,4 +46,8 @@ class RemoteModule {
         //Создаем сам сервис с методами для запросов
         retrofit.create(ITmdbApi::class.java)
 
+
+    companion object{
+        const val NETWORKTIMEOUT = 60L
+    }
 }

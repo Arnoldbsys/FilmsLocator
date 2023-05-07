@@ -1,7 +1,6 @@
 package ru.dombuketa.filmslocaror.utils
 
-import io.reactivex.rxjava3.core.Observable
-import ru.dombuketa.filmslocaror.data.entity.TmdbFilm
+import ru.dombuketa.net_module.entity.TmdbFilm
 import ru.dombuketa.filmslocaror.domain.Film
 
 object ConverterFilm {

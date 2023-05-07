@@ -1,17 +1,15 @@
 package ru.dombuketa.filmslocaror.di.modules;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.dombuketa.filmslocaror.data.ITmdbApi_J;
+import ru.dombuketa.net_module.ITmdbApi_J;
 import ru.dombuketa.filmslocaror.data.MainRepository_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
-import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel_J;
 
 @Module
 //Передаем контекст для SharedPreferences через конструктор

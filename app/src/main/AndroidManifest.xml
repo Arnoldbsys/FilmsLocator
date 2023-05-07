@@ -4,7 +4,7 @@
     package="ru.dombuketa.filmslocaror">
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
-        android:name=".App"
+        android:name=".App_J"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

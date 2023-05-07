@@ -2,24 +2,15 @@ package ru.dombuketa.filmslocaror;
 
 import android.app.Application;
 
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.dombuketa.filmslocaror.data.ApiConstants;
-import ru.dombuketa.filmslocaror.data.ITmdbApi_J;
-import ru.dombuketa.filmslocaror.data.MainRepository_J;
 import ru.dombuketa.filmslocaror.di.DaggerIAppComponent_J;
 import ru.dombuketa.filmslocaror.di.IAppComponent_J;
 import ru.dombuketa.filmslocaror.di.modules.DatabaseModule_J;
 import ru.dombuketa.filmslocaror.di.modules.DomainModule_J;
-import ru.dombuketa.filmslocaror.di.modules.RemoteModule_J;
-import ru.dombuketa.filmslocaror.domain.Interactor_J;
+import ru.dombuketa.net_module.DaggerIRemoteComponent_J;
+import ru.dombuketa.net_module.IRemoteComponent_J;
+import ru.dombuketa.net_module.RemoteModule_J;
 
 public class App_J extends Application {
-    public static final long NETWORKTIMEOUT = 60L;
     private static App_J instance;
     public static App_J getInstance() {
         return instance;
@@ -57,8 +48,10 @@ public class App_J extends Application {
         //interactor = new Interactor_J(repo); // локальная БД
 //        interactor = new Interactor_J(repo, retrofitService);
         //daggerj = DaggerIAppComponent_J.create();
+        IRemoteComponent_J remoteProvider_J = DaggerIRemoteComponent_J.create();
         daggerj = DaggerIAppComponent_J.builder()
-                .remoteModule_J(new RemoteModule_J())
+                //.remoteModule_J(new RemoteModule_J())
+                .iRemoteProvider_J(remoteProvider_J)
                 .databaseModule_J(new DatabaseModule_J())
                 .domainModule_J(new DomainModule_J(this))
                 .build();

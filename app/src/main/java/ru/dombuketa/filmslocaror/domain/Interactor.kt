@@ -3,31 +3,32 @@ package ru.dombuketa.filmslocaror.domain
 import android.util.Log
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Converter
-import retrofit2.Response
+//import retrofit2.Call
+//import retrofit2.Callback
+//import retrofit2.Response
 import ru.dombuketa.filmslocaror.data.API
-import ru.dombuketa.filmslocaror.data.ITmdbApi
+import ru.dombuketa.net_module.ITmdbApi
 import ru.dombuketa.filmslocaror.data.MainRepository
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
-import ru.dombuketa.filmslocaror.data.entity.TmdbResultsDTO
+import ru.dombuketa.net_module.entity.TmdbResultsDTO
 import ru.dombuketa.filmslocaror.utils.ConverterFilm
 import java.util.*
 
-class Interactor(private val repo: MainRepository, private val retrofitService: ITmdbApi, private val preferences: PreferenceProvider) {
+class Interactor(private val repo: MainRepository, private val retrofitService: ru.dombuketa.net_module.ITmdbApi, private val preferences: PreferenceProvider) {
     //В конструктор мы будем передавать коллбэк из вью модели, чтобы реагировать на то, когда фильмы будут получены
     //и страницу, которую нужно загрузить (это для пагинации)
     var progressBarStateRx : BehaviorSubject<Boolean> = BehaviorSubject.create()
 
+/*
     fun getFilmsFromAPI(page: Int){
         // Показываем ProgressBar
         progressBarStateRx.onNext(true)
         //Метод getDefaultCategoryFromPreferences() будет нам получать при каждом запросе нужный нам список фильмов
-        retrofitService.getFilms(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page).enqueue(object : Callback<TmdbResultsDTO>{
-            override fun onResponse(call: Call<TmdbResultsDTO>, response: Response<TmdbResultsDTO>) {
+        retrofitService.getFilms(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page).enqueue(object : Callback<ru.dombuketa.net_module.entity.TmdbResultsDTO>{
+            override fun onResponse(call: Call<ru.dombuketa.net_module.entity.TmdbResultsDTO>, response: Response<ru.dombuketa.net_module.entity.TmdbResultsDTO>) {
                 //44*
                 val listApi = response.body()?.tmdbFilms
                 val listDTO = listApi?.map { film ->
@@ -48,7 +49,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                 Log.i("interactor","data from NET")
             }
 
-            override fun onFailure(call: Call<TmdbResultsDTO>, t: Throwable) {
+            override fun onFailure(call: Call<ru.dombuketa.net_module.entity.TmdbResultsDTO>, t: Throwable) {
                 //40*
                 if ((Date().time - preferences.getLastTimeInternetOK()) / TIMEDEVIDER > TIME_ACTUAL_CACHE_MINUTES) {
                     println("!!! - Удаляем кэш - более " + TIME_ACTUAL_CACHE_MINUTES + " минут прошло.")
@@ -62,6 +63,21 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
 
         })
     }
+*/
+
+    fun getFilmsFromAPIRx(page: Int){
+        progressBarStateRx.onNext(true)
+        retrofitService.getFilmsRx(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page)
+            .subscribeOn(Schedulers.io())
+            .map {
+                ConverterFilm.convertApiListToDTOList(it.tmdbFilms)
+            }
+            .subscribeBy(onError = { progressBarStateRx.onNext(false)}, onNext = {
+                progressBarStateRx.onNext(false)
+                repo.putToDB(it)
+            })
+    }
+
 
     fun getFilmsFromAPIBySearch(searchString: String, page: Int) : Observable<List<Film>>{
         progressBarStateRx.onNext(true)

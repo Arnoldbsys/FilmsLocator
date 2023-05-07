@@ -3,8 +3,9 @@ package ru.dombuketa.filmslocaror.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.dombuketa.filmslocaror.data.entity.TmdbFilm;
+//import ru.dombuketa.filmslocaror.data.entity.TmdbFilm;
 import ru.dombuketa.filmslocaror.domain.Film;
+import ru.dombuketa.net_module.entity.TmdbFilm;
 
 public class ConverterFilm_J {
     public static List<Film> convertApiListToDTOList(List<TmdbFilm> list){

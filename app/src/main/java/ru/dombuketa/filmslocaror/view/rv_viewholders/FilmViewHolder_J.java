@@ -6,10 +6,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import ru.dombuketa.filmslocaror.R;
-import ru.dombuketa.filmslocaror.data.ApiConstants;
+//import ru.dombuketa.filmslocaror.data.ApiConstants;
 import ru.dombuketa.filmslocaror.view.customview.RatingDonutView_J;
 import ru.dombuketa.filmslocaror.databinding.FilmItemBinding;
 import ru.dombuketa.filmslocaror.domain.Film;
+import ru.dombuketa.net_module.entity.ApiConstants;
 
 //В конструктор класс передается layout, который мы создали(film_item.xml)
 public class FilmViewHolder_J extends RecyclerView.ViewHolder {

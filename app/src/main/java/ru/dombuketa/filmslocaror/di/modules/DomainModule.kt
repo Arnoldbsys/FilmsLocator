@@ -3,7 +3,7 @@ package ru.dombuketa.filmslocaror.di.modules
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ru.dombuketa.filmslocaror.data.ITmdbApi
+import ru.dombuketa.net_module.ITmdbApi
 import ru.dombuketa.filmslocaror.data.MainRepository
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.domain.Interactor
@@ -23,6 +23,6 @@ class DomainModule(val context: Context) {
 
     @Singleton
     @Provides
-    fun provideInteractor(repository: MainRepository, tmdbApi: ITmdbApi, preferenceProvider: PreferenceProvider) =
+    fun provideInteractor(repository: MainRepository, tmdbApi: ru.dombuketa.net_module.ITmdbApi, preferenceProvider: PreferenceProvider) =
         Interactor(repo = repository, retrofitService = tmdbApi, preferences = preferenceProvider)
 }

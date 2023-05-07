@@ -1,4 +1,4 @@
-package ru.dombuketa.filmslocaror.data.entity
+package ru.dombuketa.net_module.entity
 
 import com.google.gson.annotations.SerializedName
 
