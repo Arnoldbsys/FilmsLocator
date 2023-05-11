@@ -16,3 +16,4 @@ rootProject.name = "FilmsLocaror"
 include ':app'
 include ':net_module'
 include ':net_module'
+include ':db_module'

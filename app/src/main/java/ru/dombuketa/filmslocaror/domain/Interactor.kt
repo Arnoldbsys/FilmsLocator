@@ -17,7 +17,7 @@ import ru.dombuketa.net_module.entity.TmdbResultsDTO
 import ru.dombuketa.filmslocaror.utils.ConverterFilm
 import java.util.*
 
-class Interactor(private val repo: MainRepository, private val retrofitService: ru.dombuketa.net_module.ITmdbApi, private val preferences: PreferenceProvider) {
+class Interactor(private val repo: MainRepository, private val retrofitService: ITmdbApi, private val preferences: PreferenceProvider) {
     //В конструктор мы будем передавать коллбэк из вью модели, чтобы реагировать на то, когда фильмы будут получены
     //и страницу, которую нужно загрузить (это для пагинации)
     var progressBarStateRx : BehaviorSubject<Boolean> = BehaviorSubject.create()
