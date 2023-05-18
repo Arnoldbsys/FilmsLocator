@@ -1,7 +1,6 @@
 package ru.dombuketa.filmslocaror.utils
 
 import ru.dombuketa.net_module.entity.TmdbFilm
-import ru.dombuketa.filmslocaror.domain.Film
 
 object ConverterFilm {
     fun convertApiListToDTOList(list: List<TmdbFilm>?): List<Film>{

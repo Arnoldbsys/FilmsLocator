@@ -19,7 +19,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
-import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.utils.AnimationHelper
 import ru.dombuketa.filmslocaror.utils.AutoDisposable
 import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration

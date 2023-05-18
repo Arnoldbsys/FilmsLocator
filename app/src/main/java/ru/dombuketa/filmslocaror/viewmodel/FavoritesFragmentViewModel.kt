@@ -2,9 +2,6 @@ package ru.dombuketa.filmslocaror.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.dombuketa.filmslocaror.App
-import ru.dombuketa.filmslocaror.domain.Film
-import ru.dombuketa.filmslocaror.domain.Interactor
 
 class FavoritesFragmentViewModel : ViewModel() {
     val filmsListLiveData = MutableLiveData<List<Film>>()

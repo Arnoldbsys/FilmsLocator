@@ -1,7 +1,6 @@
 package ru.dombuketa.filmslocaror.view.rv_adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.dombuketa.filmslocaror.domain.Film
 
 class FilmDiff(val oldList:ArrayList<Film>, val newList: ArrayList<Film>) :DiffUtil.Callback() {
     override fun getOldListSize(): Int {

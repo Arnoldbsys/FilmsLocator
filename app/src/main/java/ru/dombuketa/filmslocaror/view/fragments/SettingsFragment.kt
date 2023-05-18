@@ -4,27 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
-import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.R
-import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
 import ru.dombuketa.filmslocaror.databinding.FragmentSettingsBinding
-import ru.dombuketa.filmslocaror.domain.Film
-import ru.dombuketa.filmslocaror.domain.Interactor
 import ru.dombuketa.filmslocaror.utils.AnimationHelper
-import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration
-import ru.dombuketa.filmslocaror.view.MainActivity
-import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
-import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
 import ru.dombuketa.filmslocaror.viewmodel.SettingsFragmentViewModel
-import java.util.*
-import javax.inject.Inject
 
 
 class SettingsFragment : Fragment() {

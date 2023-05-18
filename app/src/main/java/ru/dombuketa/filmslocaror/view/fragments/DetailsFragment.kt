@@ -21,9 +21,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import ru.dombuketa.filmslocaror.R
-import ru.dombuketa.net_module.entity.ApiConstants
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding
-import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.viewmodel.DetailsFragmentViewModel
 
 class DetailsFragment : Fragment() {

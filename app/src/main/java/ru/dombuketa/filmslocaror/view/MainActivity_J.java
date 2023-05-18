@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.animation.Animator;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,13 +14,9 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Arrays;
 import java.util.List;
 
-import ru.dombuketa.filmslocaror.App_J;
-import ru.dombuketa.filmslocaror.FilmsDataBase_J;
 import ru.dombuketa.filmslocaror.R;
-import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding;
 import ru.dombuketa.filmslocaror.domain.Film;
 import ru.dombuketa.filmslocaror.view.fragments.CastsFragment_J;

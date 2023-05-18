@@ -5,9 +5,6 @@ import androidx.lifecycle.ViewModel;
 
 import javax.inject.Inject;
 
-import ru.dombuketa.filmslocaror.App_J;
-import ru.dombuketa.filmslocaror.domain.Interactor_J;
-
 public class SettingsFragmentViewModel_J extends ViewModel {
     //Инжектим интерактор
     @Inject

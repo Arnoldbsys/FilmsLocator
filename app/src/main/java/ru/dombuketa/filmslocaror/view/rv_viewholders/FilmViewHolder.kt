@@ -2,10 +2,8 @@ package ru.dombuketa.filmslocaror.view.rv_viewholders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import ru.dombuketa.net_module.entity.ApiConstants
 import ru.dombuketa.filmslocaror.view.customview.RatingDonutView
 import ru.dombuketa.filmslocaror.databinding.FilmItemBinding
-import ru.dombuketa.filmslocaror.domain.Film
 
 
 //В конструктор класс передается layout, который мы создали(film_item.xml)

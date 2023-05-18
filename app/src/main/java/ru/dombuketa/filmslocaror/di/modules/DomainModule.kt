@@ -3,8 +3,7 @@ package ru.dombuketa.filmslocaror.di.modules
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ru.dombuketa.net_module.ITmdbApi
-import ru.dombuketa.filmslocaror.data.MainRepository
+import ru.dombuketa.db_module.repos.MainRepository
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.domain.Interactor
 import javax.inject.Singleton

@@ -6,7 +6,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.FilmItemBinding
-import ru.dombuketa.filmslocaror.domain.Film
 import ru.dombuketa.filmslocaror.view.rv_viewholders.FilmViewHolder
 
 //в параметр передаем слушатель, чтобы мы потом могли обрабатывать нажатия из класса Activity

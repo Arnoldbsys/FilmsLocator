@@ -10,10 +10,7 @@ import javax.inject.Inject;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
-import ru.dombuketa.filmslocaror.App_J;
-import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Film;
-import ru.dombuketa.filmslocaror.domain.Interactor_J;
 import ru.dombuketa.filmslocaror.utils.SingleLiveEvent_J;
 
 public class HomeFragmentViewModel_J extends ViewModel {

@@ -1,7 +1,5 @@
 package ru.dombuketa.filmslocaror.domain
 
-import android.util.Log
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -11,9 +9,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 //import retrofit2.Response
 import ru.dombuketa.filmslocaror.data.API
 import ru.dombuketa.net_module.ITmdbApi
-import ru.dombuketa.filmslocaror.data.MainRepository
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
-import ru.dombuketa.net_module.entity.TmdbResultsDTO
 import ru.dombuketa.filmslocaror.utils.ConverterFilm
 import java.util.*
 

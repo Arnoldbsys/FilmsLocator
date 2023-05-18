@@ -3,23 +3,25 @@ package ru.dombuketa.filmslocaror
 import android.app.Application
 import ru.dombuketa.filmslocaror.di.DaggerIAppComponent
 import ru.dombuketa.filmslocaror.di.IAppComponent
-import ru.dombuketa.filmslocaror.di.modules.DatabaseModule
 import ru.dombuketa.filmslocaror.di.modules.DomainModule
 import ru.dombuketa.net_module.DaggerIRemoteComponent
-import ru.dombuketa.net_module.RemoteModule
 
-class App : Application() {
+class App : Application()
+{
     lateinit var dagger: IAppComponent
     override fun onCreate() {
         super.onCreate()
         //Инициализируем экземпляр App, через который будем получать доступ к остальным переменным
         instance = this
         val remoteProvider = DaggerIRemoteComponent.create()
+        //val databaseProvider = DaggerIDatabaseComponent.builder().iAppProvider() // iAppProvider(this)
         dagger = DaggerIAppComponent.builder()
-            //.remoteModule(ru.dombuketa.net_module.RemoteModule())
-             .iRemoteProvider(remoteProvider)
-            .databaseModule(DatabaseModule())
             .domainModule(DomainModule(this))
+
+            //.remoteModule(ru.dombuketa.net_module.RemoteModule())
+            .iRemoteProvider(remoteProvider)
+            //.databaseModule(DatabaseModule())
+            //.iDatabaseProvider(databaseProvider)
             .build()
     }
 
