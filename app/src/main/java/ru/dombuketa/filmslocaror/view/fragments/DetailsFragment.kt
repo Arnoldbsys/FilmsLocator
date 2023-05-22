@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
+import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding
 import ru.dombuketa.filmslocaror.viewmodel.DetailsFragmentViewModel

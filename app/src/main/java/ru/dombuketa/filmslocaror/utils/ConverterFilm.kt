@@ -1,5 +1,6 @@
 package ru.dombuketa.filmslocaror.utils
 
+import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.net_module.entity.TmdbFilm
 
 object ConverterFilm {

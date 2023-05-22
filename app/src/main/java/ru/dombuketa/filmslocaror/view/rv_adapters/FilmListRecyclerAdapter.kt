@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.FilmItemBinding
 import ru.dombuketa.filmslocaror.view.rv_viewholders.FilmViewHolder

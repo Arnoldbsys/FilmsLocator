@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
 import ru.dombuketa.filmslocaror.view.MainActivity
 import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration

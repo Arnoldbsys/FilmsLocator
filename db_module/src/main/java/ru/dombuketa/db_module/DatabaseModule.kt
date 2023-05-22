@@ -24,7 +24,6 @@ class DatabaseModule{
         context, FilmDatabase::class.java, DATABASE_NAME
     ).build().filmDao()
 
-
     @Provides
     @Singleton
     open fun provideRepository(filmDao: IFilmDao, databaseHelper: DatabaseHelper): MainRepository {

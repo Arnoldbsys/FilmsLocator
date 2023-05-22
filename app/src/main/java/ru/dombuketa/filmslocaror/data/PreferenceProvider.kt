@@ -40,7 +40,7 @@ class PreferenceProvider(context: Context) {
     private fun setSharedListener(){
         val listener = OnSharedPreferenceChangeListener { sharedPreferences: SharedPreferences?, s: String? ->
                 when (s) {
-                    PreferenceProvider_J.KEY_DEFAULT_CATEGORY -> {
+                    PreferenceProvider.KEY_DEFAULT_CATEGORY -> {
                         currentCategory.setValue(getDefaultCategory())
                     }
                 }

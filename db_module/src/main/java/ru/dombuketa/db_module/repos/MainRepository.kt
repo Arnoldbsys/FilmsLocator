@@ -7,8 +7,9 @@ import ru.dombuketa.db_module.db.DatabaseHelper
 import ru.dombuketa.db_module.api.IFilmDao
 import ru.dombuketa.db_module.dto.Film
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
-class MainRepository(private val filmDao: IFilmDao, databaseHelper: DatabaseHelper)  {
+class MainRepository @Inject constructor(private val filmDao: IFilmDao, databaseHelper: DatabaseHelper)  {
     //Инициализируем объект для взаимодействия с БД
     private val sqlDB = databaseHelper.readableDatabase
     //Создаем курсор для обработки запросов из БД

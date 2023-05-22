@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding
 import ru.dombuketa.filmslocaror.view.fragments.*

@@ -3,10 +3,8 @@ package ru.dombuketa.filmslocaror.di
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
-import dagger.Provides
 import ru.dombuketa.db_module.api.IAppProvider
 import ru.dombuketa.db_module.api.IDatabaseProvider
-//import ru.dombuketa.db_module.api.IAppProvider
 import ru.dombuketa.filmslocaror.di.modules.DomainModule
 import ru.dombuketa.filmslocaror.view.fragments.HomeFragment
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
@@ -17,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(dependencies = [IRemoteProvider::class, IDatabaseProvider::class], modules = [DomainModule::class])
 //@Component(dependencies = [IRemoteProvider::class, IDatabaseProvider::class], modules = [DomainModule::class])
-interface IAppComponent : IAppProvider {
+interface IAppComponent {
     //метод для того, чтобы появилась внедрять зависимости в HomeFragmentViewModel
     fun injectt(homeFragmentViewModel: HomeFragmentViewModel)
     fun injectt(homeFragment: HomeFragment)
@@ -30,8 +28,5 @@ interface IAppComponent : IAppProvider {
 
 
 
-//    @Component.Factory
-//    interface AppComponentFactory{
-//        fun create(@BindsInstance context: Context): IAppComponent
-//    }
+
 }

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="film"
-            type="ru.dombuketa.filmslocaror.domain.Film" />
+            type="ru.dombuketa.db_module.dto.Film" />
     </data>
 
     <FrameLayout

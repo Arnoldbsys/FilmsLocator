@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.databinding.FragmentHomeBinding
 import ru.dombuketa.filmslocaror.utils.AnimationHelper

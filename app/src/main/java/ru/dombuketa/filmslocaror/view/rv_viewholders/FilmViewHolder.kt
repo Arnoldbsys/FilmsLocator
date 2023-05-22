@@ -2,6 +2,7 @@ package ru.dombuketa.filmslocaror.view.rv_viewholders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.view.customview.RatingDonutView
 import ru.dombuketa.filmslocaror.databinding.FilmItemBinding
 
