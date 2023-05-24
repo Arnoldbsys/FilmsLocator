@@ -2,14 +2,13 @@ package ru.dombuketa.filmslocaror.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.animation.Animator;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +23,7 @@ import java.util.List;
 import ru.dombuketa.db_module.dto.Film;
 import ru.dombuketa.filmslocaror.R;
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding;
-import ru.dombuketa.filmslocaror.utils.MessageReceiver;
+import ru.dombuketa.filmslocaror.utils.MessageReceiver_J;
 import ru.dombuketa.filmslocaror.view.fragments.CastsFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.DetailsFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.FavoritesFragment_J;
@@ -33,8 +32,8 @@ import ru.dombuketa.filmslocaror.view.fragments.SeelaterFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.SettingsFragment_J;
 
 public class MainActivity_J extends AppCompatActivity {
-    private BroadcastReceiver receiver;
     private ActivityMainBinding binding;
+    private BroadcastReceiver receiver;
     private static final int TIME_INTERVAL = 2000;
     private long backPressed = 0L;
 
@@ -52,10 +51,11 @@ public class MainActivity_J extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         setContentView(binding.getRoot());
 
-        receiver = new MessageReceiver();
+        receiver = new MessageReceiver_J();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_POWER_CONNECTED);
         filter.addAction(Intent.ACTION_BATTERY_LOW);
+        filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
         registerReceiver(receiver, filter);
 
 

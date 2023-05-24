@@ -8,6 +8,7 @@ import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -81,7 +82,15 @@ public class SettingsFragment_J extends Fragment {
                     break;
             }
         });
-
-
+        binding.radioGroupTheme.setOnCheckedChangeListener((radioGroup, i) -> {
+            switch (i){
+                case R.id.radio_light:
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    break;
+                case R.id.radio_dark:
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    break;
+            }
+        });
     }
 }

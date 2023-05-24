@@ -17,6 +17,11 @@
     <string name="radio_button_playing">В кинотеатрах</string>
     <string name="radio_group_header">Подборка на главном экране:</string>
 
+    <string name="radio_group_theme">Тема</string>
+    <string name="radio_button_light">Светлая</string>
+    <string name="radio_button_dark">Темная</string>
+
+
 
 
     <string name="mode_day">Поиск</string>
