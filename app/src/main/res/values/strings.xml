@@ -11,6 +11,19 @@
     <string name="menu_settings_title_text">Настройки</string>
     <string name="page_title">Поиск</string>
 
+    <string name="radio_button_popular">Популярные</string>
+    <string name="radio_button_top_rated">Топ</string>
+    <string name="radio_button_upcoming">Скоро</string>
+    <string name="radio_button_playing">В кинотеатрах</string>
+    <string name="radio_group_header">Подборка на главном экране:</string>
+
+    <string name="radio_group_theme">Тема</string>
+    <string name="radio_button_light">Светлая</string>
+    <string name="radio_button_dark">Темная</string>
+
+
+
+
     <string name="mode_day">Поиск</string>
     <string name="mode_night">Поиск</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -19,6 +32,10 @@
 
     <string name="alert_2clickToExit">Нажмите дважды для выхода.</string>
     <string name="alert_tellToFriends">Поделюсь с друзьями</string>
+
+    <string name="permission_storage">Нет разрешения. Пожалуйста, предоставьте разрешение</string>
+    <string name="downloaded_to_gallery">"Сохранено в галерею"</string>
+    <string name="open">В галерею</string>
 
 
 </resources>

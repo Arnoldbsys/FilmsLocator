@@ -1,26 +1,39 @@
 package ru.dombuketa.filmslocaror.view
 
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import ru.dombuketa.filmslocaror.FilmsDataBase
+import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding
-import ru.dombuketa.filmslocaror.domain.Film
+import ru.dombuketa.filmslocaror.utils.MessageReceiver_J
 import ru.dombuketa.filmslocaror.view.fragments.*
 
 class MainActivity : AppCompatActivity() {
     //val dataBase = FilmsDataBase().getFilmsDataBase()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var receiver : BroadcastReceiver
     private var backPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        receiver = MessageReceiver_J()
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_POWER_CONNECTED)
+            addAction(Intent.ACTION_BATTERY_LOW)
+            addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        }
+        registerReceiver(receiver, filter)
+
         initNavigationMenu()
 
         binding.lottieAnim.visibility = View.GONE
@@ -57,6 +70,13 @@ class MainActivity : AppCompatActivity() {
                     changeFragment(fragment?: CastsFragment(), tag)
                     true
                 }
+                R.id.settings -> {
+                    val tag = "settings"
+                    val fragment = checkFragmentExistence(tag)
+                    changeFragment(fragment?: SettingsFragment(), tag)
+                    true
+                }
+
                 else -> false
             }
         }
@@ -97,6 +117,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+    }
 
     companion object consts{
         const val TIME_INTERVAL = 2000

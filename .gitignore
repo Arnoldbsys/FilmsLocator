@@ -1,3 +1,5 @@
+*.mdmp
+*.log
 *.iml
 .gradle
 /local.properties
@@ -13,3 +15,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/src/main/java/ru/dombuketa/filmslocaror/data/API.kt 
+

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="film"
-            type="ru.dombuketa.filmslocaror.domain.Film" />
+            type="ru.dombuketa.db_module.dto.Film" />
     </data>
 
     <FrameLayout
@@ -22,15 +22,14 @@
             app:progress="32"
             app:hideWhenProgressIsZero="true"
             app:textWhenProgressIsZero="нет"
-            android:layout_gravity="bottom|left">
+            android:layout_gravity="bottom|left"/>
 
-        </ru.dombuketa.filmslocaror.view.customview.RatingDonutView>
 
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="6dp"
+            android:layout_margin="@dimen/film_item_card_margin"
             android:elevation="1dp"
             app:cardCornerRadius="10dp">
 
@@ -53,7 +52,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:padding="8dp"
+                    android:padding="@dimen/film_item_text_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     app:layout_constraintLeft_toRightOf="@id/poster"
                     app:layout_constraintRight_toRightOf="parent"
@@ -64,7 +63,7 @@
                     android:id="@+id/description"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:padding="8dp"
+                    android:padding="@dimen/film_item_text_padding"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/poster"
                     app:layout_constraintRight_toRightOf="parent"
