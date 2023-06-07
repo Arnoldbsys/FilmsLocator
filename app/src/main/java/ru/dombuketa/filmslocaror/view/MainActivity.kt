@@ -9,11 +9,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding
 import ru.dombuketa.filmslocaror.utils.MessageReceiver_J
 import ru.dombuketa.filmslocaror.view.fragments.*
+import ru.dombuketa.filmslocaror.view.notify.NotifyHelper
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     //val dataBase = FilmsDataBase().getFilmsDataBase()
@@ -35,11 +41,19 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, filter)
 
         initNavigationMenu()
-
         binding.lottieAnim.visibility = View.GONE
-        val fragmentHome = checkFragmentExistence("home")
-        changeFragment(fragmentHome?: HomeFragment(), "home")
+
+        val filmFromNotification = intent.getParcelableExtra<Film>("film")
+        if (filmFromNotification != null) {
+            lanunchDetailsFragment(filmFromNotification)
+        } else {
+            val fragmentHome = checkFragmentExistence("home")
+            changeFragment(fragmentHome ?: HomeFragment(), "home")
+        }
+
+
     }
+
 
     fun initNavigationMenu() {
         val snackbar = Snackbar.make(binding.mainContainer, "", Snackbar.LENGTH_SHORT)
@@ -97,10 +111,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkFragmentExistence(tag: String) : Fragment? = supportFragmentManager.findFragmentByTag(tag)
+
     private fun changeFragment(fragment: Fragment, tag: String){
         supportFragmentManager.beginTransaction().replace(R.id.fragment_placeholder,fragment, tag)
             .addToBackStack(null).commit()
     }
+
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount == 1) {
             if (backPressed + TIME_INTERVAL > System.currentTimeMillis()) {

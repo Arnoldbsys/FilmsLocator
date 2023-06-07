@@ -1,6 +1,7 @@
 package ru.dombuketa.filmslocaror.domain
 
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -63,6 +64,18 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     }
 */
 
+    fun getFilmFromAPI(id: Int) : Observable<Film> {
+        progressBarStateRx.onNext(true)
+        return retrofitService.getFilm(id, API.KEY, "ru-RU")
+            .subscribeOn(Schedulers.io())
+            .map {
+                progressBarStateRx.onNext(false)
+                ConverterFilm.convertApiFilmToDTOFilm(it)
+            }
+            .doOnError { progressBarStateRx.onNext(false) }
+        //return ConverterFilm.convertApiFilmToDTOFilm(retrofitService.getFilm(id, API.KEY, "ru-RU"))
+    }
+
     fun getFilmsFromAPIRx(page: Int){
         progressBarStateRx.onNext(true)
         retrofitService.getFilmsRx(getDefaultCategoryFromPreferences(), API.KEY, "ru-RU", page)
@@ -75,6 +88,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                 repo.putToDB(it)
             })
     }
+
 
 
     fun getFilmsFromAPIBySearch(searchString: String, page: Int) : Observable<List<Film>>{

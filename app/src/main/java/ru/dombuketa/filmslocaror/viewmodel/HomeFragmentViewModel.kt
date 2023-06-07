@@ -36,6 +36,10 @@ class HomeFragmentViewModel : ViewModel() {
         errorNetworkConnection.postValue("") //41*
     }
 
+    fun getFilm(id: Int) : Observable<Film>{
+        return interactor.getFilmFromAPI(id)
+    }
+
     fun getFilms(page: Int){
         //interactor.getFilmsFromAPI(page)
         interactor.getFilmsFromAPIRx(page)

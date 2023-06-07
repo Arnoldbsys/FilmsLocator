@@ -52,6 +52,8 @@ import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Interactor;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
 import ru.dombuketa.filmslocaror.utils.AutoDisposable_J;
+import ru.dombuketa.filmslocaror.view.notify.NotifyHelper;
+import ru.dombuketa.filmslocaror.view.notify.NotifyHelper_J;
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter_J;
 import ru.dombuketa.filmslocaror.view.MainActivity_J;
 import ru.dombuketa.filmslocaror.R;
@@ -158,6 +160,17 @@ public class HomeFragment_J extends Fragment {
             });
         initHomeRV();
         initRxErrorhandler();
+        // 48 Запустим нотификацию через 5 секунд после старта приложения
+        Observable.timer(5, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(timer -> {
+                    Toast.makeText(requireContext(), "Уведомление", Toast.LENGTH_SHORT).show();
+                    NotifyHelper_J.createNotification(requireContext(), viewModel.getFilm(502356));
+                }, error ->{
+                    Log.i("notification","!!!" + error.getMessage());
+                });
+        // 48 _
+
     }
 
 

@@ -90,6 +90,17 @@ public class Interactor_J {
         });
     }*/
 
+    public Observable<Film> getFilmFromAPI(Integer id){
+        progressBarStateRx.onNext(View.VISIBLE);
+        return retrofitService.getFilm(id, API.KEY, "ru-RU")
+            .subscribeOn(Schedulers.io())
+            .map( f -> {
+                progressBarStateRx.onNext(View.GONE);
+                return ConverterFilm_J.convertApiFilmToDTOFilm(f);
+            }).doOnError( e -> {progressBarStateRx.onNext(View.GONE);});
+
+    }
+
     public Observable<List<Film>> getFilmsFromApiBySearch(String searchString, int page){
         progressBarStateRx.onNext(View.VISIBLE);
         return retrofitService.getFilmsBySearch(API.KEY, "ru-RU", searchString, page)

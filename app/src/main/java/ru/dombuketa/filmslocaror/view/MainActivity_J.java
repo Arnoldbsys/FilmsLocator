@@ -86,7 +86,13 @@ public class MainActivity_J extends AppCompatActivity {
         //initTopBar();
         //setSupportActionBar(findViewById(R.id.app_bar2));
 
-
+        Film filmFromNotification = getIntent().getParcelableExtra("film");
+        if (filmFromNotification != null) {
+            launchDetailsFragment(filmFromNotification);
+        } else {
+            Fragment fragmentHome = checkFragmentExistence("home");
+            changeFragment( (fragmentHome == null) ? new HomeFragment_J() : fragmentHome, "home");
+        }
     }
 
 

@@ -5,9 +5,16 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import ru.dombuketa.net_module.entity.TmdbFilm
 import ru.dombuketa.net_module.entity.TmdbResultsDTO
 
 interface ITmdbApi {
+    @GET("3/movie/{id}")
+    fun getFilm(
+        @Path("id") category: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+    ): Observable<TmdbFilm>
     @GET("3/movie/{category}")
     fun getFilms(
         @Path("category") category: String,

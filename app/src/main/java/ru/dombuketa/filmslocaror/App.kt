@@ -1,13 +1,18 @@
 package ru.dombuketa.filmslocaror
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import ru.dombuketa.db_module.DaggerIDatabaseComponent
 import ru.dombuketa.db_module.api.IAppProvider
 import ru.dombuketa.db_module.api.IDatabaseProvider
 import ru.dombuketa.filmslocaror.di.DaggerIAppComponent
 import ru.dombuketa.filmslocaror.di.IAppComponent
 import ru.dombuketa.filmslocaror.di.modules.DomainModule
+import ru.dombuketa.filmslocaror.view.notify.NotifyConsts.CHANNEL_ID
 import ru.dombuketa.net_module.DaggerIRemoteComponent
 
 class App : Application(), IAppProvider
@@ -27,6 +32,20 @@ class App : Application(), IAppProvider
             //.databaseModule(DatabaseModule())
             .iDatabaseProvider(databaseProvider)
             .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            initWatchLaterChannel()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun initWatchLaterChannel(){
+        val name = "WatchLaterChannel"
+        val desc = "FilmsLocator notification channel"
+        val important = NotificationManager.IMPORTANCE_HIGH
+        val mChannel = NotificationChannel(CHANNEL_ID, name, important)
+        mChannel.description = desc
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(mChannel)
     }
 
     companion object{

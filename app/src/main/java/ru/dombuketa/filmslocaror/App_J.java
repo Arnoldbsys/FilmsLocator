@@ -1,7 +1,12 @@
 package ru.dombuketa.filmslocaror;
 
+import static ru.dombuketa.filmslocaror.view.notify.NotifyConsts.CHANNEL_ID;
+
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 
 import ru.dombuketa.filmslocaror.di.DaggerIAppComponent_J;
 import ru.dombuketa.db_module.DaggerIDatabaseComponent_J;
@@ -61,6 +66,19 @@ public class App_J extends Application implements IAppProvider_J {
                 .iDatabaseProvider_J(databaseProvider_j)
                 .domainModule_J(new DomainModule_J(this))
                 .build();
+        initWatchLaterChannel();
+    }
+
+    void initWatchLaterChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String name = "WatchLaterChannel";
+            String desc = "FilmsLocator notification channel";
+            Integer important = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, important);
+            mChannel.setDescription(desc);
+            NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(mChannel);
+        }
     }
 
     @Override

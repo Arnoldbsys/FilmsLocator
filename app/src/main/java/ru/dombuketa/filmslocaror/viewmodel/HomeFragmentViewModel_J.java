@@ -52,6 +52,10 @@ public class HomeFragmentViewModel_J extends ViewModel {
         errorNetworkConnection.postValue(""); //41*
     }
 
+    public Observable<Film> getFilm(Integer id){
+        return interactor.getFilmFromAPI(id);
+    }
+
     public void getFilms(Integer page){
         //interactor.getFilmsFromApi(page);
         interactor.getFilmsFromApiRx(page);
