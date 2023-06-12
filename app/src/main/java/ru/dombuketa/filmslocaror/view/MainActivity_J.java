@@ -2,7 +2,6 @@ package ru.dombuketa.filmslocaror.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.animation.Animator;
@@ -23,7 +22,7 @@ import java.util.List;
 import ru.dombuketa.db_module.dto.Film;
 import ru.dombuketa.filmslocaror.R;
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding;
-import ru.dombuketa.filmslocaror.utils.MessageReceiver_J;
+import ru.dombuketa.filmslocaror.receivers.MessageReceiver_J;
 import ru.dombuketa.filmslocaror.view.fragments.CastsFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.DetailsFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.FavoritesFragment_J;

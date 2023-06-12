@@ -23,6 +23,7 @@ import kotlinx.coroutines.*
 import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding
+import ru.dombuketa.filmslocaror.view.notify.NotifyHelper
 import ru.dombuketa.filmslocaror.viewmodel.DetailsFragmentViewModel
 
 class DetailsFragment : Fragment() {
@@ -85,6 +86,8 @@ class DetailsFragment : Fragment() {
         }
 
         binding.detailsFabDownloadWp.setOnClickListener { performAsyncLoadOfPoster() }
+
+        binding.detailsFabTimer.setOnClickListener{ NotifyHelper.notificatioSet(requireContext(), film)}
     }
 
     //Узнаем, было ли получено разрешение ранее

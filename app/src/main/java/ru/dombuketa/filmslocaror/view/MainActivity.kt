@@ -9,17 +9,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding
-import ru.dombuketa.filmslocaror.utils.MessageReceiver_J
+import ru.dombuketa.filmslocaror.receivers.MessageReceiver_J
 import ru.dombuketa.filmslocaror.view.fragments.*
-import ru.dombuketa.filmslocaror.view.notify.NotifyHelper
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     //val dataBase = FilmsDataBase().getFilmsDataBase()

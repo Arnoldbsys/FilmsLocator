@@ -70,6 +70,21 @@
         android:tint="@color/white"
         ></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/details_fab_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:borderWidth="0dp"
+        android:translationX="144dp"
+        android:backgroundTint="@color/white"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="left|bottom"
+        app:srcCompat = "@drawable/ic_outline_access_time_24"
+        android:tint="@color/white"
+        ></com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
 
     <ProgressBar
         android:id="@+id/progress_bar"

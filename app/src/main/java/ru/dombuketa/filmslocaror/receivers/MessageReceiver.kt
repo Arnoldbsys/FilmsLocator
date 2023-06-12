@@ -1,4 +1,4 @@
-package ru.dombuketa.filmslocaror.utils
+package ru.dombuketa.filmslocaror.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context

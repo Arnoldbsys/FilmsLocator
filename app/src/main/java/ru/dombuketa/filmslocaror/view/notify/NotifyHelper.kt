@@ -1,10 +1,16 @@
 package ru.dombuketa.filmslocaror.view.notify
 
+import android.app.AlarmManager
+import android.app.DatePickerDialog
 import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.os.Build
+import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.bumptech.glide.Glide
@@ -13,11 +19,36 @@ import com.bumptech.glide.request.transition.Transition
 import io.reactivex.rxjava3.core.Observable
 import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.R
+import ru.dombuketa.filmslocaror.receivers.ReminderBroadcast
 import ru.dombuketa.filmslocaror.view.MainActivity
 import ru.dombuketa.net_module.entity.ApiConstants
+import java.util.*
 
 object NotifyHelper {
     const val NOTIFY_TITLE = "Не забудьте посмотреть"
+
+
+    fun notificatioSet(context: Context, film: Film){
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = calendar.get(Calendar.MINUTE)
+        DatePickerDialog(context,
+            {_, dY, dM, doM ->
+                val timeSetListener = TimePickerDialog.OnTimeSetListener{
+                    _, hoD, pickerMinute ->
+                    val  pickedDateTime = Calendar.getInstance()
+                    pickedDateTime.set(dY, dM, doM, hoD, pickerMinute, 0)
+                    val dateTimeInMillis = pickedDateTime.timeInMillis
+                    createWatchLaterEvent(context, dateTimeInMillis, film)
+                }
+            TimePickerDialog(context, timeSetListener, currentHour, currentMinute, true).show()
+        },
+        currentYear, currentMonth, currentDay).show()
+    }
+
     fun createNotification(context: Context, film: Observable<Film>){
         film.subscribe({
             println("!!!" + it.title)
@@ -48,5 +79,15 @@ object NotifyHelper {
             },{
                 println("!!!" + it.message)
             })
+    }
+
+    private fun createWatchLaterEvent(context: Context, dateTimeInMillis: Long, film: Film){
+        val alarmManager = context.getSystemService((Context.ALARM_SERVICE)) as AlarmManager
+        val intent = Intent(film.title, null, context, ReminderBroadcast::class.java)
+        val  bundle = Bundle()
+        bundle.putParcelable(NotifyConsts.FILM_KEY, film)
+        intent.putExtra(NotifyConsts.FILM_BUNDLE_KEY, bundle)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, dateTimeInMillis, pendingIntent)
     }
 }
