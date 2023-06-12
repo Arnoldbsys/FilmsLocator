@@ -1,12 +1,18 @@
 package ru.dombuketa.filmslocaror.view.notify;
 
+import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 //import android.database.Observable;
 
 import androidx.annotation.NonNull;
@@ -18,11 +24,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 
+import java.util.Calendar;
+
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.core.Observable;
 import ru.dombuketa.db_module.dto.Film;
 import ru.dombuketa.filmslocaror.R;
+import ru.dombuketa.filmslocaror.receivers.ReminderBroadcast_J;
 import ru.dombuketa.filmslocaror.view.MainActivity;
 import ru.dombuketa.net_module.entity.ApiConstants;
 
@@ -60,5 +69,42 @@ public class NotifyHelper_J {
             Log.i("notification","!!!" + error.getMessage());
 
         });
+    }
+
+    public static void notificationSet_J(Context context, Film film){
+        Calendar calendar = Calendar.getInstance();
+        Integer curY = calendar.get(Calendar.YEAR);
+        Integer curM = calendar.get(Calendar.MONTH);
+        Integer curD = calendar.get(Calendar.DAY_OF_MONTH);
+        Integer curH = calendar.get(Calendar.HOUR);
+        Integer curm = calendar.get(Calendar.MINUTE);
+        new DatePickerDialog(context,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener(){
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                Calendar pickedDataTimeCalendar = Calendar.getInstance();
+                                pickedDataTimeCalendar.set(curY, curM, curD, hourOfDay, minute, 0);
+                                Long dataTimeInMillis = pickedDataTimeCalendar.getTimeInMillis();
+                                createWatchLaterEvent_J(context, dataTimeInMillis, film);
+                            }
+                        };
+                        new TimePickerDialog(context, timePickerListener, curH, curm, true).show();
+                    }
+
+                }, curY, curM, curD).show();
+    }
+
+
+    private static void createWatchLaterEvent_J(Context context, Long dataTimeMillis, Film film){
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(film.getTitle(), null, context, ReminderBroadcast_J.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(NotifyConsts.FILM_KEY, film);
+        intent.putExtra(NotifyConsts.FILM_BUNDLE_KEY, bundle);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, dataTimeMillis, pendingIntent);
     }
 }

@@ -35,6 +35,7 @@ import ru.dombuketa.db_module.dto.Film;
 import ru.dombuketa.filmslocaror.R;
 //import ru.dombuketa.filmslocaror.data.ApiConstants;
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding;
+import ru.dombuketa.filmslocaror.view.notify.NotifyHelper_J;
 import ru.dombuketa.filmslocaror.viewmodel.DetailsFragmentViewModel_J;
 import ru.dombuketa.net_module.entity.ApiConstants;
 
@@ -138,6 +139,8 @@ public class DetailsFragment_J extends Fragment {
             }
         });
         binding.detailsFabDownloadWp.setOnClickListener(v -> DetailsFragment_J.this.performAsyncLoadOfPoster());
+
+        binding.detailsFabTimer. setOnClickListener(l -> NotifyHelper_J.notificationSet_J(requireContext(), film));
     }
 
     //Узнаем, было ли получено разрешение ранее
