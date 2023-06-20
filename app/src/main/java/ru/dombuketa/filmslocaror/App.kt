@@ -8,7 +8,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import ru.dombuketa.db_module.DaggerIDatabaseComponent
 import ru.dombuketa.db_module.api.IAppProvider
-import ru.dombuketa.db_module.api.IDatabaseProvider
 import ru.dombuketa.filmslocaror.di.DaggerIAppComponent
 import ru.dombuketa.filmslocaror.di.IAppComponent
 import ru.dombuketa.filmslocaror.di.modules.DomainModule

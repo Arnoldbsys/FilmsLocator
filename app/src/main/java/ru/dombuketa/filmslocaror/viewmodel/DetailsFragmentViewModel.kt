@@ -1,23 +1,11 @@
 package ru.dombuketa.filmslocaror.viewmodel
 
-import android.Manifest
-import android.content.ContentValues
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Build
-import android.provider.MediaStore
-import android.view.View
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import ru.dombuketa.filmslocaror.utils.SingleLiveEvent
 import java.io.IOException
 import java.net.URL
-
-
-
 import kotlin.coroutines.suspendCoroutine
 import kotlin.coroutines.resume
 
@@ -41,6 +29,9 @@ class DetailsFragmentViewModel : ViewModel() {
     fun clearError() {
         error.postValue("")
     }
+
+
+
     companion object{
         const val ERROR_CONNECTION = "Ошибка соединения с сервером."
     }

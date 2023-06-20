@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Observable
 import ru.dombuketa.db_module.db.DatabaseHelper
 import ru.dombuketa.db_module.api.IFilmDao
 import ru.dombuketa.db_module.dto.Film
+import ru.dombuketa.db_module.dto.Notification
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
@@ -39,6 +40,17 @@ class MainRepository @Inject constructor(private val filmDao: IFilmDao, database
     fun getAllFromDB() : Observable<List<Film>> {
         return filmDao.getCachedFilms()
     }
+    // Нотификации
+    fun getActiveNotifications(): Observable<List<Notification>> = filmDao.getNotifications()
+    fun putNotificationToDB(n: Notification) {
+        // Для упрощения деактивирую старый и вставляю новый
+        filmDao.deactivateNotification(n.filmId)
+        filmDao.insertNotification(n)
+    }
+    fun deactivateNotification(film_id: Int) = filmDao.deactivateNotification(film_id)
+    fun deactivateAllNotification() = filmDao.clearAllNotifications()
+    // Нотификации _
+
 
     //40*
     fun clearAllinDB() {

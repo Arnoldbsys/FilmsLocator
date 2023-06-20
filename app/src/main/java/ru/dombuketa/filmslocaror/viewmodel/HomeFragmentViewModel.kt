@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.flow.*
 import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.data.PreferenceProvider

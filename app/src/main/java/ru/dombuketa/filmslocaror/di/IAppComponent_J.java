@@ -3,8 +3,6 @@ package ru.dombuketa.filmslocaror.di;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import ru.dombuketa.db_module.DatabaseModule_J;
-import ru.dombuketa.db_module.api.IDatabaseProvider;
 import ru.dombuketa.db_module.api.IDatabaseProvider_J;
 import ru.dombuketa.filmslocaror.di.modules.DomainModule_J;
 import ru.dombuketa.net_module.IRemoteProvider_J;

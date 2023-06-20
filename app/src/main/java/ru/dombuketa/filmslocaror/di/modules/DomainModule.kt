@@ -6,6 +6,7 @@ import dagger.Provides
 import ru.dombuketa.db_module.repos.MainRepository
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.domain.Interactor
+import ru.dombuketa.filmslocaror.view.notify.NotifyHelper
 import javax.inject.Singleton
 
 @Module
@@ -19,6 +20,11 @@ class DomainModule(val context: Context) {
     @Provides
     //Создаем экземпляр SharedPreferences
     fun providePreferences(context: Context) = PreferenceProvider(context)
+
+    @Singleton
+    @Provides
+    //Создаем экземпляр NotifyHelper
+    fun provideNotifyHelper() = NotifyHelper()
 
     @Singleton
     @Provides

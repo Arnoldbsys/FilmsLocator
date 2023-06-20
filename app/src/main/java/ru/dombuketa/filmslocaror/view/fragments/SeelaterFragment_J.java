@@ -1,6 +1,9 @@
 package ru.dombuketa.filmslocaror.view.fragments;
 
+import android.app.AlarmManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,14 @@ public class SeelaterFragment_J extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ConstraintLayout seelater_fragment_root = requireActivity().findViewById(R.id.seelater_fragment_root);
         AnimationHelper_J.performFragmentCircularRevealAnimation(seelater_fragment_root, requireActivity(),3);
+
+        AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager.AlarmClockInfo alf = alarmManager.getNextAlarmClock();
+        if (alf != null) {
+            System.out.println("!!!" + alf.toString());
+            System.out.println(alf.toString());
+        }
+
 
     }
 }

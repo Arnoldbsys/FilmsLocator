@@ -19,7 +19,9 @@ class DatabaseHelper @Inject constructor(context: Context) : SQLiteOpenHelper(co
         )
     }
 
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) { }
+    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
+
+    }
 
     companion object{
         private const val DATABASE_NAME = "films.db"

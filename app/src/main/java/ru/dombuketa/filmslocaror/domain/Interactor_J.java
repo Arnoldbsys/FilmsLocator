@@ -1,13 +1,8 @@
 package ru.dombuketa.filmslocaror.domain;
 
-import android.os.Build;
-import android.util.Log;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;

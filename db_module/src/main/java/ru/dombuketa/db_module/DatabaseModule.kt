@@ -7,6 +7,7 @@ import dagger.Provides
 import ru.dombuketa.db_module.db.FilmDatabase
 import ru.dombuketa.db_module.db.DatabaseHelper
 import ru.dombuketa.db_module.api.IFilmDao
+import ru.dombuketa.db_module.db.Migrations
 import ru.dombuketa.db_module.repos.MainRepository
 import javax.inject.Singleton
 
@@ -22,7 +23,12 @@ class DatabaseModule{
     @Singleton
     fun provideFilmDao(context: Context) = Room.databaseBuilder(
         context, FilmDatabase::class.java, DATABASE_NAME
-    ).build().filmDao()
+    )
+        .addMigrations(Migrations.MIGRATION_1_2)
+        .addMigrations(Migrations.MIGRATION_2_3)
+        .addMigrations(Migrations.MIGRATION_3_4)
+        .addMigrations(Migrations.MIGRATION_4_5)
+        .build().filmDao()
 
     @Provides
     @Singleton

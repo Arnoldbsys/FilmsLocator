@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -26,7 +25,6 @@ import ru.dombuketa.filmslocaror.utils.AutoDisposable
 import ru.dombuketa.filmslocaror.utils.TopSpacingItemDecoration
 import ru.dombuketa.filmslocaror.utils.addTo
 import ru.dombuketa.filmslocaror.view.MainActivity
-import ru.dombuketa.filmslocaror.view.notify.NotifyHelper
 import ru.dombuketa.filmslocaror.view.rv_adapters.FilmListRecyclerAdapter
 import ru.dombuketa.filmslocaror.viewmodel.HomeFragmentViewModel
 import java.util.*
@@ -95,14 +93,14 @@ class HomeFragment : Fragment() {
             }
         initHomeRV()
         // 48 Запустим нотификацию через 5 секунд после старта приложения
-        Observable.timer(5,TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe( {
-                Toast.makeText(requireContext(), "Уведомление", Toast.LENGTH_SHORT).show()
-                NotifyHelper.createNotification(requireContext(), viewModel.getFilm(502356))
-            },{
-                println("!!!" + it.message)
-            })
+//        Observable.timer(5,TimeUnit.SECONDS)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe( {
+//                Toast.makeText(requireContext(), "Уведомление", Toast.LENGTH_SHORT).show()
+//                NotifyHelper.createNotification(requireContext(), viewModel.getFilm(502356))
+//            },{
+//                println("!!!onViewCreated" + it.message)
+//            })
         // 48 _
     }
 

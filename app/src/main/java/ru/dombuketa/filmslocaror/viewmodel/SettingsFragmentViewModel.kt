@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.domain.Interactor
-import java.util.Locale.Category
 import javax.inject.Inject
 
 class SettingsFragmentViewModel : ViewModel() {

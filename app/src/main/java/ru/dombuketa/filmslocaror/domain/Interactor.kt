@@ -1,20 +1,17 @@
 package ru.dombuketa.filmslocaror.domain
 
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import ru.dombuketa.db_module.dto.Film
+import ru.dombuketa.db_module.dto.Notification
 import ru.dombuketa.db_module.repos.MainRepository
-//import retrofit2.Call
-//import retrofit2.Callback
-//import retrofit2.Response
 import ru.dombuketa.filmslocaror.data.API
 import ru.dombuketa.net_module.ITmdbApi
 import ru.dombuketa.filmslocaror.data.PreferenceProvider
 import ru.dombuketa.filmslocaror.utils.ConverterFilm
-import java.util.*
 
 class Interactor(private val repo: MainRepository, private val retrofitService: ITmdbApi, private val preferences: PreferenceProvider) {
     //В конструктор мы будем передавать коллбэк из вью модели, чтобы реагировать на то, когда фильмы будут получены
@@ -107,6 +104,39 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     //И вот такой метод у нас будет дергать метод репозитория, чтобы тот забрал для нас фильмы из БД
     fun getFilmsFromDB(): Observable<List<Film>> = repo.getAllFromDB()
 
+    fun getNotifications(): Observable<kotlin.collections.List<Notification>>{
+        return repo.getActiveNotifications()
+    }
+    fun putNodificationtoDB(n: Notification) {
+        Single.just(true)
+            .observeOn(Schedulers.io())
+            .subscribe( {
+                repo.putNotificationToDB(n)
+                println("!!! Нотификация сохранена в БД")
+            },{
+                println("!!! ОШИБКА: Нотификация не сохранена в БД" + it.message)
+            })
+    }
+    fun deactivateNotification(film_id: Int){
+        Single.just(true)
+            .observeOn(Schedulers.io())
+            .subscribe( {
+                repo.deactivateNotification(film_id)
+                println("!!! Нотификация деактивирована в БД")
+            },{
+                println("!!! ОШИБКА: Нотификация не деактивирована в БД" + it.message)
+            })
+    }
+    fun deactivateAllNotifications(){
+        Single.just(true)
+            .observeOn(Schedulers.io())
+            .subscribe( {
+                repo.deactivateAllNotification()
+                println("!!! Все нотификации деактивированы в БД")
+            },{
+                println("!!! ОШИБКА: Нотификации не деактивированы в БД" + it.message)
+            })
+    }
     companion object{
         //40*
         private const val TIMEDEVIDER = 60000

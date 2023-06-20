@@ -86,7 +86,7 @@ public class NotifyHelper_J {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 Calendar pickedDataTimeCalendar = Calendar.getInstance();
-                                pickedDataTimeCalendar.set(curY, curM, curD, hourOfDay, minute, 0);
+                                pickedDataTimeCalendar.set(year, month, dayOfMonth, hourOfDay, minute, 0);
                                 Long dataTimeInMillis = pickedDataTimeCalendar.getTimeInMillis();
                                 createWatchLaterEvent_J(context, dataTimeInMillis, film);
                             }
