@@ -161,14 +161,14 @@ public class HomeFragment_J extends Fragment {
         initHomeRV();
         initRxErrorhandler();
         // 48 Запустим нотификацию через 5 секунд после старта приложения
-        Observable.timer(5, TimeUnit.SECONDS)
+        /*Observable.timer(5, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(timer -> {
                     Toast.makeText(requireContext(), "Уведомление", Toast.LENGTH_SHORT).show();
                     NotifyHelper_J.createNotification(requireContext(), viewModel.getFilm(502356));
                 }, error ->{
                     Log.i("notification","!!!" + error.getMessage());
-                });
+                });*/
         // 48 _
 
     }

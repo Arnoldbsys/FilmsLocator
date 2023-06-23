@@ -31,7 +31,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.Executors;
 
+import javax.inject.Inject;
+
 import ru.dombuketa.db_module.dto.Film;
+import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.R;
 //import ru.dombuketa.filmslocaror.data.ApiConstants;
 import ru.dombuketa.filmslocaror.databinding.FragmentDetailsBinding;
@@ -40,6 +43,7 @@ import ru.dombuketa.filmslocaror.viewmodel.DetailsFragmentViewModel_J;
 import ru.dombuketa.net_module.entity.ApiConstants;
 
 public class DetailsFragment_J extends Fragment {
+    @Inject NotifyHelper_J notifyHelper_j;
     private FragmentDetailsBinding binding;
     private Film film;
     private DetailsFragmentViewModel_J viewModel;
@@ -78,6 +82,7 @@ public class DetailsFragment_J extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
+        notifyHelper_j = App_J.getInstance().daggerj.getNotifyHelper_j();
         getViewModel().error.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {

@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.dombuketa.db_module.repos.MainRepository_J;
+import ru.dombuketa.filmslocaror.view.notify.NotifyHelper_J;
 import ru.dombuketa.net_module.ITmdbApi_J;
 import ru.dombuketa.filmslocaror.data.PreferenceProvider_J;
 import ru.dombuketa.filmslocaror.domain.Interactor_J;
@@ -31,6 +32,10 @@ public class DomainModule_J {
     PreferenceProvider_J providePreferences(Context context){
         return new PreferenceProvider_J(context);
     }
+
+    @Singleton
+    @Provides  //Создаем экземпляр NotifyHelper
+    NotifyHelper_J provideNotifyHelper() { return new NotifyHelper_J();}
 
     @Singleton
     @Provides

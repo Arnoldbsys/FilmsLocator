@@ -5,9 +5,11 @@ import android.view.View;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import ru.dombuketa.db_module.dto.Film;
+import ru.dombuketa.db_module.dto.Notification;
 import ru.dombuketa.db_module.repos.MainRepository_J;
 import ru.dombuketa.filmslocaror.data.API;
 import ru.dombuketa.net_module.ITmdbApi_J;
@@ -168,4 +170,46 @@ public class Interactor_J {
     Observable<List<Film>> getFilmsFromDB(){
         return repo.getALLFromDB();
     }
+
+    public Observable<List<Notification>> getNotifications(){
+        return repo.getActiveNotifications();
+    }
+
+    public void putNodificationtoDB(Notification notif) {
+        Single.just(true)
+            .observeOn(Schedulers.io())
+            .subscribe(
+                action ->{
+                    repo.putNotificationToDB(notif);
+                    System.out.println("!!! Нотификация сохранена в БД");
+                },
+                err ->{
+                    System.out.println("!!! ОШИБКА: Нотификация не сохранена в БД" + err.getMessage());
+                });
+    }
+    public void deactivateNotification(int film_id) {
+        Single.just(true)
+            .observeOn(Schedulers.io())
+            .subscribe(
+                action ->{
+                    repo.deactivateNotification(film_id);
+                    System.out.println("!!! Нотификация деактивирована в БД");
+                    },
+                err -> {
+                    System.out.println("!!! ОШИБКА: Нотификация не деактивирована в БД" + err.getMessage());
+                });
+    }
+    public void deactivateAllNotifications(){
+        Single.just(true)
+            .observeOn(Schedulers.io())
+            .subscribe(
+                action ->{
+                    repo.deactivateAllNotification();
+                    System.out.println("!!! Все нотификации деактивированы в БД");
+                },
+                err ->{
+                    System.out.println("!!! ОШИБКА: Нотификации не деактивированы в БД" + err.getMessage());
+                });
+    }
+
 }

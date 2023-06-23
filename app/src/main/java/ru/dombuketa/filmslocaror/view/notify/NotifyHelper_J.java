@@ -30,9 +30,12 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.core.Observable;
 import ru.dombuketa.db_module.dto.Film;
+import ru.dombuketa.db_module.dto.Notification;
+import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.R;
 import ru.dombuketa.filmslocaror.receivers.ReminderBroadcast_J;
 import ru.dombuketa.filmslocaror.view.MainActivity;
+import ru.dombuketa.filmslocaror.view.MainActivity_J;
 import ru.dombuketa.net_module.entity.ApiConstants;
 
 public class NotifyHelper_J {
@@ -41,7 +44,7 @@ public class NotifyHelper_J {
     public static void createNotification(Context context, Observable<Film> film){
         film.subscribe(item ->{
             Log.i("notification","!!!" + item.getTitle());
-            Intent inte = new Intent(context, MainActivity.class);
+            Intent inte = new Intent(context, MainActivity_J.class);
             inte.putExtra("film_id", item.getId());
             inte.putExtra("film", item);
             PendingIntent pendingInte = PendingIntent.getActivity(context, 0, inte, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -54,7 +57,7 @@ public class NotifyHelper_J {
             builde.setAutoCancel(true);
 
             NotificationManagerCompat notifManager = NotificationManagerCompat.from(context);
-            Glide.with(context).asBitmap().load(ApiConstants.BASE_URL + "w500" + item.getPoster())
+            Glide.with(context).asBitmap().load(ApiConstants.IMAGES_URL + "w500" + item.getPoster())
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -79,22 +82,20 @@ public class NotifyHelper_J {
         Integer curH = calendar.get(Calendar.HOUR);
         Integer curm = calendar.get(Calendar.MINUTE);
         new DatePickerDialog(context,
-                new DatePickerDialog.OnDateSetListener() {
+            (view, year, month, dayOfMonth) -> {
+                TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener(){
                     @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener(){
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                Calendar pickedDataTimeCalendar = Calendar.getInstance();
-                                pickedDataTimeCalendar.set(year, month, dayOfMonth, hourOfDay, minute, 0);
-                                Long dataTimeInMillis = pickedDataTimeCalendar.getTimeInMillis();
-                                createWatchLaterEvent_J(context, dataTimeInMillis, film);
-                            }
-                        };
-                        new TimePickerDialog(context, timePickerListener, curH, curm, true).show();
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        Calendar pickedDataTime = Calendar.getInstance();
+                        pickedDataTime.set(year, month, dayOfMonth, hourOfDay, minute, 0);
+                        Long dataTimeInMillis = pickedDataTime.getTimeInMillis();
+                        App_J.getInstance().daggerj.getInteractor_j().putNodificationtoDB(
+                            new Notification(0, film.getId(), film.getTitle(), year, month, dayOfMonth, hourOfDay, minute, film.getPoster(), true));
+                        createWatchLaterEvent_J(context, dataTimeInMillis, film);
                     }
-
-                }, curY, curM, curD).show();
+                };
+                new TimePickerDialog(context, timePickerListener, curH, curm, true).show();
+            }, curY, curM, curD).show();
     }
 
 
