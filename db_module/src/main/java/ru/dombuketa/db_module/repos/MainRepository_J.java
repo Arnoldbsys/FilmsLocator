@@ -14,6 +14,7 @@ import io.reactivex.rxjava3.core.Observable;
 import ru.dombuketa.db_module.db.DatabaseHelper_J;
 import ru.dombuketa.db_module.api.IFilmDao_J;
 import ru.dombuketa.db_module.dto.Film;
+import ru.dombuketa.db_module.dto.Notification;
 
 public class MainRepository_J {
     private DatabaseHelper_J databaseHelper_j;
@@ -86,5 +87,23 @@ public class MainRepository_J {
     }
 
     public List<Film> filmsDataBase = new ArrayList<Film>();
+    // Нотификации
+    public void deactivateAllNotification() {
+        filmDao_j.clearAllNotifications();
+    }
 
+    public void deactivateNotification(int film_id) {
+        filmDao_j.deactivateNotification(film_id);
+    }
+
+    public void putNotificationToDB(Notification notif) {
+        // Для упрощения деактивирую старый и вставляю новый
+        filmDao_j.deactivateNotification(notif.getFilmId());
+        filmDao_j.insertNotification(notif);
+    }
+
+    public Observable<List<Notification>> getActiveNotifications() {
+        return filmDao_j.getNotifications();
+    }
+    //_ Нотификации
 }
