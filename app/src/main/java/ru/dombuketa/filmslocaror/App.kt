@@ -13,6 +13,7 @@ import ru.dombuketa.filmslocaror.di.IAppComponent
 import ru.dombuketa.filmslocaror.di.modules.DomainModule
 import ru.dombuketa.filmslocaror.view.notify.NotifyConsts.CHANNEL_ID
 import ru.dombuketa.net_module.DaggerIRemoteComponent
+import java.util.Date
 
 class App : Application(), IAppProvider
 {
@@ -34,6 +35,7 @@ class App : Application(), IAppProvider
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             initWatchLaterChannel()
         }
+        dagger.getInteractor().setStartAppTimeToPreferences(Date().time)  //52*
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

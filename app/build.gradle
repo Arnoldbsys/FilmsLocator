@@ -36,6 +36,32 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    flavorDimensions "version"
+    productFlavors{
+        free{
+            dimension "version"
+            applicationIdSuffix ".free"
+            versionNameSuffix "-free"
+        }
+        full{
+            dimension "version"
+            applicationIdSuffix ".full"
+            versionNameSuffix "-full"
+        }
+    }
+    sourceSets {
+        free {
+            java {
+                srcDirs 'src\\free\\java'
+            }
+        }
+        full {
+            java {
+                srcDirs 'src\\full\\java'
+            }
+        }
+    }
 }
 
 

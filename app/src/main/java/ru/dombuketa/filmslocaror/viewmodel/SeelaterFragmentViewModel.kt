@@ -6,6 +6,7 @@ import ru.dombuketa.db_module.dto.Film
 import ru.dombuketa.db_module.dto.Notification
 import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.domain.Interactor
+import java.util.*
 import javax.inject.Inject
 
 class SeelaterFragmentViewModel : ViewModel() {
@@ -23,10 +24,15 @@ class SeelaterFragmentViewModel : ViewModel() {
         return interactor.getFilmFromAPI(id)
     }
 
+    fun getEvaluatePeriodState() : Boolean = Date().time - interactor.getStartAppTimeFromPreferences() < TIME_EVALUATE_PERIOD
+
     fun getFilms(page: Int){
         //interactor.getFilmsFromAPI(page)
         interactor.getFilmsFromAPIRx(page)
     }
 
+    companion object{
+        private const val TIME_EVALUATE_PERIOD = 60000L //Минута
+    }
 }
 

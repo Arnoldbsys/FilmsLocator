@@ -17,6 +17,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     //В конструктор мы будем передавать коллбэк из вью модели, чтобы реагировать на то, когда фильмы будут получены
     //и страницу, которую нужно загрузить (это для пагинации)
     var progressBarStateRx : BehaviorSubject<Boolean> = BehaviorSubject.create()
+    var evaluatePeriodStateRx : BehaviorSubject<Boolean> = BehaviorSubject.create()  // Пробный период
 
 /*
     fun getFilmsFromAPI(page: Int){
@@ -61,6 +62,8 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     }
 */
 
+
+
     fun getFilmFromAPI(id: Int) : Observable<Film> {
         progressBarStateRx.onNext(true)
         return retrofitService.getFilm(id, API.KEY, "ru-RU")
@@ -101,6 +104,10 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     fun savaDefaultCategoryToPreferences(category: String) = preferences.saveDefaultCategory(category)
     //Метод для получения настроек
     fun getDefaultCategoryFromPreferences() = preferences.getDefaultCategory()
+
+    fun getStartAppTimeFromPreferences() = preferences.getStartTimeApp()
+    fun setStartAppTimeToPreferences(time: Long) = preferences.setStartTimeApp(time)
+
     //И вот такой метод у нас будет дергать метод репозитория, чтобы тот забрал для нас фильмы из БД
     fun getFilmsFromDB(): Observable<List<Film>> = repo.getAllFromDB()
 

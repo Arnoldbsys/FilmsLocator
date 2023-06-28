@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.lifecycle.MutableLiveData
+import java.util.Date
 
 class PreferenceProvider(context: Context) {
     //Нам нужен контекст приложения
@@ -58,8 +59,12 @@ class PreferenceProvider(context: Context) {
     fun setLastTimeInternetOK(time: Long) {
         preference.edit().putLong(LAST_TIME_INTERNET_OK, time).apply()
     }
-    //40*_
 
+    //40*_
+    //52*
+    fun getStartTimeApp(): Long = preference.getLong(LAST_TIME_START_APP, Date().time)
+    fun setStartTimeApp(time: Long) = preference.edit().putLong(LAST_TIME_START_APP, time).apply()
+    //52*_
 
 
     //Ключи для наших настроек, по ним мы их будем получать
@@ -68,6 +73,7 @@ class PreferenceProvider(context: Context) {
         private const val KEY_DEFAULT_CATEGORY = "default_category"
         private const val DEFAULT_CATEGORY = "popular"
         private const val LAST_TIME_INTERNET_OK = "last_time_internet_ok" //40*
+        private const val LAST_TIME_START_APP = "last_time_start_app"
 
     }
 }

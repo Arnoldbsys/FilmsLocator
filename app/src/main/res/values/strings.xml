@@ -21,6 +21,7 @@
     <string name="radio_button_light">Светлая</string>
     <string name="radio_button_dark">Темная</string>
 
+    <string name="eval_label">Пробный период окончился, пора приобретать полнофункциональную версию программы.</string>
 
 
 
@@ -36,6 +37,7 @@
     <string name="permission_storage">Нет разрешения. Пожалуйста, предоставьте разрешение</string>
     <string name="downloaded_to_gallery">"Сохранено в галерею"</string>
     <string name="open">В галерею</string>
+    <string name="clear_all_reminders">Очистить все</string>
 
 
 </resources>

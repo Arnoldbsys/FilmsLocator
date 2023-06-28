@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +22,7 @@ import ru.dombuketa.filmslocaror.utils.addTo
 import ru.dombuketa.filmslocaror.view.rv_adapters.NotificationListRecyclerAdapter
 import ru.dombuketa.filmslocaror.view.rv_helpers.SeelaterTouchHelper
 import ru.dombuketa.filmslocaror.viewmodel.SeelaterFragmentViewModel
+import java.util.Date
 
 class SeelaterFragment : Fragment() {
     private lateinit var binding: FragmentSeelaterBinding
@@ -50,7 +52,20 @@ class SeelaterFragment : Fragment() {
                 notificationsAdapter.addItems(list)
             }
             .addTo(autoDisposable)
+        //Log.i("SeeLater", Date().time.toString())
         initSeelaterRV()
+        if (viewModel.getEvaluatePeriodState()){
+            //binding.evalLabel.visibility = View.GONE
+            binding.btnReminders.visibility = View.VISIBLE
+            binding.seelaterRecycler.visibility = View.VISIBLE
+        }
+        else{
+            //binding.evalLabel.visibility = View.VISIBLE
+            Toast.makeText(requireContext(),  EVAL_MESSAGE, Toast.LENGTH_SHORT).show()
+            binding.btnReminders.visibility = View.GONE
+            binding.seelaterRecycler.visibility = View.GONE
+        }
+
 
         binding.btnReminders.setOnClickListener {
             viewModel.clearAllNotifications()
@@ -92,4 +107,9 @@ class SeelaterFragment : Fragment() {
             addItemDecoration(decorator)
         }
     }
+
+    companion object{
+        const val EVAL_MESSAGE = "Пробный период окончился, Напоминания доступны в полнофункциональной версии программы."
+    }
+
 }
