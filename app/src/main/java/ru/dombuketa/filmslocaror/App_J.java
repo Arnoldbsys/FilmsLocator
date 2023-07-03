@@ -24,6 +24,7 @@ public class App_J extends Application implements IAppProvider_J {
     public static App_J getInstance() {
         return instance;
     }
+    public boolean isPromoShow = false;
 
 //    public MainRepository_J repo;
 //    public Interactor_J interactor;

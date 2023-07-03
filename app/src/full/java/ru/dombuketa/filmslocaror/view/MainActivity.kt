@@ -1,15 +1,22 @@
 package ru.dombuketa.filmslocaror.view
 
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import ru.dombuketa.db_module.dto.Film
+import ru.dombuketa.filmslocaror.App
 import ru.dombuketa.filmslocaror.R
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding
 import ru.dombuketa.filmslocaror.receivers.MessageReceiver_J
@@ -44,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             val fragmentHome = checkFragmentExistence("home")
             changeFragment(fragmentHome ?: HomeFragment(), "home")
         }
-
+        showPromo()
 
     }
 
@@ -129,6 +136,60 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
+    }
+
+    private fun showPromo(){
+        if (!App.instance.isPromoShow){
+            //Получаем доступ к Remote Config
+            val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+            //Устанавливаем настройки
+            val configSettings = FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(5).build()
+            firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+            Log.i("promo", configSettings.toString())
+            //Вызываем метод, который получит данные с сервера и вешаем слушатель
+            firebaseRemoteConfig.fetch()
+                .addOnCompleteListener {
+                    Log.i("promo", it.isSuccessful.toString() + "--" + it.exception?.message.toString())
+                    if (it.isSuccessful){
+                        //активируем последний полученный конфиг с сервера
+                        firebaseRemoteConfig.activate()
+                        val link = firebaseRemoteConfig.getString("film_link") //Получаем ссылку
+                        Log.i("promo","link=" + link)
+                        val film_id = firebaseRemoteConfig.getDouble("film_id") //Получаем id
+                        Log.i("promo","filmId=" + film_id)
+                        val film_ids = firebaseRemoteConfig.getString("film_ids") //Получаем id
+                        Log.i("promo","filmIds=" + film_ids)
+                        if (link.isNotBlank()){
+                            App.instance.isPromoShow = true //Ставим флаг, что уже промо показали
+                            //Включаем промо верстку
+                            binding.promoViewGroup.apply {
+                                visibility = View.VISIBLE //Делаем видимой
+                                animate().setDuration(1500).alpha(1f).start() //Анимируем появление
+                                setLinkForPoster(link) //Вызываем метод, который загрузит постер в ImageView
+                                //Кнопка, по нажатии на которую промо уберется (желательно сделать отдельную кнопку с крестиком)
+                                watchButton.setOnClickListener {
+                                    visibility = View.GONE
+
+                                    App.instance.dagger.getInteractor().getFilmFromAPI(film_id.toInt()).subscribe({
+                                        //val intent = Intent(context, MainActivity::class.java)
+                                        //intent.putExtra("film", it)
+                                        //val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                                        lanunchDetailsFragment(it)
+                                    })
+                                }
+                            }
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    Log.i("promo",it.message.toString())
+                }
+                .addOnCanceledListener {
+                    Log.i("promo","cancel")
+                }
+
+        }
     }
 
     companion object consts{

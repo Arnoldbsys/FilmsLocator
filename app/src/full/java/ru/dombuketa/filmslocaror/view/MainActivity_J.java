@@ -9,20 +9,27 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.List;
 
 import ru.dombuketa.db_module.dto.Film;
+import ru.dombuketa.filmslocaror.App_J;
 import ru.dombuketa.filmslocaror.R;
 import ru.dombuketa.filmslocaror.databinding.ActivityMainBinding;
 import ru.dombuketa.filmslocaror.receivers.MessageReceiver_J;
+import ru.dombuketa.filmslocaror.view.customview.PromoView;
 import ru.dombuketa.filmslocaror.view.fragments.CastsFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.DetailsFragment_J;
 import ru.dombuketa.filmslocaror.view.fragments.FavoritesFragment_J;
@@ -189,6 +196,39 @@ public class MainActivity_J extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
+    }
+
+    private void showPromo(){
+        if (!App_J.getInstance().isPromoShow){
+            FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance(); //Получаем доступ к Remote Config
+            FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(0).build(); //Устанавливаем настройки
+            Log.i("promoJ", configSettings.toString());
+            //Вызываем метод, который получит данные с сервера и вешаем слушатель
+            firebaseRemoteConfig.fetch().addOnCompleteListener(task -> {
+                Log.i("promoJ", task.isSuccessful() + "--" + task.getException().getMessage());
+                if (task.isSuccessful()){
+                    //активируем последний полученный конфиг с сервера
+                    firebaseRemoteConfig.activate();
+                    String link = firebaseRemoteConfig.getString("film_link"); //Получаем ссылку
+                    Log.i("promoJ","link=" + link);
+                    Double film_id = firebaseRemoteConfig.getDouble("film_id"); //Получаем id
+                    Log.i("promoJ","filmId=" + film_id);
+                    String film_ids = firebaseRemoteConfig.getString("film_ids"); //Получаем id
+                    Log.i("promoJ","filmIds=" + film_ids);
+                    if (!link.isEmpty()){
+                        App_J.getInstance().isPromoShow = true; //Ставим флаг, что уже промо показали
+                        //Включаем промо верстку
+                        PromoView pw = binding.promoViewGroup;
+                        pw.setVisibility(View.VISIBLE);
+                        pw.animate().setDuration(1500).alpha(1f).start();
+                        pw.setLinkForPoster(link); //Вызываем метод, который загрузит постер в ImageView
+                        //Кнопка, по нажатии на которую промо уберется (желательно сделать отдельную кнопку с крестиком)
+                        pw.getWatchButton().setOnClickListener( l -> pw.setVisibility(View.GONE));
+                    }
+                }
+            });
+        }
     }
 
     @Override

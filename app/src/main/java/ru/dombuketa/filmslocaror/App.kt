@@ -18,6 +18,7 @@ import java.util.Date
 class App : Application(), IAppProvider
 {
     lateinit var dagger: IAppComponent
+    var isPromoShow = false
     override fun onCreate() {
         super.onCreate()
         //Инициализируем экземпляр App, через который будем получать доступ к остальным переменным
