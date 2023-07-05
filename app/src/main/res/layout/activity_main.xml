@@ -6,7 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_main"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
+
+    <ru.dombuketa.filmslocaror.view.customview.PromoView
+        android:id="@+id/promo_view_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:translationZ="10dp"
+        android:visibility="gone"></ru.dombuketa.filmslocaror.view.customview.PromoView>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie_anim"
